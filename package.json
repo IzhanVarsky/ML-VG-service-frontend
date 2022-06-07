@@ -8,6 +8,8 @@
   },
   "dependencies": {
     "@mantine/core": "^4.2.8",
+    "@mantine/dropzone": "^4.2.8",
+    "@mantine/form": "^4.2.8",
     "@mantine/hooks": "^4.2.8",
     "@mantine/rte": "^4.2.8",
     "@mantine/ssr": "^4.2.8",
