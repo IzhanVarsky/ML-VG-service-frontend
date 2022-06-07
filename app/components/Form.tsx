@@ -33,7 +33,7 @@ const sendData = (data) => {
   });
 };
 
-export default function Navbar() {
+export default function Form() {
   const form = useForm({
     initialValues: {
       musicFile: undefined,
