@@ -54,6 +54,7 @@ export default function Navbar() {
           <Text>Select music file</Text>
           <Dropzone
             multiple={false}
+            accept={["audio/*"]}
             onDrop={(files) => form.setFieldValue('musicFile', files[0])}
           >
             {() => <Text color='lightgray'>Drag or click</Text>}

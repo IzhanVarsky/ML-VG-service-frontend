@@ -1,6 +1,6 @@
 import { AppShell } from '@mantine/core';
 import Header from '~/components/Header';
-import Navbar from '~/components/Navbar';
+import Navbar from '~/components/Form';
 import Covers from '~/components/covers/Covers';
 
 export default function Index() {
