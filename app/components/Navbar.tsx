@@ -8,12 +8,13 @@ import {
   Switch,
   Chips,
   Chip,
+  NumberInput,
 } from '@mantine/core';
 import Shape from './Shape';
 
 export default function Navbar() {
   return (
-    <Shape>
+    <Shape style={{height: '100%'}}>
       <Stack justify="space-around">
         <Button variant='outline'>
           Select Music file
@@ -43,6 +44,11 @@ export default function Navbar() {
           <Radio value="1" label="1" />
           <Radio value="2" label="2" />
         </RadioGroup>
+        <NumberInput
+          defaultValue={5}
+          placeholder="Number of covers"
+          required
+        />
         <InputWrapper label="Emotion">
           <Chips>
             <Chip value="anger">😠</Chip>
