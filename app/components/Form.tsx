@@ -13,72 +13,92 @@ import {
   Divider,
 } from '@mantine/core';
 import Shape from './Shape';
-import { useForm } from '@mantine/form';
-import { Dropzone } from '@mantine/dropzone';
+import {useForm} from '@mantine/form';
+import {Dropzone} from '@mantine/dropzone';
 
 const sendData = (data) => {
   console.log('Send data to server:', data);
-
-  fetch('http://MY_UPLOAD_SERVER.COM/api/upload', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data'
+  const formData = new FormData()
+  for (let key in data) {
+    formData.append(key, data[key]);
+  }
+  console.log('FORMDATA:', formData);
+  $.ajax({
+    url: "http://localhost:5001/generate",
+    type: 'POST',
+    data: formData,
+    context: this,
+    processData: false,
+    contentType: false,
+    cache: false,
+    success: (response) => {
+      console.log('SUCC', response);
     },
-    body: data, // TODO: возможно надо запихнуть в класс FormData
-  }).then(res => {
-    const json = res.json();
-    console.log('Server answer:', json);
-  }).catch(err => {
-    console.log("Uploading error error", err);
+    error: (e) => {
+      console.log('ERR', e);
+    }
   });
+  // fetch('http://localhost:5001/generate', {
+  //   method: 'POST',
+  //   headers: {
+  //     "Accept": "*",
+  //   },
+  //   body: formData,
+  // }).then(res => {
+  //   console.log('RES', res);
+  //   const json = res.json();
+  //   console.log('Server answer:', json);
+  // }).catch(err => {
+  //   console.log("Uploading error error", err);
+  // });
 };
 
 export default function Form() {
   const form = useForm({
     initialValues: {
-      musicFile: undefined,
-      artistName: '',
-      trackName: '',
-      generatorType: "1",
-      rasterize: true,
-      captionerType: "1",
-      numberCovers: 5,
+      audio_file: undefined,
+      track_artist: 'XXX',
+      track_name: 'YYY',
       emotion: 'anger',
+      rasterize: true,
+      gen_type: "1",
+      use_captioner: "1",
+      // numberCovers: 5,
     },
   });
 
   return (
-    <Shape style={{ height: '100%' }}>
+    <Shape style={{height: '100%'}}>
       <form onSubmit={form.onSubmit(sendData)}>
         <Stack justify="space-around">
           <Text>Select music file</Text>
           <Dropzone
             multiple={false}
             accept={["audio/*"]}
-            onDrop={(files) => form.setFieldValue('musicFile', files[0])}
+            onDrop={(files) => form.setFieldValue('audio_file', files[0])}
           >
             {() => <Text color='lightgray'>Drag or click</Text>}
           </Dropzone>
-          {form.values['musicFile']
-            && <Text color='blue'>{form.values['musicFile'].name} is selected</Text>}
-          <Divider my="sm" />
+          {form.values['audio_file']
+            && <Text color='blue'>{form.values['audio_file'].name} is selected</Text>}
+          <Divider my="sm"/>
           <TextInput
             label="Artist name"
             required
-            {...form.getInputProps('artistName')}
+            {...form.getInputProps('track_artist')}
           />
           <TextInput
             label="Track name"
             required
-            {...form.getInputProps('trackName')}
+            {...form.getInputProps('track_name')}
           />
           <RadioGroup
             label="Generator type"
             required
-            {...form.getInputProps('generatorType')}
+            {...form.getInputProps('gen_type')}
           >
-            <Radio value="1" label="1" />
-            <Radio value="2" label="2" />
+            <Radio value="1" label="1"/>
+            <Radio value="2" label="2"/>
           </RadioGroup>
           <Switch
             label="Rasterize"
@@ -87,16 +107,16 @@ export default function Form() {
           <RadioGroup
             label="Captioner type"
             required
-            {...form.getInputProps('captionerType')}
+            {...form.getInputProps('use_captioner')}
           >
-            <Radio value="1" label="1" />
-            <Radio value="2" label="2" />
+            <Radio value="1" label="1"/>
+            <Radio value="2" label="2"/>
           </RadioGroup>
-          <NumberInput
-            placeholder="Number of covers"
-            required
-            {...form.getInputProps('numberCovers')}
-          />
+          {/*<NumberInput*/}
+          {/*  placeholder="Number of covers"*/}
+          {/*  required*/}
+          {/*  {...form.getInputProps('numberCovers')}*/}
+          {/*/>*/}
           <InputWrapper label="Emotion">
             <Chips
               {...form.getInputProps('emotion')}
@@ -113,6 +133,6 @@ export default function Form() {
           <Button type='submit' variant='gradient'>Generate</Button>
         </Stack>
       </form>
-    </Shape >
+    </Shape>
   )
 }
