@@ -4,15 +4,15 @@ import {
   InputWrapper,
   ColorInput,
   Textarea,
-  Accordion,
   Container,
-  Button,
   Title,
+  Tabs,
 } from '@mantine/core';
 import Shape from '~/components/Shape';
 import { Link } from '@remix-run/react';
+import { AdjustmentsAlt, FileText } from 'tabler-icons-react';
 
-const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512"><style>@import url('https://fonts.googleapis.com/css?family=Playfair Display');</style>
+const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="712" height="712" viewBox="0 0 512 512"><style>@import url('https://fonts.googleapis.com/css?family=Playfair Display');</style>
 <rect width="512" height="512" fill="rgb(202, 175, 181)" fill-opacity="1"/>
 <path d="M 12,16 C 50,40 7,42 129,45 C 120,64 64,89 83,15 C 214,29 139,101 140,47 C 161,51 179,33 304,37 C 217,27 258,85 366,18 C 384,36 358,50 423,59 C 331,18 396,14 480,49 C 392,17 465,24 508,33 C 536,132 527,50 537,76 C 537,196 537,215 535,229 C 531,252 525,159 537,177 C 537,306 537,306 537,231 C 537,251 536,284 536,287 C 534,415 537,322 535,363 C 537,454 536,487 537,506 C 537,524 537,542 537,561 C 518,561 499,561 480,561 C 461,561 442,561 312,561 C 293,560 370,561 352,561 C 247,560 219,561 198,560 C 179,560 159,560 178,560 C 231,560 206,561 93,561 C 176,561 45,561 133,561 C 41,561 100,560 -30,561 C -30,542 -31,524 -30,471 C -31,487 -30,470 -30,400 C -30,361 -31,370 -30,287 C -28,268 -27,249 -29,231 C -15,213 -30,304 -25,233 C -30,159 11,142 -27,234 C -25,105 -30,189 21,177 C -31,50 -29,32 12,16 Z" fill="rgb(161, 134, 154)" fill-opacity="1.0" stroke="rgb(161, 134, 154)" stroke-opacity="1.0" stroke-width="0"/>
 <path d="M 569,76 C 558,95 546,112 535,131 C 520,128 507,152 496,162 C 483,173 469,183 457,193 C 441,181 427,190 418,225 C 405,235 392,246 379,256 C 366,267 338,218 234,304 C 303,302 291,312 295,320 C 255,334 273,339 245,238 C 150,349 144,335 140,303 C 139,302 132,258 134,267 C 131,252 123,197 126,217 C 124,203 123,187 102,63 C 98,40 96,24 111,121 C 108,105 106,88 103,71 C 83,-58 80,-75 79,-91 C 82,-64 73,-124 72,-138 C 96,-136 106,-129 231,-131 C 132,-115 151,-90 163,-104 C 292,-116 320,-31 323,-104 C 339,-98 354,-92 370,-86 C 385,-80 401,-74 416,-68 C 429,-62 447,-56 463,-49 C 478,-44 494,-38 510,-31 C 525,-26 540,-20 569,76 Z" fill="rgb(177, 191, 212)" fill-opacity="1.0" stroke="rgb(177, 191, 212)" stroke-opacity="1.0" stroke-width="0"/>
@@ -33,40 +33,32 @@ export default function Main() {
           to="/"
         >Go back</Link>
       </Title>
-      {/* <Accordion>
-        <Accordion.Item label="Edit raw svg">
-
-        </Accordion.Item>
-      </Accordion> */}
-      <Grid>
-        <Grid.Col span={5}>
-          <Textarea
-            minRows={30}
-            minLength={50}
-          >{svg}</Textarea>
-        </Grid.Col>
-        <Grid.Col span={5}>
+      <Grid justify='space-around'>
+        <Grid.Col span={3}>
           <Container m='xs'>
             <div dangerouslySetInnerHTML={{ __html: svg }} />
           </Container>
-          <Stack justify="space-around" p="xl" m="xl">
-            <InputWrapper label="Colors">
-              <Stack>
-                <ColorInput defaultValue="#C5D899" />
-                <ColorInput defaultValue="#CF3636" />
-                <ColorInput defaultValue="#E08D07" />
-              </Stack>
-            </InputWrapper>
-            {/* <InputWrapper label="Effects">
-              <Stack>
-                <ColorInput defaultValue="#C5D899" />
-                <ColorInput defaultValue="#CF3636" />
-                <ColorInput defaultValue="#E08D07" />
-              </Stack>
-            </InputWrapper> */}
-          </Stack>
+        </Grid.Col>
+        <Grid.Col span={4}>
+          <Tabs>
+            <Tabs.Tab label="Edit options" icon={<AdjustmentsAlt size={14} />}>
+              <InputWrapper label="Colors">
+                <Stack>
+                  <ColorInput defaultValue="#C5D899" />
+                  <ColorInput defaultValue="#CF3636" />
+                  <ColorInput defaultValue="#E08D07" />
+                </Stack>
+              </InputWrapper>
+            </Tabs.Tab>
+            <Tabs.Tab label="Edit raw svg" icon={<FileText size={14} />}>
+              <Textarea
+                minRows={30}
+                minLength={50}
+              >{svg}</Textarea>
+            </Tabs.Tab>
+          </Tabs>
         </Grid.Col>
       </Grid>
-    </Shape>
+    </Shape >
   )
 }
