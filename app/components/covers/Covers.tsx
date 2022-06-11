@@ -2,16 +2,11 @@ import Carousel from './Carousel';
 import Viewer from './Viewer';
 
 
-export default function Covers({ covers, selectedCover, setSelectedCover }) {
+export default function Covers() {
   return (
     <>
-      <Carousel
-        covers={covers}
-        selectedCover={selectedCover}
-        setSelectedCover={setSelectedCover} />
-      <Viewer
-        covers={covers}
-        selectedCover={selectedCover} />
+      <Carousel />
+      <Viewer />
     </>
   )
 }

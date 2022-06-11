@@ -1,8 +1,10 @@
 import { Grid, Image, AspectRatio } from '@mantine/core';
 import Shape from '../Shape';
+import {useOutletContext} from "@remix-run/react";
 
 
-export default function Carousel({ covers, selectedCover, setSelectedCover }) {
+export default function Carousel() {
+  const [selectedCover, setSelectedCover, covers, _] = useOutletContext();
   return (
     <Shape size={50}>
       {/* //   <Pagination total={covers.length} size="xl"
@@ -28,13 +30,17 @@ export default function Carousel({ covers, selectedCover, setSelectedCover }) {
     //     }
     //     }
     // /> */}
-      <Grid justify="space-around" columns={covers.length}>
+      <Grid justify="space-around"
+            // columns={covers.length}
+      >
         {covers.map((cover, index) => {
           const src = cover.src
             ? cover.src
             : 'data:image/png;base64, ' + cover.base64;
           return (
-            <Grid.Col span={1}>
+            <Grid.Col span={1}
+                      key={index}
+            >
               <AspectRatio ratio={1} sx={{ maxWidth: '16vh' }}>
                 <Image
                   key={index}

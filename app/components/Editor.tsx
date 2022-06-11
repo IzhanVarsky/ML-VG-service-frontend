@@ -13,7 +13,7 @@ import { Link, useOutletContext } from '@remix-run/react';
 import { AdjustmentsAlt, FileText } from 'tabler-icons-react';
 
 export default function Main() {
-  const [selectedCover, setSelectedCover, covers, setCovers] = useOutletContext();
+  const [selectedCover, _, covers, _] = useOutletContext();
   const cover = covers[selectedCover];
 
   return (

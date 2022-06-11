@@ -8,6 +8,7 @@ export default function Header() {
       <Shape>
           <Text
             size='xl'
+            weight={800}
             variant="gradient"
             style={{ fontFamily: 'Greycliff CF, sans-serif' }}
           >

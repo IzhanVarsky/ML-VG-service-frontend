@@ -1,16 +1,15 @@
 function downloadBase64File(contentType, base64Data, fileName) {
-    const downloadLink = document.createElement("a");
-    downloadLink.href = `data:${contentType};base64,${base64Data}`;
-    downloadLink.download = fileName;
-    downloadLink.click();
+    const link = document.createElement("a");
+    link.href = `data:${contentType};base64,${base64Data}`;
+    link.download = fileName;
+    link.click();
 }
 
 function downloadTextFile(text, filename) {
-    let element = document.createElement('a');
-    element.href = 'data:text/plain;charset=utf-8,' + encodeURIComponent(text);
-    element.download = filename;
-    element.click();
-
+    let link = document.createElement('a');
+    link.href = 'data:text/plain;charset=utf-8,' + encodeURIComponent(text);
+    link.download = filename;
+    link.click();
 }
 
 module.exports = {

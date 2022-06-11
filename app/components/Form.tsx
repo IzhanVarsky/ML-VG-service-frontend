@@ -15,11 +15,14 @@ import {
 import Shape from './Shape';
 import { useForm } from '@mantine/form';
 import { Dropzone } from '@mantine/dropzone';
+import {useOutletContext} from "@remix-run/react";
 
-export default function Form({ setCovers }) {
+export default function Form() {
+  const [_, _, _, setCovers] = useOutletContext();
   const sendData = (data) => {
     console.log('Audio file:', data.audio_file)
     if (data.audio_file === undefined) {
+      // TODO: Отрисовать пользователю, что он не загрузил файл
       return
     }
     console.log('Send data to server:', data);
@@ -28,6 +31,7 @@ export default function Form({ setCovers }) {
       formData.append(key, data[key]);
     }
     console.log('FORMDATA:', formData);
+    // TODO: сделать прогресс бар, хотя бы просто <progress/>
     $.ajax({
       url: "http://localhost:5001/generate",
       type: 'POST',
@@ -120,6 +124,8 @@ export default function Form({ setCovers }) {
           </RadioGroup>
           <NumberInput
             placeholder="Number of covers"
+            min={1}
+            max={20}
             required
             {...form.getInputProps('num_samples')}
           />

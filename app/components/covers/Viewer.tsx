@@ -1,9 +1,10 @@
 import { Button, Grid, Image, Stack, Tabs, AspectRatio, Container } from '@mantine/core';
-import { Link } from '@remix-run/react';
+import {Link, useOutletContext} from '@remix-run/react';
 import Shape from '../Shape';
 import {downloadTextFile, downloadBase64File} from "app/download_utils";
 
-export default function Viewer({ covers, selectedCover }) {
+export default function Viewer() {
+  const [selectedCover, _, covers, _] = useOutletContext();
   const cover = covers[selectedCover];
   const src = cover.src
     ? cover.src
