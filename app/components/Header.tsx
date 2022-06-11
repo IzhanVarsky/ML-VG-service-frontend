@@ -11,7 +11,7 @@ export default function Header() {
             variant="gradient"
             style={{ fontFamily: 'Greycliff CF, sans-serif' }}
           >
-            CoverGan
+            CoverGAN
           </Text>
       </Shape>
     </MantineHeader>

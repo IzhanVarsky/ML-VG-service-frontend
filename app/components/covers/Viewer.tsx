@@ -1,7 +1,7 @@
 import { Button, Grid, Image, Stack, Tabs, AspectRatio, Container } from '@mantine/core';
 import { Link } from '@remix-run/react';
 import Shape from '../Shape';
-
+import {downloadTextFile, downloadBase64File} from "app/download_utils";
 
 export default function Viewer({ covers, selectedCover }) {
   const cover = covers[selectedCover];
@@ -18,10 +18,8 @@ export default function Viewer({ covers, selectedCover }) {
               <div dangerouslySetInnerHTML={{ __html: cover.svg }} />
             </Container>
             <Grid justify='space-around'>
-              <Button>Download</Button>
-              <Link
-                to="/edit"
-              >
+              <Button onClick={() => downloadTextFile(cover.svg, "image.svg")}>Download</Button>
+              <Link to="/edit">
                 <Button>Edit</Button>
               </Link>
             </Grid>
@@ -35,7 +33,7 @@ export default function Viewer({ covers, selectedCover }) {
                 src={src}
               />
             </AspectRatio>
-            <Button>Download</Button>
+            <Button onClick={() => downloadBase64File("image/png", cover.base64, "image.png")}>Download</Button>
           </Stack>
         </Tabs.Tab>
       </Tabs>

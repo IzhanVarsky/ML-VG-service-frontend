@@ -18,6 +18,10 @@ import { Dropzone } from '@mantine/dropzone';
 
 export default function Form({ setCovers }) {
   const sendData = (data) => {
+    console.log('Audio file:', data.audio_file)
+    if (data.audio_file === undefined) {
+      return
+    }
     console.log('Send data to server:', data);
     const formData = new FormData()
     for (let key in data) {
@@ -28,7 +32,7 @@ export default function Form({ setCovers }) {
       url: "http://localhost:5001/generate",
       type: 'POST',
       data: formData,
-      context: this,
+      // context: this,
       processData: false,
       contentType: false,
       cache: false,
