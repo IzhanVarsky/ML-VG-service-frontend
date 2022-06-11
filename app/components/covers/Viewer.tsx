@@ -20,7 +20,7 @@ export default function Viewer({ covers, selectedCover }) {
             <Grid justify='space-around'>
               <Button>Download</Button>
               <Link
-                to="/main/edit"
+                to="/edit"
               >
                 <Button>Edit</Button>
               </Link>

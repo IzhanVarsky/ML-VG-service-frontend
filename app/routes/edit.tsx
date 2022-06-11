@@ -1,6 +1,6 @@
 import { AppShell } from '@mantine/core';
 import Header from '~/components/Header';
-import Main from '~/components/Editor';
+import Editor from '~/components/Editor';
 
 export default function Index() {
 
@@ -13,7 +13,7 @@ export default function Index() {
         },
       }}
     >
-      <Main />
+      <Editor />
     </AppShell>
   );
 }

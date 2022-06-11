@@ -13,14 +13,14 @@ import { Link, useOutletContext } from '@remix-run/react';
 import { AdjustmentsAlt, FileText } from 'tabler-icons-react';
 
 export default function Main() {
-  const [selectedCover, _, covers, _] = useOutletContext();
+  const [selectedCover, setSelectedCover, covers, setCovers] = useOutletContext();
   const cover = covers[selectedCover];
 
   return (
     <Shape>
       <Title>
         <Link
-          to="/main/"
+          to="/"
         >Go back</Link>
       </Title>
       <Grid justify='space-around'>
@@ -44,7 +44,7 @@ export default function Main() {
               <Textarea
                 minRows={30}
                 minLength={50}
-              >{svg}</Textarea>
+              >{cover.svg}</Textarea>
             </Tabs.Tab>
           </Tabs>
         </Grid.Col>
