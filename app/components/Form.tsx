@@ -13,47 +13,48 @@ import {
   Divider,
 } from '@mantine/core';
 import Shape from './Shape';
-import {useForm} from '@mantine/form';
-import {Dropzone} from '@mantine/dropzone';
+import { useForm } from '@mantine/form';
+import { Dropzone } from '@mantine/dropzone';
 
-const sendData = (data) => {
-  console.log('Send data to server:', data);
-  const formData = new FormData()
-  for (let key in data) {
-    formData.append(key, data[key]);
-  }
-  console.log('FORMDATA:', formData);
-  $.ajax({
-    url: "http://localhost:5001/generate",
-    type: 'POST',
-    data: formData,
-    context: this,
-    processData: false,
-    contentType: false,
-    cache: false,
-    success: (response) => {
-      console.log('SUCC', response);
-    },
-    error: (e) => {
-      console.log('ERR', e);
+export default function Form({ setCovers }) {
+  const sendData = (data) => {
+    console.log('Send data to server:', data);
+    const formData = new FormData()
+    for (let key in data) {
+      formData.append(key, data[key]);
     }
-  });
-  // fetch('http://localhost:5001/generate', {
-  //   method: 'POST',
-  //   headers: {
-  //     "Accept": "*",
-  //   },
-  //   body: formData,
-  // }).then(res => {
-  //   console.log('RES', res);
-  //   const json = res.json();
-  //   console.log('Server answer:', json);
-  // }).catch(err => {
-  //   console.log("Uploading error error", err);
-  // });
-};
+    console.log('FORMDATA:', formData);
+    $.ajax({
+      url: "http://localhost:5001/generate",
+      type: 'POST',
+      data: formData,
+      context: this,
+      processData: false,
+      contentType: false,
+      cache: false,
+      success: (response) => {
+        console.log('SUCC', response);
+        setCovers(response.result);
+      },
+      error: (e) => {
+        console.log('ERR', e);
+      }
+    });
+    // fetch('http://localhost:5001/generate', {
+    //   method: 'POST',
+    //   headers: {
+    //     "Accept": "*",
+    //   },
+    //   body: formData,
+    // }).then(res => {
+    //   console.log('RES', res);
+    //   const json = res.json();
+    //   console.log('Server answer:', json);
+    // }).catch(err => {
+    //   console.log("Uploading error error", err);
+    // });
+  };
 
-export default function Form() {
   const form = useForm({
     initialValues: {
       audio_file: undefined,
@@ -63,12 +64,13 @@ export default function Form() {
       rasterize: true,
       gen_type: "1",
       use_captioner: "1",
-      // numberCovers: 5,
+      num_samples: 5,
+      use_filters: false,
     },
   });
 
   return (
-    <Shape style={{height: '100%'}}>
+    <Shape style={{ height: '100%' }}>
       <form onSubmit={form.onSubmit(sendData)}>
         <Stack justify="space-around">
           <Text>Select music file</Text>
@@ -81,7 +83,7 @@ export default function Form() {
           </Dropzone>
           {form.values['audio_file']
             && <Text color='blue'>{form.values['audio_file'].name} is selected</Text>}
-          <Divider my="sm"/>
+          <Divider my="sm" />
           <TextInput
             label="Artist name"
             required
@@ -97,8 +99,8 @@ export default function Form() {
             required
             {...form.getInputProps('gen_type')}
           >
-            <Radio value="1" label="1"/>
-            <Radio value="2" label="2"/>
+            <Radio value="1" label="1" />
+            <Radio value="2" label="2" />
           </RadioGroup>
           <Switch
             label="Rasterize"
@@ -109,14 +111,14 @@ export default function Form() {
             required
             {...form.getInputProps('use_captioner')}
           >
-            <Radio value="1" label="1"/>
-            <Radio value="2" label="2"/>
+            <Radio value="1" label="1" />
+            <Radio value="2" label="2" />
           </RadioGroup>
-          {/*<NumberInput*/}
-          {/*  placeholder="Number of covers"*/}
-          {/*  required*/}
-          {/*  {...form.getInputProps('numberCovers')}*/}
-          {/*/>*/}
+          <NumberInput
+            placeholder="Number of covers"
+            required
+            {...form.getInputProps('num_samples')}
+          />
           <InputWrapper label="Emotion">
             <Chips
               {...form.getInputProps('emotion')}
@@ -130,6 +132,10 @@ export default function Form() {
               {/* TODO: Сделать всплывающее окошко с названием при наведении */}
             </Chips>
           </InputWrapper>
+          <Switch
+            label="Use filters"
+            {...form.getInputProps('use_filters')}
+          />
           <Button type='submit' variant='gradient'>Generate</Button>
         </Stack>
       </form>

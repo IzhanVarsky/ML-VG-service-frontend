@@ -1,14 +1,17 @@
-import { } from '@mantine/core';
-import Shape from '../Shape';
 import Carousel from './Carousel';
 import Viewer from './Viewer';
 
 
-export default function Covers() {
+export default function Covers({ covers, selectedCover, setSelectedCover }) {
   return (
     <>
-      <Carousel />
-      <Viewer />
+      <Carousel
+        covers={covers}
+        selectedCover={selectedCover}
+        setSelectedCover={setSelectedCover} />
+      <Viewer
+        covers={covers}
+        selectedCover={selectedCover} />
     </>
   )
 }

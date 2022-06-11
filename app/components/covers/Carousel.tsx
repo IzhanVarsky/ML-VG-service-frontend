@@ -1,32 +1,53 @@
-import { Grid, Image } from '@mantine/core';
+import { Grid, Image, AspectRatio } from '@mantine/core';
 import Shape from '../Shape';
 
 
-export default function Carousel() {
+export default function Carousel({ covers, selectedCover, setSelectedCover }) {
   return (
-    <Shape>
-      <Grid justify="space-around">
-        <Image
-          height='16vh'
-          src="https://www.nashe.ru/storage/27409/conversions/Megadeth-Peace-Sells-But-Whos-Buying-album-cover-web-optimised-820-large.jpg"
-        />
-        <Image
-          height='16vh'
-          src="https://www.nashe.ru/storage/27409/conversions/Megadeth-Peace-Sells-But-Whos-Buying-album-cover-web-optimised-820-large.jpg"
-        />
-        <Image
-          height='16vh'
-          src="https://www.nashe.ru/storage/27409/conversions/Megadeth-Peace-Sells-But-Whos-Buying-album-cover-web-optimised-820-large.jpg"
-        />
-        <Image
-          height='16vh'
-          src="https://www.nashe.ru/storage/27409/conversions/Megadeth-Peace-Sells-But-Whos-Buying-album-cover-web-optimised-820-large.jpg"
-        />
-        <Image
-          height='16vh'
-          src="https://www.nashe.ru/storage/27409/conversions/Megadeth-Peace-Sells-But-Whos-Buying-album-cover-web-optimised-820-large.jpg"
-        />
+    <Shape size={50}>
+      {/* //   <Pagination total={covers.length} size="xl"
+    //     itemComponent={(item, a, b, c) => {
+    //       if (Number.isInteger(item.page)) {
+    //         const index = item.page - 1
+    //         const cover = covers[index];
+    //         const src = cover.src
+    //           ? cover.src
+    //           : 'data:image/png;base64, ' + cover.base64;
+
+    //         return (
+    //           <Image
+    //             onClick={setSelectedCover(index)}
+    //             style={{ border: index == selectedCover ? "5px solid #228be6" : "0"}}
+    //             height='16vh'
+    //             src={src}
+    //           />
+    //         )
+    //       }
+    //       console.log(item, a, b, c);
+    //       return (<Button onClick={item.onClick}>{item.page}</Button>);
+    //     }
+    //     }
+    // /> */}
+      <Grid justify="space-around" columns={covers.length}>
+        {covers.map((cover, index) => {
+          const src = cover.src
+            ? cover.src
+            : 'data:image/png;base64, ' + cover.base64;
+          return (
+            <Grid.Col span={1}>
+              <AspectRatio ratio={1} sx={{ maxWidth: '16vh' }}>
+                <Image
+                  key={index}
+                  // height='16vh'
+                  src={src}
+                  onClick={() => setSelectedCover(index)}
+                  style={{ outline: index == selectedCover ? "5px solid #228be6" : "0" }}
+                />
+              </AspectRatio>
+            </Grid.Col>
+          )
+        })}
       </Grid>
-    </Shape>
+    </Shape >
   )
 }

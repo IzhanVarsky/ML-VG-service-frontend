@@ -4,7 +4,7 @@ import Shape from './Shape';
 
 export default function Header() {
   return (
-    <MantineHeader height="7vh" style={{ borderBottom: 0 }}>
+    <MantineHeader height="5rem" style={{ borderBottom: 0 }}>
       <Shape>
           <Text
             size='xl'
