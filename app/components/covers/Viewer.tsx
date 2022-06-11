@@ -4,7 +4,7 @@ import Shape from '../Shape';
 import {downloadTextFile, downloadBase64File} from "app/download_utils";
 
 export default function Viewer() {
-  const [selectedCover, _, covers, _] = useOutletContext();
+  const [selectedCover, setSelectedCover, covers, setCovers] = useOutletContext();
   const cover = covers[selectedCover];
   const src = cover.src
     ? cover.src

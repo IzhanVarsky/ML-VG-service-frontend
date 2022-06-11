@@ -4,7 +4,7 @@ import {useOutletContext} from "@remix-run/react";
 
 
 export default function Carousel() {
-  const [selectedCover, setSelectedCover, covers, _] = useOutletContext();
+  const [selectedCover, setSelectedCover, covers, setCovers] = useOutletContext();
   return (
     <Shape size={50}>
       {/* //   <Pagination total={covers.length} size="xl"
@@ -46,8 +46,10 @@ export default function Carousel() {
                   key={index}
                   // height='16vh'
                   src={src}
-                  onClick={() => setSelectedCover(index)}
-                  style={{ outline: index == selectedCover ? "5px solid #228be6" : "0" }}
+                  onClick={() => {setSelectedCover(index)}}
+                  style={{
+                    outline: index == selectedCover ? "5px solid #228be6" : "0",
+                    cursor: 'pointer'}}
                 />
               </AspectRatio>
             </Grid.Col>

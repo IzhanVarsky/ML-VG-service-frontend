@@ -18,7 +18,7 @@ import { Dropzone } from '@mantine/dropzone';
 import {useOutletContext} from "@remix-run/react";
 
 export default function Form() {
-  const [_, _, _, setCovers] = useOutletContext();
+  const [selectedCover, setSelectedCover, covers, setCovers] = useOutletContext();
   const sendData = (data) => {
     console.log('Audio file:', data.audio_file)
     if (data.audio_file === undefined) {
