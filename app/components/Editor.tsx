@@ -6,15 +6,51 @@ import {
   Textarea,
   Container,
   Title,
-  Tabs,
+  Tabs, Button,
 } from '@mantine/core';
 import Shape from '~/components/Shape';
 import { Link, useOutletContext } from '@remix-run/react';
-import { AdjustmentsAlt, FileText } from 'tabler-icons-react';
+import { AdjustmentsAlt, FileText, Palette } from 'tabler-icons-react';
+import {downloadBase64File} from "app/download_utils";
 
 export default function Main() {
   const [selectedCover, setSelectedCover, covers, setCovers] = useOutletContext();
   const cover = covers[selectedCover];
+
+  const downloadPNGFromServer = (data) => {
+    const formData = new FormData()
+    formData.append("svg", data);
+    // TODO: сделать прогресс бар, хотя бы просто <progress/>
+    $.ajax({
+      url: "http://localhost:5001/rasterize",
+      type: 'POST',
+      data: formData,
+      // context: this,
+      processData: false,
+      contentType: false,
+      cache: false,
+      success: (response) => {
+        console.log('SUCC', response);
+        downloadBase64File("image/png", response.result.res_png1, "rasterized.png");
+      },
+      error: (e) => {
+        console.log('ERR', e);
+      }
+    });
+    // fetch('http://localhost:5001/generate', {
+    //   method: 'POST',
+    //   headers: {
+    //     "Accept": "*",
+    //   },
+    //   body: formData,
+    // }).then(res => {
+    //   console.log('RES', res);
+    //   const json = res.json();
+    //   console.log('Server answer:', json);
+    // }).catch(err => {
+    //   console.log("Uploading error error", err);
+    // });
+  };
 
   return (
     <Shape>
@@ -45,6 +81,9 @@ export default function Main() {
                 minRows={30}
                 minLength={50}
               >{cover.svg}</Textarea>
+            </Tabs.Tab>
+            <Tabs.Tab label="PNG (rasterize)" icon={<Palette size={14} />}>
+              <Button onClick={() => downloadPNGFromServer(cover.svg)}>Download</Button>
             </Tabs.Tab>
           </Tabs>
         </Grid.Col>
