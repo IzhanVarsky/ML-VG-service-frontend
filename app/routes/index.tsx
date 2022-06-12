@@ -1,4 +1,4 @@
-import { AppShell } from '@mantine/core';
+import { AppShell, Stack } from '@mantine/core';
 import Header from '~/components/Header';
 import Form from '~/components/Form';
 import Covers from '~/components/covers/Covers';
@@ -6,15 +6,14 @@ import Covers from '~/components/covers/Covers';
 export default function Index() {
   return (
     <AppShell
-      header={<Header />}
-      navbar={<Form />}
+      navbar={<Stack><Header /><Form /></Stack>}
       styles={{
         main: {
           padding: 0,
         },
       }}
     >
-      <Covers/>
+      <Covers />
     </AppShell>
   );
 }
