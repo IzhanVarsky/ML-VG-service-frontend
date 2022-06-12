@@ -73,7 +73,7 @@ export default function Form() {
 
   return (
     <>
-      <Shape style={{ height: '100%' }}>
+      <Shape style={{ height: '100%', width: '23rem' }}>
         <form onSubmit={form.onSubmit(sendData)}>
           <Stack justify="space-around">
             <Text>Select music file</Text>
@@ -85,7 +85,12 @@ export default function Form() {
               {() => <Text color='lightgray'>Drag or click</Text>}
             </Dropzone>
             {form.values['audio_file']
-              && <Text color='blue'>{form.values['audio_file'].name} is selected</Text>}
+              && <Text
+                color='blue'
+                style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                {form.values['audio_file'].name}
+              </Text>
+            }
             <Divider my="sm" />
             <TextInput
               label="Artist name"
