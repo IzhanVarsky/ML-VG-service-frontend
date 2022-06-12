@@ -5,14 +5,16 @@ import {
   ColorInput,
   Textarea,
   Tabs, Button,
+  Text,
 } from '@mantine/core';
 import Shape from '~/components/Shape';
 import { Link, useOutletContext } from '@remix-run/react';
 import { AdjustmentsAlt, FileText, Palette, Braces } from 'tabler-icons-react';
-import { downloadBase64File, getJSON } from "~/download_utils";
+import { getJSON, extractColors, downloadPNGFromServer } from "~/download_utils";
 import { getColors } from '~/utils';
 import SVG from './SVG';
 import { useEffect, useState } from 'react';
+import { Dropzone } from '@mantine/dropzone';
 
 export default function Main() {
   const [selectedCover, setSelectedCover, covers, setCovers] = useOutletContext();
@@ -28,27 +30,6 @@ export default function Main() {
   useEffect(() => {
     getJSON(cover, (svg) => setColors(getColors(svg)));
   }, []);
-
-  const downloadPNGFromServer = (data) => {
-    const formData = new FormData()
-    formData.append("svg", data);
-    // TODO: сделать прогресс бар, хотя бы просто <progress/>
-    $.ajax({
-      url: "http://localhost:5001/rasterize",
-      type: 'POST',
-      data: formData,
-      processData: false,
-      contentType: false,
-      cache: false,
-      success: (response) => {
-        console.log('SUCC', response);
-        downloadBase64File("image/png", response.result.res_png1, "rasterized.png");
-      },
-      error: (e) => {
-        console.log('ERR', e);
-      }
-    });
-  };
 
   return (
     <Shape>
@@ -75,6 +56,21 @@ export default function Main() {
                     />
                   )
                   }
+                  <Dropzone
+                    multiple={false}
+                    accept={["image/*"]}
+                    onDrop={(files) => {
+                      let oldCover = cover + '';
+                      extractColors(files[0], colors.length, newColors => {
+                        setColors(newColors);
+                        colors.forEach((oldColor, index) => {
+                          oldCover = oldCover.replace(oldColor, newColors[index]);
+                        });
+                        setCover(oldCover);
+                      });
+                    }}>
+                    {() => <Text color='grey'>Drop image to style transfer</Text>}
+                  </Dropzone>
                 </Stack>
               </InputWrapper>
             </Tabs.Tab>
