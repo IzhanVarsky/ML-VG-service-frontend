@@ -22,13 +22,7 @@ export default function Main() {
 
   const updateColor = (oldColor) => (newColor) => {
     setColors(colors.map(c => c === oldColor ? newColor : c));
-    setCover({ svg: cover.replace(oldColor, newColor) });
-  }
-
-  const updateSVG = (event) => {
-    console.log('event', event);
-
-    setCover({ svg });
+    setCover(cover.replace(oldColor, newColor));
   }
 
   useEffect(() => {
