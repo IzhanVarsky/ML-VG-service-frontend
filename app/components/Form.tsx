@@ -13,12 +13,35 @@ import {
   Divider,
   Loader,
   Container,
+  NativeSelect,
 } from '@mantine/core';
 import Shape from './Shape';
 import { useForm } from '@mantine/form';
 import { Dropzone } from '@mantine/dropzone';
 import { useOutletContext } from "@remix-run/react";
 import { useState } from 'react';
+
+const emotions = [
+  'ANGER',
+  'COMFORTABLE',
+  'FEAR',
+  'FUNNY',
+  'HAPPY',
+  'INSPIRATIONAL',
+  'JOY',
+  'LONELY',
+  'NOSTALGIC',
+  'PASSIONATE',
+  'QUIET',
+  'RELAXED',
+  'ROMANTIC',
+  'SADNESS',
+  'SERIOUS',
+  'SOULFUL',
+  'SURPRISE',
+  'SWEET',
+  'WARY'
+];
 
 export default function Form() {
   const [selectedCover, setSelectedCover, covers, setCovers] = useOutletContext();
@@ -82,16 +105,15 @@ export default function Form() {
               accept={["audio/*"]}
               onDrop={(files) => form.setFieldValue('audio_file', files[0])}
             >
-              {() => <Text color='lightgray'>Drag or click</Text>}
+              {() => (
+                form.values['audio_file']
+                  ? <Text
+                    color='grey'
+                    style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}
+                  >{form.values['audio_file'].name}</Text>
+                  : <Text color='lightgray'>Drag or click</Text>
+              )}
             </Dropzone>
-            {form.values['audio_file']
-              && <Text
-                color='blue'
-                style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                {form.values['audio_file'].name}
-              </Text>
-            }
-            <Divider my="sm" />
             <TextInput
               label="Artist name"
               required
@@ -126,17 +148,11 @@ export default function Form() {
               {...form.getInputProps('num_samples')}
             />
             <InputWrapper label="Emotion">
-              <Chips
+              <NativeSelect
+                data={emotions}
+                required
                 {...form.getInputProps('emotion')}
-              >
-                <Chip value="anger">😠</Chip>
-                <Chip value="fear">😨</Chip>
-                <Chip value="funny">😂</Chip>
-                <Chip value="happy">🤗</Chip>
-                <Chip value="lonely">😔</Chip>
-                {/* TODO: Дополнить список */}
-                {/* TODO: Сделать всплывающее окошко с названием при наведении */}
-              </Chips>
+              />
             </InputWrapper>
             <Switch
               size="md"
