@@ -11,7 +11,7 @@ import Shape from '~/components/Shape';
 import { Link, useOutletContext } from '@remix-run/react';
 import { AdjustmentsAlt, FileText, Palette, Braces } from 'tabler-icons-react';
 import { getJSON, extractColors, downloadPNGFromServer } from "~/download_utils";
-import { getColors } from '~/utils';
+import { getColors, addRectBefore } from '~/utils';
 import SVG from './SVG';
 import { useEffect, useState } from 'react';
 import { Dropzone } from '@mantine/dropzone';
@@ -20,7 +20,6 @@ export default function Main() {
   const [selectedCover, setSelectedCover, covers, setCovers] = useOutletContext();
   const [cover, setCover] = useState(covers[selectedCover].svg);
   const [colors, setColors] = useState([]);
-  const [value, setValue] = useState('');
 
   const updateColor = (oldColor) => (newColor) => {
     setColors(colors.map(c => c === oldColor ? newColor : c));
@@ -71,6 +70,13 @@ export default function Main() {
                     }}>
                     {() => <Text color='grey'>Drop image to style transfer</Text>}
                   </Dropzone>
+                  <Button onClick={() => {
+                    const { svg: newSVG, color: newColor } = addRectBefore(cover);
+                    setCover(newSVG);
+                    setColors([...colors, newColor]);
+                  }}>
+                    Add filter
+                  </Button>
                 </Stack>
               </InputWrapper>
             </Tabs.Tab>
