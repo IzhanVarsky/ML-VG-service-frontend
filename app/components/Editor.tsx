@@ -4,19 +4,29 @@ import {
   InputWrapper,
   ColorInput,
   Textarea,
-  Container,
-  Title,
   Tabs, Button,
 } from '@mantine/core';
 import Shape from '~/components/Shape';
 import { Link, useOutletContext } from '@remix-run/react';
 import { AdjustmentsAlt, FileText, Palette, Braces } from 'tabler-icons-react';
-import { downloadBase64File, downloadTextFile } from "app/download_utils";
+import { downloadBase64File, getJSON } from "~/download_utils";
+import { getColors } from '~/utils';
 import SVG from './SVG';
+import { useEffect, useState } from 'react';
 
 export default function Main() {
   const [selectedCover, setSelectedCover, covers, setCovers] = useOutletContext();
-  const cover = covers[selectedCover];
+  const [cover, setCover] = useState(covers[selectedCover]);
+  const [colors, setColors] = useState([]);
+
+  const updateColor = (oldColor) => (newColor) => {
+    setColors(colors.map(c => c === oldColor ? newColor : c));
+    setCover({ svg: cover.svg.replace(oldColor, newColor) });
+  }
+
+  useEffect(() => {
+    getJSON(cover.svg, (svg) => setColors(getColors(svg)));
+  }, []);
 
   const downloadPNGFromServer = (data) => {
     const formData = new FormData()
@@ -39,34 +49,12 @@ export default function Main() {
     });
   };
 
-  const getJSON = (data) => {
-    const formData = new FormData()
-    formData.append("svg", data);
-    // TODO: сделать прогресс бар, хотя бы просто <progress/>
-    $.ajax({
-      url: "http://localhost:5001/svg_to_json",
-      type: 'POST',
-      data: formData,
-      processData: false,
-      contentType: false,
-      cache: false,
-      success: (response) => {
-        console.log('SUCC', response);
-        downloadTextFile(JSON.stringify(response.result), "obj.json");
-      },
-      error: (e) => {
-        console.log('ERR', e);
-      }
-    });
-  };
-
   return (
     <Shape>
-      <Title>
-        <Link
-          to="/"
-        >Go back</Link>
-      </Title>
+        <Link to="/">
+          <Button m='md'>
+            Go back
+          </Button>
       <Grid justify='space-around' columns={2}>
         <Grid.Col span={1}>
           <SVG svg={cover.svg} />
@@ -76,9 +64,14 @@ export default function Main() {
             <Tabs.Tab label="Edit options" icon={<AdjustmentsAlt size={14} />}>
               <InputWrapper label="Colors">
                 <Stack>
-                  <ColorInput defaultValue="#C5D899" />
-                  <ColorInput defaultValue="#CF3636" />
-                  <ColorInput defaultValue="#E08D07" />
+                  {colors.map((color, index) =>
+                    <ColorInput
+                      key={index}
+                      value={color}
+                      onChange={updateColor(color)}
+                    />
+                  )
+                  }
                 </Stack>
               </InputWrapper>
             </Tabs.Tab>
