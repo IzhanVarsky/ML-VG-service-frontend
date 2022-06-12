@@ -9,12 +9,13 @@ export default function Header() {
         <Space w="xl" />
         <Text
           size='xl'
+          align='center'
           weight={800}
           variant="gradient"
           gradient={{ from: 'indigo', to: 'red', deg: 10 }}
           style={{ fontFamily: 'Greycliff CF, sans-serif' }}
         >
-          CoverGAN
+          - - - CoverGAN - - -
         </Text>
       </Shape>
     </MantineHeader>

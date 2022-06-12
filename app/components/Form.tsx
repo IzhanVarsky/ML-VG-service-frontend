@@ -110,7 +110,14 @@ export default function Form() {
             <Dropzone
               multiple={false}
               accept={["audio/*"]}
-              onDrop={(files) => form.setFieldValue('audio_file', files[0])}
+              onDrop={(files) => {
+                form.setFieldValue('audio_file', files[0]);
+                setShowError(false);
+              }}
+              style={{
+                borderColor: showError ? '#ffa3a3' : '',
+                backgroundColor: showError ? '#fff6f5' : ''
+              }}
             >
               {() => (
                 form.values['audio_file']
