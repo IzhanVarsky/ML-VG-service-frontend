@@ -12,6 +12,7 @@ import Shape from '~/components/Shape';
 import { Link, useOutletContext } from '@remix-run/react';
 import { AdjustmentsAlt, FileText, Palette, Braces } from 'tabler-icons-react';
 import { downloadBase64File, downloadTextFile } from "app/download_utils";
+import SVG from './SVG';
 
 export default function Main() {
   const [selectedCover, setSelectedCover, covers, setCovers] = useOutletContext();
@@ -68,9 +69,7 @@ export default function Main() {
       </Title>
       <Grid justify='space-around'>
         <Grid.Col>
-          <Container>
-            <div dangerouslySetInnerHTML={{ __html: cover.svg }} />
-          </Container>
+          <SVG svg={cover.svg} />
         </Grid.Col>
         <Grid.Col>
           <Tabs>

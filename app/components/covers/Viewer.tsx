@@ -1,7 +1,8 @@
 import { Button, Grid, Image, Stack, Tabs, AspectRatio, Container } from '@mantine/core';
-import {Link, useOutletContext} from '@remix-run/react';
+import { Link, useOutletContext } from '@remix-run/react';
 import Shape from '../Shape';
-import {downloadTextFile, downloadBase64File} from "app/download_utils";
+import { downloadTextFile, downloadBase64File } from "app/download_utils";
+import SVG from '../SVG';
 
 export default function Viewer() {
   const [selectedCover, setSelectedCover, covers, setCovers] = useOutletContext();
@@ -15,9 +16,7 @@ export default function Viewer() {
       <Tabs position="center" grow>
         <Tabs.Tab label="SVG">
           <Stack>
-            <Container>
-              <div dangerouslySetInnerHTML={{ __html: cover.svg }} />
-            </Container>
+            <SVG svg={cover.svg} />
             <Grid justify='space-around'>
               <Button onClick={() => downloadTextFile(cover.svg, "image.svg")}>Download</Button>
               <Link to="/edit">
