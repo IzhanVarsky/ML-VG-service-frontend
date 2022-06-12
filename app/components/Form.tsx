@@ -48,19 +48,6 @@ export default function Form() {
         console.log('ERR', e);
       }
     });
-    // fetch('http://localhost:5001/generate', {
-    //   method: 'POST',
-    //   headers: {
-    //     "Accept": "*",
-    //   },
-    //   body: formData,
-    // }).then(res => {
-    //   console.log('RES', res);
-    //   const json = res.json();
-    //   console.log('Server answer:', json);
-    // }).catch(err => {
-    //   console.log("Uploading error error", err);
-    // });
   };
 
   const form = useForm({
@@ -69,7 +56,6 @@ export default function Form() {
       track_artist: 'XXX',
       track_name: 'YYY',
       emotion: 'anger',
-      rasterize: true,
       gen_type: "1",
       use_captioner: "1",
       num_samples: 5,
@@ -110,10 +96,6 @@ export default function Form() {
             <Radio value="1" label="1" />
             <Radio value="2" label="2" />
           </RadioGroup>
-          <Switch
-            label="Rasterize"
-            {...form.getInputProps('rasterize')}
-          />
           <RadioGroup
             label="Captioner type"
             required
@@ -143,6 +125,7 @@ export default function Form() {
             </Chips>
           </InputWrapper>
           <Switch
+            size="md"
             label="Use filters"
             {...form.getInputProps('use_filters')}
           />
