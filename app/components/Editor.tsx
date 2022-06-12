@@ -10,8 +10,8 @@ import {
 } from '@mantine/core';
 import Shape from '~/components/Shape';
 import { Link, useOutletContext } from '@remix-run/react';
-import { AdjustmentsAlt, FileText, Palette } from 'tabler-icons-react';
-import {downloadBase64File} from "app/download_utils";
+import { AdjustmentsAlt, FileText, Palette, Braces } from 'tabler-icons-react';
+import {downloadBase64File, downloadTextFile} from "app/download_utils";
 
 export default function Main() {
   const [selectedCover, setSelectedCover, covers, setCovers] = useOutletContext();
@@ -25,7 +25,6 @@ export default function Main() {
       url: "http://localhost:5001/rasterize",
       type: 'POST',
       data: formData,
-      // context: this,
       processData: false,
       contentType: false,
       cache: false,
@@ -37,19 +36,27 @@ export default function Main() {
         console.log('ERR', e);
       }
     });
-    // fetch('http://localhost:5001/generate', {
-    //   method: 'POST',
-    //   headers: {
-    //     "Accept": "*",
-    //   },
-    //   body: formData,
-    // }).then(res => {
-    //   console.log('RES', res);
-    //   const json = res.json();
-    //   console.log('Server answer:', json);
-    // }).catch(err => {
-    //   console.log("Uploading error error", err);
-    // });
+  };
+
+  const getJSON = (data) => {
+    const formData = new FormData()
+    formData.append("svg", data);
+    // TODO: сделать прогресс бар, хотя бы просто <progress/>
+    $.ajax({
+      url: "http://localhost:5001/svg_to_json",
+      type: 'POST',
+      data: formData,
+      processData: false,
+      contentType: false,
+      cache: false,
+      success: (response) => {
+        console.log('SUCC', response);
+        downloadTextFile(JSON.stringify(response.result), "obj.json");
+      },
+      error: (e) => {
+        console.log('ERR', e);
+      }
+    });
   };
 
   return (
@@ -84,6 +91,9 @@ export default function Main() {
             </Tabs.Tab>
             <Tabs.Tab label="PNG (rasterize)" icon={<Palette size={14} />}>
               <Button onClick={() => downloadPNGFromServer(cover.svg)}>Download</Button>
+            </Tabs.Tab>
+            <Tabs.Tab label="To JSON" icon={<Braces size={14} />}>
+              <Button onClick={() => getJSON(cover.svg)}>Download JSON</Button>
             </Tabs.Tab>
           </Tabs>
         </Grid.Col>
