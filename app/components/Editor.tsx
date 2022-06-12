@@ -67,11 +67,11 @@ export default function Main() {
           to="/"
         >Go back</Link>
       </Title>
-      <Grid justify='space-around'>
-        <Grid.Col>
+      <Grid justify='space-around' columns={2}>
+        <Grid.Col span={1}>
           <SVG svg={cover.svg} />
         </Grid.Col>
-        <Grid.Col>
+        <Grid.Col span={1}>
           <Tabs>
             <Tabs.Tab label="Edit options" icon={<AdjustmentsAlt size={14} />}>
               <InputWrapper label="Colors">
