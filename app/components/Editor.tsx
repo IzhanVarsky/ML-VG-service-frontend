@@ -13,21 +13,40 @@ import { AdjustmentsAlt, FileText, Palette, Braces } from 'tabler-icons-react';
 import { getJSON, extractColors, downloadPNGFromServer } from "~/download_utils";
 import { getColors, addRectBefore } from '~/utils';
 import SVG from './SVG';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Dropzone } from '@mantine/dropzone';
+import useHistoryState from '~/HistoryState';
 
 export default function Main() {
   const [selectedCover, setSelectedCover, covers, setCovers] = useOutletContext();
-  const [cover, setCover] = useState(covers[selectedCover].svg);
-  const [colors, setColors] = useState([]);
+  const [state, setState, undo, redo, history] = useHistoryState({
+    svg: covers[selectedCover].svg,
+    colors: [],
+  });
+
+  const setColors = (colors) => {
+    setState({
+      svg: state.svg,
+      colors,
+    })
+  }
+
+  const setCover = (svg) => {
+    setState({
+      svg,
+      colors: state.colors,
+    })
+  }
 
   const updateColor = (oldColor) => (newColor) => {
-    setColors(colors.map(c => c === oldColor ? newColor : c));
-    setCover(cover.replace(oldColor, newColor));
+    setState({
+      svg: state.svg.replace(oldColor, newColor),
+      colors: state.colors.map(c => c === oldColor ? newColor : c),
+    });
   }
 
   useEffect(() => {
-    getJSON(cover, (svg) => setColors(getColors(svg)));
+    getJSON(state.svg, (svg) => setColors(getColors(svg)));
   }, []);
 
   return (
@@ -37,16 +56,22 @@ export default function Main() {
           Go back
         </Button>
       </Link>
+      <Button m='md' onClick={() => { undo(); console.log(history) }}>
+        Undo
+      </Button>
+      <Button m='md' onClick={() => { redo(); console.log(history) }}>
+        Redo
+      </Button>
       <Grid justify='space-around' columns={2}>
         <Grid.Col span={1}>
-          <SVG svg={cover} />
+          <SVG svg={state.svg} />
         </Grid.Col>
         <Grid.Col span={1}>
           <Tabs>
             <Tabs.Tab label="Edit options" icon={<AdjustmentsAlt size={14} />}>
               <InputWrapper label="Colors">
                 <Stack>
-                  {colors.map((color, index) =>
+                  {state.colors.map((color, index) =>
                     <ColorInput
                       key={index}
                       value={color}
@@ -59,21 +84,25 @@ export default function Main() {
                     multiple={false}
                     accept={["image/*"]}
                     onDrop={(files) => {
-                      let oldCover = cover + '';
-                      extractColors(files[0], colors.length, newColors => {
-                        setColors(newColors);
-                        colors.forEach((oldColor, index) => {
+                      let oldCover = state.svg + '';
+                      extractColors(files[0], state.colors.length, newColors => {
+                        state.colors.forEach((oldColor, index) => {
                           oldCover = oldCover.replace(oldColor, newColors[index]);
                         });
-                        setCover(oldCover);
+                        setState({
+                          svg: oldCover,
+                          colors: newColors,
+                        });
                       });
                     }}>
                     {() => <Text color='grey'>Drop image to style transfer</Text>}
                   </Dropzone>
                   <Button onClick={() => {
-                    const { svg: newSVG, color: newColor } = addRectBefore(cover);
-                    setCover(newSVG);
-                    setColors([...colors, newColor]);
+                    const { svg: newSVG, color: newColor } = addRectBefore(state.svg);
+                    setState({
+                      svg: newSVG,
+                      colors: [...state.colors, newColor],
+                    })
                   }}>
                     Add filter
                   </Button>
@@ -84,15 +113,15 @@ export default function Main() {
               <Textarea
                 minRows={30}
                 minLength={50}
-                value={cover}
+                value={state.svg}
                 onChange={event => setCover(event.currentTarget.value)}
               />
             </Tabs.Tab>
             <Tabs.Tab label="PNG (rasterize)" icon={<Palette size={14} />}>
-              <Button onClick={() => downloadPNGFromServer(cover)}>Download</Button>
+              <Button onClick={() => downloadPNGFromServer(state.svg)}>Download</Button>
             </Tabs.Tab>
             <Tabs.Tab label="To JSON" icon={<Braces size={14} />}>
-              <Button onClick={() => getJSON(cover)}>Download JSON</Button>
+              <Button onClick={() => getJSON(state.svg)}>Download JSON</Button>
             </Tabs.Tab>
           </Tabs>
         </Grid.Col>
