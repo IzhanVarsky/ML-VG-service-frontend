@@ -16,16 +16,23 @@ import { useEffect, useState } from 'react';
 
 export default function Main() {
   const [selectedCover, setSelectedCover, covers, setCovers] = useOutletContext();
-  const [cover, setCover] = useState(covers[selectedCover]);
+  const [cover, setCover] = useState(covers[selectedCover].svg);
   const [colors, setColors] = useState([]);
+  const [value, setValue] = useState('');
 
   const updateColor = (oldColor) => (newColor) => {
     setColors(colors.map(c => c === oldColor ? newColor : c));
-    setCover({ svg: cover.svg.replace(oldColor, newColor) });
+    setCover({ svg: cover.replace(oldColor, newColor) });
+  }
+
+  const updateSVG = (event) => {
+    console.log('event', event);
+
+    setCover({ svg });
   }
 
   useEffect(() => {
-    getJSON(cover.svg, (svg) => setColors(getColors(svg)));
+    getJSON(cover, (svg) => setColors(getColors(svg)));
   }, []);
 
   const downloadPNGFromServer = (data) => {
@@ -51,13 +58,14 @@ export default function Main() {
 
   return (
     <Shape>
-        <Link to="/">
-          <Button m='md'>
-            Go back
-          </Button>
+      <Link to="/">
+        <Button m='md'>
+          Go back
+        </Button>
+      </Link>
       <Grid justify='space-around' columns={2}>
         <Grid.Col span={1}>
-          <SVG svg={cover.svg} />
+          <SVG svg={cover} />
         </Grid.Col>
         <Grid.Col span={1}>
           <Tabs>
@@ -79,14 +87,15 @@ export default function Main() {
               <Textarea
                 minRows={30}
                 minLength={50}
-                defaultValue={cover.svg}
+                value={cover}
+                onChange={event => setCover(event.currentTarget.value)}
               />
             </Tabs.Tab>
             <Tabs.Tab label="PNG (rasterize)" icon={<Palette size={14} />}>
-              <Button onClick={() => downloadPNGFromServer(cover.svg)}>Download</Button>
+              <Button onClick={() => downloadPNGFromServer(cover)}>Download</Button>
             </Tabs.Tab>
             <Tabs.Tab label="To JSON" icon={<Braces size={14} />}>
-              <Button onClick={() => getJSON(cover.svg)}>Download JSON</Button>
+              <Button onClick={() => getJSON(cover)}>Download JSON</Button>
             </Tabs.Tab>
           </Tabs>
         </Grid.Col>
