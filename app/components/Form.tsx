@@ -6,20 +6,19 @@ import {
   RadioGroup,
   Radio,
   Switch,
-  Chips,
-  Chip,
   NumberInput,
   Text,
-  Divider,
   Loader,
   Container,
   NativeSelect,
+  Alert,
 } from '@mantine/core';
 import Shape from './Shape';
 import { useForm } from '@mantine/form';
 import { Dropzone } from '@mantine/dropzone';
 import { useOutletContext } from "@remix-run/react";
 import { useState } from 'react';
+import { X } from 'tabler-icons-react';
 
 const emotions = [
   'ANGER',
@@ -46,6 +45,7 @@ const emotions = [
 export default function Form() {
   const [selectedCover, setSelectedCover, covers, setCovers] = useOutletContext();
   const [isLoading, setIsLoading] = useState(false);
+  const [showError, setShowError] = useState(false);
 
   const sendData = (data) => {
     setIsLoading(true);
@@ -97,7 +97,14 @@ export default function Form() {
   return (
     <>
       <Shape style={{ height: '100%', width: '23rem' }}>
-        <form onSubmit={form.onSubmit(sendData)}>
+        <form onSubmit={form.onSubmit((data) => {
+          if (form.values['audio_file']) {
+            setShowError(false);
+            sendData(data);
+          } else {
+            setShowError(true);
+          }
+        })}>
           <Stack justify="space-around">
             <Text>Select music file</Text>
             <Dropzone
@@ -111,7 +118,7 @@ export default function Form() {
                     color='grey'
                     style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}
                   >{form.values['audio_file'].name}</Text>
-                  : <Text color='lightgray'>Drag or click</Text>
+                  : <Text color={showError ? 'red' : 'grey'}>Drag or click</Text>
               )}
             </Dropzone>
             <TextInput
