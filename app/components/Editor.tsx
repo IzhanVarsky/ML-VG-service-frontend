@@ -11,7 +11,7 @@ import {
 import Shape from '~/components/Shape';
 import { Link, useOutletContext } from '@remix-run/react';
 import { AdjustmentsAlt, FileText, Palette, Braces } from 'tabler-icons-react';
-import {downloadBase64File, downloadTextFile} from "app/download_utils";
+import { downloadBase64File, downloadTextFile } from "app/download_utils";
 
 export default function Main() {
   const [selectedCover, setSelectedCover, covers, setCovers] = useOutletContext();
@@ -87,7 +87,8 @@ export default function Main() {
               <Textarea
                 minRows={30}
                 minLength={50}
-              >{cover.svg}</Textarea>
+                defaultValue={cover.svg}
+              />
             </Tabs.Tab>
             <Tabs.Tab label="PNG (rasterize)" icon={<Palette size={14} />}>
               <Button onClick={() => downloadPNGFromServer(cover.svg)}>Download</Button>
