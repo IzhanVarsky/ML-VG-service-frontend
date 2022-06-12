@@ -70,6 +70,7 @@ export default function Main() {
                     <ColorInput
                       key={index}
                       value={color}
+                      format='rgb' // TODO: change to rgba
                       onChange={updateColor(color)}
                     />
                   )
