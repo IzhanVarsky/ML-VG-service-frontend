@@ -1,4 +1,4 @@
-import { Grid, Image, AspectRatio, Container } from '@mantine/core';
+import { Grid, Image, AspectRatio, Container, Center } from '@mantine/core';
 import Shape from '../Shape';
 import { useOutletContext } from "@remix-run/react";
 
@@ -11,6 +11,7 @@ export default function Carousel() {
         {covers.map((cover, index) => {
           return (
             <Grid.Col span={1} key={index}>
+              <Center >
                 <Image
                   key={index}
                   src={'data:image/png;base64, ' + cover.base64}
@@ -21,6 +22,7 @@ export default function Carousel() {
                     maxWidth: '16vh'
                   }}
                 />
+              </Center>
             </Grid.Col>
           )
         })}
