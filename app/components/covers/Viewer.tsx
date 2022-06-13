@@ -16,16 +16,13 @@ export default function Viewer() {
       <Tabs position="center" grow>
         <Tabs.Tab label="SVG">
           <Stack>
-            {/*{cover.svg}*/}
             <SVG svg={cover.svg} />
             <Grid justify='space-around'>
               <Button
                 onClick={() => downloadTextFile(cover.svg, "image.svg")}
-                style={{ width: "45%" }}>
-                Download
-              </Button>
-              <Link to="/edit" style={{ width: '45%' }}>
-                <Button style={{ width: "100%" }}>Edit</Button>
+              >Download</Button>
+              <Link to="/edit">
+                <Button>Edit</Button>
               </Link>
             </Grid>
           </Stack>
@@ -38,7 +35,13 @@ export default function Viewer() {
                 src={src}
               />
             </AspectRatio>
-            <Button onClick={() => downloadBase64File("image/png", cover.base64, "image.png")}>Download</Button>
+            <Grid justify='center'>
+              <Button
+                onClick={() => downloadBase64File("image/png", cover.base64, "image.png")}
+              >
+                Download
+              </Button>
+            </Grid>
           </Stack>
         </Tabs.Tab>
       </Tabs>
