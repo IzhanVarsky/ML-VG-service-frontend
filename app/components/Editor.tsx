@@ -26,10 +26,10 @@ export default function Main() {
     colors: [],
   });
 
-  const updateState = (value) => {
+  const updateState = (s) => {
     setState({
-      svg: prettifyXml(value.svg),
-      colors: value.colors
+      svg: prettifyXml(s.svg),
+      colors: s.colors
     })
   }
 
@@ -55,7 +55,7 @@ export default function Main() {
   }
 
   useEffect(() => {
-    getJSON(state.svg, (svg) => setColors(getColors(svg)));
+    setColors(getColors(state.svg));
   }, []);
 
   return (

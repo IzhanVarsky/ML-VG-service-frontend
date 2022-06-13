@@ -1,13 +1,10 @@
 import { Container } from '@mantine/core';
+import {svgWithSize} from "~/utils";
 
-export default function SVG({ svg }) {
+export default function SVG({ svg, size="50vh" }) {
   return (
     <Container>
-      <img
-        style={{ height: '50vh' }}
-        src={`data:image/svg+xml;utf8,${encodeURIComponent(svg)}`}
-        alt='SVG'
-      />
+      <div dangerouslySetInnerHTML={{ __html: svgWithSize(svg, size) }} />
     </Container>
   )
 }

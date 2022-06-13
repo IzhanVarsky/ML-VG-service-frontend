@@ -1,33 +1,18 @@
-const isIterable = (x) => {
-    if (typeof x === 'object') {
-        return true;
-    }
-
-    return false;
+const getColors = (svg) => {
+    let colors = [];
+    const parsed = $(svg);
+    let fill_find = parsed.find("[fill^='rgb']");
+    let stroke_find = parsed.find("[stroke^='rgb']");
+    fill_find.each((i, el) => colors.push(el.getAttribute("fill")))
+    stroke_find.each((i, el) => colors.push(el.getAttribute("stroke")))
+    return colors;
 }
 
-const getColors = (json) => {
-    const result = [];
-
-    for (let key in json) {
-        if (key === "fill" || key === 'stroke') {
-            result.push(json[key]);
-        } else if (isIterable(json[key])) {
-            result.push(...getColors(json[key]));
-        }
-    }
-
-    return result.filter(color => color.startsWith('rgb'));
-}
-
-const getSVGDims = (svg) => {
+const svgWithSize = (svg, size) => {
     const parsed = $(svg)[0];
-    const height = parsed.getAttribute("height");
-    const width = parsed.getAttribute("width");
-
-    console.log("W", width, "H", height);
-
-    return {height, width}
+    parsed.setAttribute("width", size);
+    parsed.setAttribute("height", size);
+    return parsed.outerHTML;
 }
 
 const addRectBefore = (svg, color = 'rgb(230, 230, 230)') => {
@@ -72,4 +57,5 @@ module.exports = {
     getColors: getColors,
     addRectBefore: addRectBefore,
     prettifyXml: prettifyXml,
+    svgWithSize: svgWithSize,
 };
