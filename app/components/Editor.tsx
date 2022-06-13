@@ -171,7 +171,9 @@ export default function Main() {
               </Tabs.Tab>
               <Tabs.Tab label="Edit Raw SVG" icon={<FileText size={14}/>}>
                 <Textarea
+                  placeholder='Write SVG . . .'
                   style={{minHeight: '70vh'}}
+                  minRows={10}
                   maxRows={21}
                   autosize
                   value={state.svg}

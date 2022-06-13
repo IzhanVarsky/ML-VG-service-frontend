@@ -1,10 +1,15 @@
-import { Container } from '@mantine/core';
+import {Container, Text} from '@mantine/core';
 import {svgWithSize} from "~/utils";
 
-export default function SVG({ svg, size="50vh" }) {
+export default function SVG({svg, size = "50vh"}) {
+  let html = svgWithSize(svg, size);
   return (
     <Container>
-      <div dangerouslySetInnerHTML={{ __html: svgWithSize(svg, size) }} />
+      {html === "" ?
+        <Text size={'xl'}>SVG is empty</Text>
+        :
+        <div dangerouslySetInnerHTML={{__html: html}}/>
+      }
     </Container>
   )
 }
