@@ -57,6 +57,17 @@ export default function Main() {
     });
   }
 
+  // const shuffleColors = () => {
+  //   function shuffle(array) {
+  //     const copy = [...array];
+  //     copy.sort(() => Math.random() - 0.5);
+
+  //     return copy;
+  //   }
+
+  //   updateColor(state.colors)(shuffle(state.colors));
+  // }
+
   return (
     <>
       <Link to="/">
@@ -91,10 +102,9 @@ export default function Main() {
                 <Stack style={{ height: '70vh' }}>
                   <ScrollArea>
                     {state.colors.map((color, index) =>
-                      <Center>
+                      <Center key={index}>
                         <ColorInput
                           style={{ margin: '10px', width: '50%' }}
-                          key={index}
                           value={color}
                           format='rgba'
                           onChange={updateColor(color)}
@@ -102,6 +112,12 @@ export default function Main() {
                       </Center>
                     )}
                   </ScrollArea>
+                  {/* <Button
+                    style={{ minHeight: '5vh' }}
+                    onClick={shuffleColors}
+                  >
+                    Shuffle colors
+                  </Button> */}
                   <Dropzone
                     multiple={false}
                     accept={["image/*"]}
