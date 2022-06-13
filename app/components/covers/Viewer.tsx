@@ -19,9 +19,13 @@ export default function Viewer() {
             {/*{cover.svg}*/}
             <SVG svg={cover.svg} />
             <Grid justify='space-around'>
-              <Button onClick={() => downloadTextFile(cover.svg, "image.svg")}>Download</Button>
-              <Link to="/edit">
-                <Button>Edit</Button>
+              <Button
+                onClick={() => downloadTextFile(cover.svg, "image.svg")}
+                style={{ width: "45%" }}>
+                Download
+              </Button>
+              <Link to="/edit" style={{ width: '45%' }}>
+                <Button style={{ width: "100%" }}>Edit</Button>
               </Link>
             </Grid>
           </Stack>
