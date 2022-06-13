@@ -193,10 +193,11 @@ export default function Main() {
                     style={{minHeight: '5vh'}}
                     onClick={() => {
                       const {svg: newSVG, color: newColor} = addRectBefore(state.svg);
-                      updateState({
-                        svg: newSVG,
-                        colors: [...state.colors, newColor],
-                      })
+                      updCover(newSVG);
+                      // updateState({
+                      //   svg: newSVG,
+                      //   colors: [...state.colors, newColor],
+                      // })
                     }}>
                     Add filter
                   </Button>
