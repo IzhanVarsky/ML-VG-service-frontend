@@ -8,18 +8,26 @@ const getColors = (svg) => {
     return colors;
 }
 
-const svgWithSize = (svg, size) => {
-    const parsed = $(svg)[0];
-    if (parsed) {
-        try {
-            parsed.setAttribute("width", size);
-            parsed.setAttribute("height", size);
-            return parsed.outerHTML;
-        } catch (e) {
-            return svg;
-        }
+const getSVGSize = (svg) => {
+    try {
+        const parsed = $(svg)[0];
+        const w = parseInt(parsed.getAttribute("width"));
+        const h = parseInt(parsed.getAttribute("height"));
+        return {w, h};
+    } catch (e) {
+        return {w: 0, h: 0}
     }
-    return svg;
+}
+
+const svgWithSize = (svg, size) => {
+    try {
+        const parsed = $(svg)[0];
+        parsed.setAttribute("width", size);
+        parsed.setAttribute("height", size);
+        return parsed.outerHTML;
+    } catch (e) {
+        return svg;
+    }
 }
 
 const addRectBefore = (svg, color = 'rgb(230, 230, 230)') => {
@@ -65,4 +73,5 @@ module.exports = {
     addRectBefore: addRectBefore,
     prettifyXml: prettifyXml,
     svgWithSize: svgWithSize,
+    getSVGSize: getSVGSize,
 };

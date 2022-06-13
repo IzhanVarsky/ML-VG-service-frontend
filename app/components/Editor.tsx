@@ -1,6 +1,18 @@
-import { Button, Center, ColorInput, Grid, Group, ScrollArea, Stack, Tabs, Text, Textarea, } from '@mantine/core';
+import {
+  Button,
+  Center,
+  ColorInput,
+  Grid,
+  Group,
+  ScrollArea,
+  Stack,
+  Tabs,
+  Text,
+  Textarea,
+  NumberInput,
+} from '@mantine/core';
 import Shape from '~/components/Shape';
-import { Link, useOutletContext } from '@remix-run/react';
+import {Link, useOutletContext} from '@remix-run/react';
 import {
   AdjustmentsAlt,
   ArrowBackUp,
@@ -12,11 +24,11 @@ import {
   Palette,
   LayoutBoardSplit,
 } from 'tabler-icons-react';
-import { downloadPNGFromServer, downloadTextFile, extractColors, getJSON } from "~/download_utils";
-import { addRectBefore, getColors, prettifyXml } from '~/utils';
+import {downloadPNGFromServer, downloadTextFile, extractColors, getJSON} from "~/download_utils";
+import {addRectBefore, getColors, prettifyXml, getSVGSize, svgWithSize} from '~/utils';
 import SVG from './SVG';
-import { useState } from 'react';
-import { Dropzone } from '@mantine/dropzone';
+import {useState} from 'react';
+import {Dropzone} from '@mantine/dropzone';
 import useHistoryState from '~/HistoryState';
 
 export default function Main() {
@@ -25,7 +37,8 @@ export default function Main() {
   const [state, setState, undo, redo] = useHistoryState(covers.length ? {
     svg: prettifyXml(covers[selectedCover].svg),
     colors: getColors(covers[selectedCover].svg),
-  } : { svg: '', colors: [] });
+  } : {svg: '', colors: []});
+  const [imageSizeToDownload, setImageSizeToDownload] = useState(getSVGSize(state.svg).w);
 
   const updateState = (s) => {
     setState({
@@ -71,7 +84,7 @@ export default function Main() {
   return (
     <>
       <Link to="/">
-        <Button m='md' leftIcon={<ArrowBigLeft />} style={{ margin: 5, marginLeft: 16 }}>
+        <Button m='md' leftIcon={<ArrowBigLeft/>} style={{margin: 5, marginLeft: 16}}>
           Go back
         </Button>
       </Link>
@@ -79,18 +92,18 @@ export default function Main() {
         <Grid justify='space-around' align="center" columns={2}>
           <Grid.Col span={1}>
             <Center>
-              <SVG svg={state.svg} />
+              <SVG svg={state.svg}/>
             </Center>
             <Center>
               <Button m='md'
-                onClick={undo}
-                leftIcon={<ArrowBackUp />}
+                      onClick={undo}
+                      leftIcon={<ArrowBackUp/>}
               >
                 Undo
               </Button>
               <Button m='md'
-                onClick={redo}
-                leftIcon={<ArrowForwardUp />}
+                      onClick={redo}
+                      leftIcon={<ArrowForwardUp/>}
               >
                 Redo
               </Button>
@@ -98,13 +111,13 @@ export default function Main() {
           </Grid.Col>
           <Grid.Col span={1}>
             <Tabs>
-              <Tabs.Tab label="Edit Options" icon={<AdjustmentsAlt size={14} />}>
-                <Stack style={{ height: '70vh' }}>
+              <Tabs.Tab label="Edit Options" icon={<AdjustmentsAlt size={14}/>}>
+                <Stack style={{height: '70vh'}}>
                   <ScrollArea>
                     {state.colors.map((color, index) =>
                       <Center key={index}>
                         <ColorInput
-                          style={{ margin: '10px', width: '50%' }}
+                          style={{margin: '10px', width: '50%'}}
                           value={color}
                           format='rgba'
                           onChange={updateColor(color)}
@@ -137,16 +150,16 @@ export default function Main() {
                       }, () => setIsLoading(false));
                     }}>
                     {() =>
-                      <Group style={{ pointerEvents: 'none' }}>
-                        <Palette color='grey' />
+                      <Group style={{pointerEvents: 'none'}}>
+                        <Palette color='grey'/>
                         <Text color='grey'>Drop image to style transfer</Text>
                       </Group>
                     }
                   </Dropzone>
                   <Button
-                    style={{ minHeight: '5vh' }}
+                    style={{minHeight: '5vh'}}
                     onClick={() => {
-                      const { svg: newSVG, color: newColor } = addRectBefore(state.svg);
+                      const {svg: newSVG, color: newColor} = addRectBefore(state.svg);
                       updateState({
                         svg: newSVG,
                         colors: [...state.colors, newColor],
@@ -156,33 +169,44 @@ export default function Main() {
                   </Button>
                 </Stack>
               </Tabs.Tab>
-              <Tabs.Tab label="Edit Raw SVG" icon={<FileText size={14} />}>
+              <Tabs.Tab label="Edit Raw SVG" icon={<FileText size={14}/>}>
                 <Textarea
-                  minRows={30}
-                  minLength={50}
+                  style={{minHeight: '70vh'}}
+                  maxRows={21}
+                  autosize
                   value={state.svg}
                   onChange={event => updCover(event.currentTarget.value)}
                 />
               </Tabs.Tab>
-              <Tabs.Tab label="Download" icon={<Download size={14} />}>
-                <Stack style={{ width: '50%', margin: '25%' }}>
+              <Tabs.Tab label="Download" icon={<Download size={14}/>}>
+                <Stack style={{
+                  padding: '0 25%',
+                  justifyContent: 'center', minHeight: '70vh'
+                }}>
+                  <NumberInput
+                    defaultValue={imageSizeToDownload}
+                    onChange={(val) => setImageSizeToDownload(val)}
+                    placeholder="Image size"
+                    label="Image size"
+                    required
+                  />
                   <Button
-                    leftIcon={<Palette size={14} />}
-                    onClick={() => downloadPNGFromServer(state.svg)}
+                    leftIcon={<LayoutBoardSplit size={14}/>}
+                    onClick={() => downloadTextFile(svgWithSize(state.svg, imageSizeToDownload), "edited.svg")}
+                  >
+                    Download SVG
+                  </Button>
+                  <Button
+                    leftIcon={<Palette size={14}/>}
+                    onClick={() => downloadPNGFromServer(svgWithSize(state.svg, imageSizeToDownload))}
                   >
                     Download PNG
                   </Button>
                   <Button
-                    leftIcon={<Braces size={14} />}
-                    onClick={() => getJSON(state.svg)}
+                    leftIcon={<Braces size={14}/>}
+                    onClick={() => getJSON(svgWithSize(state.svg, imageSizeToDownload))}
                   >
                     Download JSON
-                  </Button>
-                  <Button
-                    leftIcon={<LayoutBoardSplit size={14} />}
-                    onClick={() => downloadTextFile(state.svg, "edited.svg")}
-                  >
-                    Download SVG
                   </Button>
                 </Stack>
               </Tabs.Tab>
