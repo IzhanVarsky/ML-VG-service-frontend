@@ -22,10 +22,10 @@ import useHistoryState from '~/HistoryState';
 export default function Main() {
   const [selectedCover, setSelectedCover, covers, setCovers] = useOutletContext();
   const [isLoading, setIsLoading] = useState(false);
-  const [state, setState, undo, redo] = useHistoryState({
+  const [state, setState, undo, redo] = useHistoryState(covers.length ? {
     svg: prettifyXml(covers[selectedCover].svg),
     colors: getColors(covers[selectedCover].svg),
-  });
+  } : { svg: '', colors: [] });
 
   const updateState = (s) => {
     setState({
