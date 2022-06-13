@@ -75,10 +75,7 @@ const addRectBefore = (svg, color = 'rgb(230, 230, 230)') => {
     } else {
         parsed.append(rect);
     }
-    return {
-        svg: parsed[0].outerHTML,
-        color,
-    };
+    return parsed[0].outerHTML;
 }
 
 const prettifyXml = function (sourceXml) {

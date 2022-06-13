@@ -15,7 +15,6 @@ function downloadTextFile(text, filename) {
 function downloadPNGFromServer(data) {
     const formData = new FormData()
     formData.append("svg", data);
-    // TODO: сделать прогресс бар, хотя бы просто <progress/>
     $.ajax({
         url: "http://localhost:5001/rasterize",
         type: 'POST',
@@ -36,7 +35,6 @@ function downloadPNGFromServer(data) {
 function getJSON(data, callback) {
     const formData = new FormData()
     formData.append("svg", data);
-    // TODO: сделать прогресс бар, хотя бы просто <progress/>
     $.ajax({
         url: "http://localhost:5001/svg_to_json",
         type: 'POST',
@@ -65,7 +63,6 @@ function extractColors(image, n, callback, callback_err) {
     formData.append("color_count", n);
     formData.append("algo_type", 1);
     formData.append("use_random", false);
-    // TODO: сделать прогресс бар, хотя бы просто <progress/>
     $.ajax({
         url: "http://localhost:5001/extract_colors",
         type: 'POST',
@@ -75,11 +72,7 @@ function extractColors(image, n, callback, callback_err) {
         cache: false,
         success: (response) => {
             console.log('COLORS:', response);
-
-            const colors = response.result.map(([r, g, b]) => {
-                return `rgb(${r}, ${g}, ${b})`;
-            })
-
+            const colors = response.result.map(([r, g, b]) => `rgb(${r}, ${g}, ${b})`)
             callback(colors);
         },
         error: (e) => {

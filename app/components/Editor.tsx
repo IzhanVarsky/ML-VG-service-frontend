@@ -1,16 +1,16 @@
 import {
+  ActionIcon,
   Button,
   Center,
   ColorInput,
   Grid,
   Group,
+  NumberInput,
   ScrollArea,
   Stack,
   Tabs,
   Text,
-  Textarea,
-  NumberInput,
-  ActionIcon
+  Textarea
 } from '@mantine/core';
 import Shape from '~/components/Shape';
 import {Link, useOutletContext} from '@remix-run/react';
@@ -22,16 +22,24 @@ import {
   Braces,
   Download,
   FileText,
-  Palette,
   LayoutBoardSplit,
+  Palette,
+  Refresh,
 } from 'tabler-icons-react';
 import {downloadPNGFromServer, downloadTextFile, extractColors, getJSON} from "~/download_utils";
-import {addRectBefore, getColors, prettifyXml, getSVGSize, svgWithSize, changeColorByIndex, changeAllColors} from '~/utils';
+import {
+  addRectBefore,
+  changeAllColors,
+  changeColorByIndex,
+  getColors,
+  getSVGSize,
+  prettifyXml,
+  svgWithSize
+} from '~/utils';
 import SVG from './SVG';
 import {useState} from 'react';
 import {Dropzone} from '@mantine/dropzone';
 import useHistoryState from '~/HistoryState';
-import { Refresh } from 'tabler-icons-react';
 
 const randomColor = () => {
   let rgba = [];
@@ -51,41 +59,46 @@ export default function Main() {
   } : {svg: '', colors: []});
   const [imageSizeToDownload, setImageSizeToDownload] = useState(getSVGSize(state.svg).w);
 
-  const updateState = (s) => {
+  const updateStatePrettified = (newState) => {
     setState({
-      svg: s.svg,
-      colors: s.colors
+      svg: prettifyXml(newState.svg),
+      colors: newState.colors
     })
   }
 
-  const updCover = (svg) => {
-    let prettified = prettifyXml(svg);
+  const updateSVGWithColors = (svg) => {
+    updateStatePrettified({
+      svg,
+      colors: getColors(svg)
+    })
+  }
+
+  const updCoverNotPrettified = (svg) => {
+    // For textarea only
     let colors;
-    if (prettified.includes('parsererror')) {
-      prettified = svg;
+    if (prettifyXml(svg).includes('parsererror')) {
       colors = state.colors;
     } else {
       colors = getColors(svg);
     }
-
-    updateState({
+    setState({
       svg,
       colors,
     })
   }
 
-  const updateColor = (oldColor) => (newColor) => {
-    console.log("oldColor", oldColor, "newcolor", newColor)
-    updateState({
-      svg: state.svg.replace(oldColor, newColor),
-      colors: state.colors.map(c => c === oldColor ? newColor : c),
-    });
+  const updWithNewColors = (newColors) => {
+    let newSVG = changeAllColors(state.svg, newColors);
+    updateStatePrettified({
+      svg: newSVG,
+      colors: newColors
+    })
   }
 
   const updateColorByIndex = (ind) => (newColor) => {
     console.log("ind", ind, "newcolor", newColor)
     let newsvg = changeColorByIndex(state.svg, ind, newColor);
-    updateState({
+    updateStatePrettified({
       svg: newsvg,
       colors: state.colors.map((c, i) => i === ind ? newColor : c),
     });
@@ -101,11 +114,7 @@ export default function Main() {
 
     let newColors = state.colors;
     shuffle(newColors);
-    let svg = changeAllColors(state.svg, newColors);
-    updateState({
-      svg,
-      colors: newColors
-    })
+    updWithNewColors(newColors);
   }
 
   return (
@@ -147,10 +156,9 @@ export default function Main() {
                           style={{margin: '10px', width: '50%'}}
                           value={color}
                           format='rgba'
-                          // onChange={updateColor(color)}
                           onChange={updateColorByIndex(index)}
                           rightSection={
-                            <ActionIcon onClick={() => updateColor(color)(randomColor())}>
+                            <ActionIcon onClick={() => updateColorByIndex(index)(randomColor())}>
                               <Refresh size={16} />
                             </ActionIcon>
                           }
@@ -170,15 +178,8 @@ export default function Main() {
                     loading={isLoading}
                     onDrop={(files) => {
                       setIsLoading(true)
-                      let oldCover = state.svg + '';
                       extractColors(files[0], state.colors.length, newColors => {
-                        state.colors.forEach((oldColor, index) => {
-                          oldCover = oldCover.replace(oldColor, newColors[index]);
-                        });
-                        updateState({
-                          svg: oldCover,
-                          colors: newColors,
-                        });
+                        updWithNewColors(newColors);
                         setIsLoading(false)
                       }, () => setIsLoading(false));
                     }}>
@@ -191,14 +192,7 @@ export default function Main() {
                   </Dropzone>
                   <Button
                     style={{minHeight: '5vh'}}
-                    onClick={() => {
-                      const {svg: newSVG, color: newColor} = addRectBefore(state.svg);
-                      updCover(newSVG);
-                      // updateState({
-                      //   svg: newSVG,
-                      //   colors: [...state.colors, newColor],
-                      // })
-                    }}>
+                    onClick={() => updateSVGWithColors(addRectBefore(state.svg))}>
                     Add filter
                   </Button>
                 </Stack>
@@ -211,7 +205,7 @@ export default function Main() {
                   maxRows={21}
                   autosize
                   value={state.svg}
-                  onChange={event => updCover(event.currentTarget.value)}
+                  onChange={event => updCoverNotPrettified(event.currentTarget.value)}
                 />
               </Tabs.Tab>
               <Tabs.Tab label="Download" icon={<Download size={14}/>}>
