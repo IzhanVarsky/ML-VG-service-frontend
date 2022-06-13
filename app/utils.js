@@ -1,11 +1,40 @@
-const getColors = (svg) => {
-    let colors = [];
-    const parsed = $(svg);
+function colorArrays(svg) {
+    let parsed = $(svg);
     let fill_find = parsed.find("[fill^='rgb']");
     let stroke_find = parsed.find("[stroke^='rgb']");
+    return {fill_find, stroke_find};
+}
+
+const getColors = (svg) => {
+    let colors = [];
+    let {fill_find, stroke_find} = colorArrays(svg);
     fill_find.each((i, el) => colors.push(el.getAttribute("fill")))
     stroke_find.each((i, el) => colors.push(el.getAttribute("stroke")))
+    // return {colors, selectors:[fill_find, stroke_find]};
     return colors;
+}
+
+const changeColorByIndex = (svg, ind, newColor) => {
+    let parsed = $(svg);
+    let fill_find = parsed.find("[fill^='rgb']");
+    let stroke_find = parsed.find("[stroke^='rgb']");
+    if (ind < fill_find.length) {
+        fill_find[ind].setAttribute("fill", newColor)
+    } else if (ind < fill_find.length + stroke_find.length) {
+        stroke_find[ind - fill_find.length].setAttribute("stroke", newColor)
+    }
+    return parsed[0].outerHTML;
+}
+
+const changeAllColors = (svg, newColors) => {
+    let parsed = $(svg);
+    console.log('Before', parsed[0].outerHTML);
+    let fill_find = parsed.find("[fill^='rgb']");
+    let stroke_find = parsed.find("[stroke^='rgb']");
+    fill_find.each((i, el) => el.setAttribute("fill", newColors[i]));
+    stroke_find.each((i, el) => el.setAttribute("stroke", newColors[i + fill_find.length]));
+    console.log('After', parsed[0].outerHTML);
+    return parsed[0].outerHTML;
 }
 
 const getSVGSize = (svg) => {
@@ -80,4 +109,6 @@ module.exports = {
     prettifyXml: prettifyXml,
     svgWithSize: svgWithSize,
     getSVGSize: getSVGSize,
+    changeColorByIndex: changeColorByIndex,
+    changeAllColors: changeAllColors,
 };

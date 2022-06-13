@@ -26,7 +26,7 @@ import {
   LayoutBoardSplit,
 } from 'tabler-icons-react';
 import {downloadPNGFromServer, downloadTextFile, extractColors, getJSON} from "~/download_utils";
-import {addRectBefore, getColors, prettifyXml, getSVGSize, svgWithSize} from '~/utils';
+import {addRectBefore, getColors, prettifyXml, getSVGSize, svgWithSize, changeColorByIndex, changeAllColors} from '~/utils';
 import SVG from './SVG';
 import {useState} from 'react';
 import {Dropzone} from '@mantine/dropzone';
@@ -34,12 +34,12 @@ import useHistoryState from '~/HistoryState';
 import { Refresh } from 'tabler-icons-react';
 
 const randomColor = () => {
-  let colors = [];
+  let rgba = [];
   for (let i = 0; i < 3; i++) {
-    colors.push(Math.floor(Math.random() * 255));
+    rgba.push(Math.floor(Math.random() * 255));
   }
-  colors.push(Math.random().toFixed(2));
-  return `rgba(${colors[0]}, ${colors[1]}, ${colors[2]}, ${colors[3]})`
+  rgba.push(Math.random().toFixed(2));
+  return `rgba(${rgba[0]}, ${rgba[1]}, ${rgba[2]}, ${rgba[3]})`
 };
 
 export default function Main() {
@@ -75,22 +75,38 @@ export default function Main() {
   }
 
   const updateColor = (oldColor) => (newColor) => {
+    console.log("oldColor", oldColor, "newcolor", newColor)
     updateState({
       svg: state.svg.replace(oldColor, newColor),
       colors: state.colors.map(c => c === oldColor ? newColor : c),
     });
   }
 
-  // const shuffleColors = () => {
-  //   function shuffle(array) {
-  //     const copy = [...array];
-  //     copy.sort(() => Math.random() - 0.5);
-  //
-  //     return copy;
-  //   }
-  //
-  //   updateColor(state.colors)(shuffle(state.colors));
-  // }
+  const updateColorByIndex = (ind) => (newColor) => {
+    console.log("ind", ind, "newcolor", newColor)
+    let newsvg = changeColorByIndex(state.svg, ind, newColor);
+    updateState({
+      svg: newsvg,
+      colors: state.colors.map((c, i) => i === ind ? newColor : c),
+    });
+  }
+
+  const shuffleColors = () => {
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        let j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+    }
+
+    let newColors = state.colors;
+    shuffle(newColors);
+    let svg = changeAllColors(state.svg, newColors);
+    updateState({
+      svg,
+      colors: newColors
+    })
+  }
 
   return (
     <>
@@ -131,7 +147,8 @@ export default function Main() {
                           style={{margin: '10px', width: '50%'}}
                           value={color}
                           format='rgba'
-                          onChange={updateColor(color)}
+                          // onChange={updateColor(color)}
+                          onChange={updateColorByIndex(index)}
                           rightSection={
                             <ActionIcon onClick={() => updateColor(color)(randomColor())}>
                               <Refresh size={16} />
@@ -141,12 +158,12 @@ export default function Main() {
                       </Center>
                     )}
                   </ScrollArea>
-                  {/*<Button*/}
-                  {/*  style={{ minHeight: '5vh' }}*/}
-                  {/*  onClick={shuffleColors}*/}
-                  {/*>*/}
-                  {/*  Shuffle colors*/}
-                  {/*</Button>*/}
+                  <Button
+                    style={{ minHeight: '5vh' }}
+                    onClick={shuffleColors}
+                  >
+                    Shuffle colors
+                  </Button>
                   <Dropzone
                     multiple={false}
                     accept={["image/*"]}
