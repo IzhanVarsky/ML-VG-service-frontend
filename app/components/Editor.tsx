@@ -10,6 +10,7 @@ import {
   Text,
   Textarea,
   NumberInput,
+  ActionIcon
 } from '@mantine/core';
 import Shape from '~/components/Shape';
 import {Link, useOutletContext} from '@remix-run/react';
@@ -30,6 +31,16 @@ import SVG from './SVG';
 import {useState} from 'react';
 import {Dropzone} from '@mantine/dropzone';
 import useHistoryState from '~/HistoryState';
+import { Refresh } from 'tabler-icons-react';
+
+const randomColor = () => {
+  let colors = [];
+  for (let i = 0; i < 3; i++) {
+    colors.push(Math.floor(Math.random() * 255));
+  }
+  colors.push(Math.random().toFixed(2));
+  return `rgba(${colors[0]}, ${colors[1]}, ${colors[2]}, ${colors[3]})`
+};
 
 export default function Main() {
   const [selectedCover, setSelectedCover, covers, setCovers] = useOutletContext();
@@ -74,10 +85,10 @@ export default function Main() {
   //   function shuffle(array) {
   //     const copy = [...array];
   //     copy.sort(() => Math.random() - 0.5);
-
+  //
   //     return copy;
   //   }
-
+  //
   //   updateColor(state.colors)(shuffle(state.colors));
   // }
 
@@ -121,16 +132,21 @@ export default function Main() {
                           value={color}
                           format='rgba'
                           onChange={updateColor(color)}
+                          rightSection={
+                            <ActionIcon onClick={() => updateColor(color)(randomColor())}>
+                              <Refresh size={16} />
+                            </ActionIcon>
+                          }
                         />
                       </Center>
                     )}
                   </ScrollArea>
-                  {/* <Button
-                    style={{ minHeight: '5vh' }}
-                    onClick={shuffleColors}
-                  >
-                    Shuffle colors
-                  </Button> */}
+                  {/*<Button*/}
+                  {/*  style={{ minHeight: '5vh' }}*/}
+                  {/*  onClick={shuffleColors}*/}
+                  {/*>*/}
+                  {/*  Shuffle colors*/}
+                  {/*</Button>*/}
                   <Dropzone
                     multiple={false}
                     accept={["image/*"]}
