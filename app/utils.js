@@ -39,7 +39,13 @@ const addRectBefore = (svg, color = 'rgb(230, 230, 230)') => {
 
     const rect = `<rect x="0" y="0" width="${width}" height="${height}" fill="${color}" fill-opacity="0.5" />`;
 
-    parsed.find("text:first").before(rect);
+    let find = parsed.find("text:first");
+    console.log('find', find);
+    if (find.length) {
+        find.before(rect);
+    } else {
+        parsed.append(rect);
+    }
     return {
         svg: parsed[0].outerHTML,
         color,
