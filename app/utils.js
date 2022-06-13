@@ -10,9 +10,16 @@ const getColors = (svg) => {
 
 const svgWithSize = (svg, size) => {
     const parsed = $(svg)[0];
-    parsed.setAttribute("width", size);
-    parsed.setAttribute("height", size);
-    return parsed.outerHTML;
+    if (parsed) {
+        try {
+            parsed.setAttribute("width", size);
+            parsed.setAttribute("height", size);
+            return parsed.outerHTML;
+        } catch (e) {
+            return svg;
+        }
+    }
+    return svg;
 }
 
 const addRectBefore = (svg, color = 'rgb(230, 230, 230)') => {

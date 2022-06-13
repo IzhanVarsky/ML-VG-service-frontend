@@ -28,9 +28,9 @@ export default function Viewer() {
         </Tabs.Tab>
         <Tabs.Tab label="PNG">
           <Stack>
-            <AspectRatio ratio={1} sx={{ maxHeight: '45vh' }}>
+            <AspectRatio ratio={1} sx={{ maxHeight: '50vh' }}>
               <Image
-                height='45vh'
+                height='50vh'
                 src={src}
               />
             </AspectRatio>

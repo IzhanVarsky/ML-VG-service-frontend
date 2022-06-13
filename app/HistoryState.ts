@@ -36,7 +36,7 @@ const useHistoryState: <T>(
   );
 
   const undo: () => void = useCallback(() => {
-    if (pointer <= 1) return;
+    if (pointer <= 0) return;
     _setState(history[pointer - 1]);
     setPointer(pointer - 1);
   }, [history, pointer, setPointer]);

@@ -21,9 +21,9 @@ import useHistoryState from '~/HistoryState';
 export default function Main() {
   const [selectedCover, setSelectedCover, covers, setCovers] = useOutletContext();
   const [isLoading, setIsLoading] = useState(false);
-  const [state, setState, undo, redo, history] = useHistoryState({
+  const [state, setState, undo, redo] = useHistoryState({
     svg: prettifyXml(covers[selectedCover].svg),
-    colors: [],
+    colors: getColors(covers[selectedCover].svg),
   });
 
   const updateState = (s) => {
@@ -33,17 +33,10 @@ export default function Main() {
     })
   }
 
-  const setColors = (colors) => {
-    updateState({
-      svg: state.svg,
-      colors,
-    })
-  }
-
-  const setCover = (svg) => {
+  const updCover = (svg) => {
     updateState({
       svg,
-      colors: state.colors,
+      colors: getColors(svg),
     })
   }
 
@@ -53,10 +46,6 @@ export default function Main() {
       colors: state.colors.map(c => c === oldColor ? newColor : c),
     });
   }
-
-  useEffect(() => {
-    setColors(getColors(state.svg));
-  }, []);
 
   return (
     <Shape>
@@ -96,7 +85,7 @@ export default function Main() {
                     <ColorInput
                       key={index}
                       value={color}
-                      format='rgb' // TODO: change to rgba
+                      format='rgba'
                       onChange={updateColor(color)}
                     />
                   )
@@ -143,7 +132,7 @@ export default function Main() {
                 minRows={30}
                 minLength={50}
                 value={state.svg}
-                onChange={event => setCover(event.currentTarget.value)}
+                onChange={event => updCover(event.currentTarget.value)}
               />
             </Tabs.Tab>
             <Tabs.Tab label="PNG (rasterize)" icon={<Palette size={14}/>}>
