@@ -1,4 +1,4 @@
-import { Button, ColorInput, Grid, Group, InputWrapper, Stack, Tabs, Text, Textarea, } from '@mantine/core';
+import { Button, Center, ColorInput, Grid, Group, ScrollArea, Stack, Tabs, Text, Textarea, } from '@mantine/core';
 import Shape from '~/components/Shape';
 import { Link, useOutletContext } from '@remix-run/react';
 import {
@@ -15,7 +15,7 @@ import {
 import { downloadPNGFromServer, downloadTextFile, extractColors, getJSON } from "~/download_utils";
 import { addRectBefore, getColors, prettifyXml } from '~/utils';
 import SVG from './SVG';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Dropzone } from '@mantine/dropzone';
 import useHistoryState from '~/HistoryState';
 
@@ -58,42 +58,50 @@ export default function Main() {
   }
 
   return (
-    <Shape>
+    <>
       <Link to="/">
-        <Button m='md' leftIcon={<ArrowBigLeft />}>
+        <Button m='md' leftIcon={<ArrowBigLeft />} style={{ margin: 5, marginLeft: 16 }}>
           Go back
         </Button>
       </Link>
-      <Button m='md'
-        onClick={undo}
-        leftIcon={<ArrowBackUp />}
-      >
-        Undo
-      </Button>
-      <Button m='md'
-        onClick={redo}
-        leftIcon={<ArrowForwardUp />}
-      >
-        Redo
-      </Button>
-      <Grid justify='space-around' columns={2}>
-        <Grid.Col span={1}>
-          <SVG svg={state.svg} />
-        </Grid.Col>
-        <Grid.Col span={1}>
-          <Tabs>
-            <Tabs.Tab label="Edit Options" icon={<AdjustmentsAlt size={14} />}>
-              <InputWrapper label="Colors">
-                <Stack>
-                  {state.colors.map((color, index) =>
-                    <ColorInput
-                      key={index}
-                      value={color}
-                      format='rgba'
-                      onChange={updateColor(color)}
-                    />
-                  )
-                  }
+      <Shape>
+        <Grid justify='space-around' align="center" columns={2}>
+          <Grid.Col span={1}>
+            <Center>
+              <SVG svg={state.svg} />
+            </Center>
+            <Center>
+              <Button m='md'
+                onClick={undo}
+                leftIcon={<ArrowBackUp />}
+              >
+                Undo
+              </Button>
+              <Button m='md'
+                onClick={redo}
+                leftIcon={<ArrowForwardUp />}
+              >
+                Redo
+              </Button>
+            </Center>
+          </Grid.Col>
+          <Grid.Col span={1}>
+            <Tabs>
+              <Tabs.Tab label="Edit Options" icon={<AdjustmentsAlt size={14} />}>
+                <Stack style={{ height: '70vh' }}>
+                  <ScrollArea>
+                    {state.colors.map((color, index) =>
+                      <Center>
+                        <ColorInput
+                          style={{ margin: '10px', width: '50%' }}
+                          key={index}
+                          value={color}
+                          format='rgba'
+                          onChange={updateColor(color)}
+                        />
+                      </Center>
+                    )}
+                  </ScrollArea>
                   <Dropzone
                     multiple={false}
                     accept={["image/*"]}
@@ -119,51 +127,52 @@ export default function Main() {
                       </Group>
                     }
                   </Dropzone>
-                  <Button onClick={() => {
-                    const { svg: newSVG, color: newColor } = addRectBefore(state.svg);
-                    updateState({
-                      svg: newSVG,
-                      colors: [...state.colors, newColor],
-                    })
-                  }}>
+                  <Button
+                    style={{ minHeight: '5vh' }}
+                    onClick={() => {
+                      const { svg: newSVG, color: newColor } = addRectBefore(state.svg);
+                      updateState({
+                        svg: newSVG,
+                        colors: [...state.colors, newColor],
+                      })
+                    }}>
                     Add filter
                   </Button>
                 </Stack>
-              </InputWrapper>
-            </Tabs.Tab>
-            <Tabs.Tab label="Edit Raw SVG" icon={<FileText size={14} />}>
-              <Textarea
-                minRows={30}
-                minLength={50}
-                value={state.svg}
-                onChange={event => updCover(event.currentTarget.value)}
-              />
-            </Tabs.Tab>
-            <Tabs.Tab label="Download" icon={<Download size={14} />}>
-              <Stack style={{ width: '50%', margin: '25%' }}>
-                <Button
-                  leftIcon={<Palette size={14} />}
-                  onClick={() => downloadPNGFromServer(state.svg)}
-                >
-                  Download PNG
-                </Button>
-                <Button
-                  leftIcon={<Braces size={14} />}
-                  onClick={() => getJSON(state.svg)}
-                >
-                  Download JSON
-                </Button>
-                <Button
-                  leftIcon={<LayoutBoardSplit size={14} />}
-                  onClick={() => downloadTextFile(state.svg, "edited.svg")}
-                >
-                  Download SVG
-                </Button>
-              </Stack>
-            </Tabs.Tab>
-          </Tabs>
-        </Grid.Col>
-      </Grid>
-    </Shape>
-  )
+              </Tabs.Tab>
+              <Tabs.Tab label="Edit Raw SVG" icon={<FileText size={14} />}>
+                <Textarea
+                  minRows={30}
+                  minLength={50}
+                  value={state.svg}
+                  onChange={event => updCover(event.currentTarget.value)}
+                />
+              </Tabs.Tab>
+              <Tabs.Tab label="Download" icon={<Download size={14} />}>
+                <Stack style={{ width: '50%', margin: '25%' }}>
+                  <Button
+                    leftIcon={<Palette size={14} />}
+                    onClick={() => downloadPNGFromServer(state.svg)}
+                  >
+                    Download PNG
+                  </Button>
+                  <Button
+                    leftIcon={<Braces size={14} />}
+                    onClick={() => getJSON(state.svg)}
+                  >
+                    Download JSON
+                  </Button>
+                  <Button
+                    leftIcon={<LayoutBoardSplit size={14} />}
+                    onClick={() => downloadTextFile(state.svg, "edited.svg")}
+                  >
+                    Download SVG
+                  </Button>
+                </Stack>
+              </Tabs.Tab>
+            </Tabs>
+          </Grid.Col>
+        </Grid>
+      </Shape>
+    </>)
 }
