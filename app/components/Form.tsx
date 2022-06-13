@@ -11,14 +11,14 @@ import {
   Loader,
   Container,
   NativeSelect,
-  Alert,
+  Group
 } from '@mantine/core';
 import Shape from './Shape';
-import { useForm } from '@mantine/form';
-import { Dropzone } from '@mantine/dropzone';
-import { useOutletContext } from "@remix-run/react";
-import { useState } from 'react';
-import { X } from 'tabler-icons-react';
+import {useForm} from '@mantine/form';
+import {Dropzone} from '@mantine/dropzone';
+import {useOutletContext} from "@remix-run/react";
+import {useState} from 'react';
+import { FileMusic} from 'tabler-icons-react';
 
 const emotions = [
   'ANGER',
@@ -49,23 +49,15 @@ export default function Form() {
 
   const sendData = (data) => {
     setIsLoading(true);
-    console.log('Audio file:', data.audio_file)
-    if (data.audio_file === undefined) {
-      // TODO: Отрисовать пользователю, что он не загрузил файл
-      return
-    }
     console.log('Send data to server:', data);
     const formData = new FormData()
     for (let key in data) {
       formData.append(key, data[key]);
     }
-    console.log('FORMDATA:', formData);
-    // TODO: сделать прогресс бар, хотя бы просто <progress/>
     $.ajax({
       url: "http://localhost:5001/generate",
       type: 'POST',
       data: formData,
-      // context: this,
       processData: false,
       contentType: false,
       cache: false,
@@ -96,7 +88,7 @@ export default function Form() {
 
   return (
     <>
-      <Shape style={{ height: '100%', width: '23rem' }}>
+      <Shape style={{height: '100%', width: '23rem'}}>
         <form onSubmit={form.onSubmit((data) => {
           if (form.values['audio_file']) {
             setShowError(false);
@@ -119,14 +111,14 @@ export default function Form() {
                 backgroundColor: showError ? '#fff6f5' : ''
               }}
             >
-              {() => (
-                form.values['audio_file']
-                  ? <Text
-                    color='grey'
-                    style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}
-                  >{form.values['audio_file'].name}</Text>
-                  : <Text color={showError ? 'red' : 'grey'}>Drag or click</Text>
-              )}
+              {() =>
+                <Group style={{pointerEvents: 'none'}}>
+                  <FileMusic color={showError ? '#ff3b3b' : 'grey'}/>
+                  {form.values['audio_file']
+                    ? <Text color='grey'>{form.values['audio_file'].name}</Text>
+                    : <Text color={showError ? 'red' : 'grey'}>Drag or click</Text>}
+                </Group>
+              }
             </Dropzone>
             <TextInput
               label="Artist name"
@@ -143,16 +135,16 @@ export default function Form() {
               required
               {...form.getInputProps('gen_type')}
             >
-              <Radio value="1" label="1" />
-              <Radio value="2" label="2" />
+              <Radio value="1" label="1"/>
+              <Radio value="2" label="2"/>
             </RadioGroup>
             <RadioGroup
               label="Captioner type"
               required
               {...form.getInputProps('use_captioner')}
             >
-              <Radio value="1" label="1" />
-              <Radio value="2" label="2" />
+              <Radio value="1" label="1"/>
+              <Radio value="2" label="2"/>
             </RadioGroup>
             <NumberInput
               placeholder="Number of covers"
@@ -175,7 +167,7 @@ export default function Form() {
             />
 
             {isLoading
-              ? <Container><Loader size='xl' /></Container>
+              ? <Container><Loader size='xl'/></Container>
               : <Button type='submit' variant='gradient'>Generate</Button>}
           </Stack>
         </form>

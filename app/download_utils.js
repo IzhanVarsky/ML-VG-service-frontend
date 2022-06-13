@@ -12,7 +12,7 @@ function downloadTextFile(text, filename) {
     link.click();
 }
 
-const downloadPNGFromServer = (data) => {
+function downloadPNGFromServer(data) {
     const formData = new FormData()
     formData.append("svg", data);
     // TODO: сделать прогресс бар, хотя бы просто <progress/>
@@ -31,9 +31,9 @@ const downloadPNGFromServer = (data) => {
             console.log('ERR', e);
         }
     });
-};
+}
 
-async function getJSON(data, callback) {
+function getJSON(data, callback) {
     const formData = new FormData()
     formData.append("svg", data);
     // TODO: сделать прогресс бар, хотя бы просто <progress/>
@@ -57,9 +57,9 @@ async function getJSON(data, callback) {
             console.log('ERR', e);
         }
     });
-};
+}
 
-async function extractColors(image, n, callback) {
+function extractColors(image, n, callback, callback_err) {
     const formData = new FormData()
     formData.append("img", image);
     formData.append("color_count", n);
@@ -83,10 +83,13 @@ async function extractColors(image, n, callback) {
             callback(colors);
         },
         error: (e) => {
+            if (callback_err !== undefined) {
+                callback_err(e)
+            }
             console.log('ERR', e);
         }
     });
-};
+}
 
 module.exports = {
     downloadBase64File: downloadBase64File,

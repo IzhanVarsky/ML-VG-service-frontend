@@ -4,21 +4,22 @@ import {
   InputWrapper,
   ColorInput,
   Textarea,
-  Tabs, Button,
-  Text,
+  Tabs, Button, Group, Text,
 } from '@mantine/core';
 import Shape from '~/components/Shape';
-import { Link, useOutletContext } from '@remix-run/react';
-import { AdjustmentsAlt, FileText, Palette, Braces } from 'tabler-icons-react';
-import { getJSON, extractColors, downloadPNGFromServer } from "~/download_utils";
-import { getColors, addRectBefore } from '~/utils';
+import {Link, useOutletContext} from '@remix-run/react';
+import {AdjustmentsAlt, FileText, Palette, Braces} from 'tabler-icons-react';
+import {getJSON, extractColors, downloadPNGFromServer, downloadTextFile} from "~/download_utils";
+import {getColors, addRectBefore} from '~/utils';
 import SVG from './SVG';
-import { useEffect } from 'react';
-import { Dropzone } from '@mantine/dropzone';
+import {useEffect, useState} from 'react';
+import {Dropzone} from '@mantine/dropzone';
 import useHistoryState from '~/HistoryState';
+import {ArrowBigLeft, ArrowBackUp, ArrowForwardUp, Download} from 'tabler-icons-react';
 
 export default function Main() {
   const [selectedCover, setSelectedCover, covers, setCovers] = useOutletContext();
+  const [isLoading, setIsLoading] = useState(false);
   const [state, setState, undo, redo, history] = useHistoryState({
     svg: covers[selectedCover].svg,
     colors: [],
@@ -52,23 +53,35 @@ export default function Main() {
   return (
     <Shape>
       <Link to="/">
-        <Button m='md'>
+        <Button m='md' leftIcon={<ArrowBigLeft/>}>
           Go back
         </Button>
       </Link>
-      <Button m='md' onClick={() => { undo(); console.log(history) }}>
+      <Button m='md'
+              onClick={undo}
+              leftIcon={<ArrowBackUp/>}
+      >
         Undo
       </Button>
-      <Button m='md' onClick={() => { redo(); console.log(history) }}>
+      <Button m='md'
+              onClick={redo}
+              leftIcon={<ArrowForwardUp/>}
+      >
         Redo
+      </Button>
+      <Button m='md'
+              onClick={() => downloadTextFile(state.svg, "edited.svg")}
+              leftIcon={<Download/>}
+      >
+        Download SVG
       </Button>
       <Grid justify='space-around' columns={2}>
         <Grid.Col span={1}>
-          <SVG svg={state.svg} />
+          <SVG svg={state.svg}/>
         </Grid.Col>
         <Grid.Col span={1}>
           <Tabs>
-            <Tabs.Tab label="Edit options" icon={<AdjustmentsAlt size={14} />}>
+            <Tabs.Tab label="Edit Options" icon={<AdjustmentsAlt size={14}/>}>
               <InputWrapper label="Colors">
                 <Stack>
                   {state.colors.map((color, index) =>
@@ -83,7 +96,9 @@ export default function Main() {
                   <Dropzone
                     multiple={false}
                     accept={["image/*"]}
+                    loading={isLoading}
                     onDrop={(files) => {
+                      setIsLoading(true)
                       let oldCover = state.svg + '';
                       extractColors(files[0], state.colors.length, newColors => {
                         state.colors.forEach((oldColor, index) => {
@@ -93,12 +108,18 @@ export default function Main() {
                           svg: oldCover,
                           colors: newColors,
                         });
-                      });
+                        setIsLoading(false)
+                      }, () => setIsLoading(false));
                     }}>
-                    {() => <Text color='grey'>Drop image to style transfer</Text>}
+                    {() =>
+                      <Group style={{pointerEvents: 'none'}}>
+                        <Palette color='grey'/>
+                        <Text color='grey'>Drop image to style transfer</Text>
+                      </Group>
+                    }
                   </Dropzone>
                   <Button onClick={() => {
-                    const { svg: newSVG, color: newColor } = addRectBefore(state.svg);
+                    const {svg: newSVG, color: newColor} = addRectBefore(state.svg);
                     setState({
                       svg: newSVG,
                       colors: [...state.colors, newColor],
@@ -109,7 +130,7 @@ export default function Main() {
                 </Stack>
               </InputWrapper>
             </Tabs.Tab>
-            <Tabs.Tab label="Edit raw svg" icon={<FileText size={14} />}>
+            <Tabs.Tab label="Edit Raw SVG" icon={<FileText size={14}/>}>
               <Textarea
                 minRows={30}
                 minLength={50}
@@ -117,15 +138,15 @@ export default function Main() {
                 onChange={event => setCover(event.currentTarget.value)}
               />
             </Tabs.Tab>
-            <Tabs.Tab label="PNG (rasterize)" icon={<Palette size={14} />}>
+            <Tabs.Tab label="PNG (rasterize)" icon={<Palette size={14}/>}>
               <Button onClick={() => downloadPNGFromServer(state.svg)}>Download</Button>
             </Tabs.Tab>
-            <Tabs.Tab label="To JSON" icon={<Braces size={14} />}>
+            <Tabs.Tab label="To JSON" icon={<Braces size={14}/>}>
               <Button onClick={() => getJSON(state.svg)}>Download JSON</Button>
             </Tabs.Tab>
           </Tabs>
         </Grid.Col>
       </Grid>
-    </Shape >
+    </Shape>
   )
 }

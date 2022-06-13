@@ -5,7 +5,9 @@ export default function SVG({ svg }) {
     <Container>
       <img
         style={{ height: '50vh' }}
-        src={`data:image/svg+xml;utf8,${encodeURIComponent(svg)}`} />
+        src={`data:image/svg+xml;utf8,${encodeURIComponent(svg)}`}
+        alt='SVG'
+      />
     </Container>
   )
 }
