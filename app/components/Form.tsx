@@ -11,14 +11,15 @@ import {
   Loader,
   Container,
   NativeSelect,
-  Group
+  Grid,
 } from '@mantine/core';
 import Shape from './Shape';
-import {useForm} from '@mantine/form';
-import {Dropzone} from '@mantine/dropzone';
-import {useOutletContext} from "@remix-run/react";
-import {useState} from 'react';
-import { FileMusic} from 'tabler-icons-react';
+import { useForm } from '@mantine/form';
+import { Dropzone } from '@mantine/dropzone';
+import { useOutletContext } from "@remix-run/react";
+import { useState } from 'react';
+import { FileMusic } from 'tabler-icons-react';
+import config from '../config.json';
 
 const emotions = [
   'ANGER',
@@ -55,7 +56,7 @@ export default function Form() {
       formData.append(key, data[key]);
     }
     $.ajax({
-      url: "http://localhost:5001/generate",
+      url: `${config.host}/generate`,
       type: 'POST',
       data: formData,
       processData: false,
@@ -88,7 +89,7 @@ export default function Form() {
 
   return (
     <>
-      <Shape style={{height: '100%', width: '23rem'}}>
+      <Shape style={{ height: '100%', width: '23rem' }}>
         <form onSubmit={form.onSubmit((data) => {
           if (form.values['audio_file']) {
             setShowError(false);
@@ -112,12 +113,19 @@ export default function Form() {
               }}
             >
               {() =>
-                <Group style={{pointerEvents: 'none'}}>
-                  <FileMusic color={showError ? '#ff3b3b' : 'grey'}/>
-                  {form.values['audio_file']
-                    ? <Text color='grey'>{form.values['audio_file'].name}</Text>
-                    : <Text color={showError ? 'red' : 'grey'}>Drag or click</Text>}
-                </Group>
+                <Grid columns={8} align='center'>
+                  <Grid.Col span={1}>
+                    <FileMusic color={showError ? '#ff3b3b' : 'grey'} size={30} />
+                  </Grid.Col>
+                  <Grid.Col span={7}>
+                    {form.values['audio_file']
+                      ? <Text
+                        color='grey'
+                        style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}
+                      >{form.values['audio_file'].name}</Text>
+                      : <Text color={showError ? 'red' : 'grey'}>Drag or click</Text>}
+                  </Grid.Col>
+                </Grid>
               }
             </Dropzone>
             <TextInput
@@ -135,16 +143,16 @@ export default function Form() {
               required
               {...form.getInputProps('gen_type')}
             >
-              <Radio value="1" label="1"/>
-              <Radio value="2" label="2"/>
+              <Radio value="1" label="1" />
+              <Radio value="2" label="2" />
             </RadioGroup>
             <RadioGroup
               label="Captioner type"
               required
               {...form.getInputProps('use_captioner')}
             >
-              <Radio value="1" label="1"/>
-              <Radio value="2" label="2"/>
+              <Radio value="1" label="1" />
+              <Radio value="2" label="2" />
             </RadioGroup>
             <NumberInput
               placeholder="Number of covers"
@@ -167,7 +175,7 @@ export default function Form() {
             />
 
             {isLoading
-              ? <Container><Loader size='xl'/></Container>
+              ? <Container><Loader size='xl' /></Container>
               : <Button type='submit' variant='gradient'>Generate</Button>}
           </Stack>
         </form>
