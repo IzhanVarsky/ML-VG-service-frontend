@@ -1,46 +1,54 @@
-import {
-  Stack,
-  Grid,
-  InputWrapper,
-  ColorInput,
-  Textarea,
-  Tabs, Button, Group, Text,
-} from '@mantine/core';
+import {Button, ColorInput, Grid, Group, InputWrapper, Stack, Tabs, Text, Textarea,} from '@mantine/core';
 import Shape from '~/components/Shape';
 import {Link, useOutletContext} from '@remix-run/react';
-import {AdjustmentsAlt, FileText, Palette, Braces} from 'tabler-icons-react';
-import {getJSON, extractColors, downloadPNGFromServer, downloadTextFile} from "~/download_utils";
-import {getColors, addRectBefore} from '~/utils';
+import {
+  AdjustmentsAlt,
+  ArrowBackUp,
+  ArrowBigLeft,
+  ArrowForwardUp,
+  Braces,
+  Download,
+  FileText,
+  Palette
+} from 'tabler-icons-react';
+import {downloadPNGFromServer, downloadTextFile, extractColors, getJSON} from "~/download_utils";
+import {addRectBefore, getColors, prettifyXml} from '~/utils';
 import SVG from './SVG';
 import {useEffect, useState} from 'react';
 import {Dropzone} from '@mantine/dropzone';
 import useHistoryState from '~/HistoryState';
-import {ArrowBigLeft, ArrowBackUp, ArrowForwardUp, Download} from 'tabler-icons-react';
 
 export default function Main() {
   const [selectedCover, setSelectedCover, covers, setCovers] = useOutletContext();
   const [isLoading, setIsLoading] = useState(false);
   const [state, setState, undo, redo, history] = useHistoryState({
-    svg: covers[selectedCover].svg,
+    svg: prettifyXml(covers[selectedCover].svg),
     colors: [],
   });
 
-  const setColors = (colors) => {
+  const updateState = (value) => {
     setState({
+      svg: prettifyXml(value.svg),
+      colors: value.colors
+    })
+  }
+
+  const setColors = (colors) => {
+    updateState({
       svg: state.svg,
       colors,
     })
   }
 
   const setCover = (svg) => {
-    setState({
+    updateState({
       svg,
       colors: state.colors,
     })
   }
 
   const updateColor = (oldColor) => (newColor) => {
-    setState({
+    updateState({
       svg: state.svg.replace(oldColor, newColor),
       colors: state.colors.map(c => c === oldColor ? newColor : c),
     });
@@ -104,7 +112,7 @@ export default function Main() {
                         state.colors.forEach((oldColor, index) => {
                           oldCover = oldCover.replace(oldColor, newColors[index]);
                         });
-                        setState({
+                        updateState({
                           svg: oldCover,
                           colors: newColors,
                         });
@@ -120,7 +128,7 @@ export default function Main() {
                   </Dropzone>
                   <Button onClick={() => {
                     const {svg: newSVG, color: newColor} = addRectBefore(state.svg);
-                    setState({
+                    updateState({
                       svg: newSVG,
                       colors: [...state.colors, newColor],
                     })

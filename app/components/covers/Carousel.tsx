@@ -7,8 +7,7 @@ export default function Carousel() {
   const [selectedCover, setSelectedCover, covers, setCovers] = useOutletContext();
   return (
     <Shape size={50}>
-      <Grid justify="space-around"
-      >
+      <Grid justify="space-around">
         {covers.map((cover, index) => {
           const src = cover.src
             ? cover.src
