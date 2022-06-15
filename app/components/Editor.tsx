@@ -29,6 +29,7 @@ import {
 import { downloadPNGFromServer, downloadTextFile, extractColors, getJSON } from "~/download_utils";
 import {
   addRectBefore,
+  addShadowFilter,
   changeAllColors,
   changeColorByIndex,
   getColors,
@@ -194,11 +195,24 @@ export default function Main() {
                       </Group>
                     }
                   </Dropzone>
-                  <Button
-                    style={{ minHeight: '5vh' }}
-                    onClick={() => updateSVGWithColors(addRectBefore(state.svg))}>
-                    Add filter
-                  </Button>
+                  <Grid justify={'center'} align={'center'}>
+                    <Grid.Col span={4}>
+                      <Center>
+                        <Button
+                          onClick={() => updateSVGWithColors(addShadowFilter(state.svg))}>
+                          Add shadow filter
+                        </Button>
+                      </Center>
+                    </Grid.Col>
+                    <Grid.Col span={4}>
+                      <Center>
+                        <Button
+                          onClick={() => updateSVGWithColors(addRectBefore(state.svg))}>
+                          Add color filter
+                        </Button>
+                      </Center>
+                    </Grid.Col>
+                  </Grid>
                 </Stack>
               </Tabs.Tab>
               <Tabs.Tab label="Edit Raw SVG" icon={<FileText size={14}/>}>

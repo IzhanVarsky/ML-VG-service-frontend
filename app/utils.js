@@ -61,9 +61,7 @@ const svgWithSize = (svg, size) => {
   }
 }
 
-const addRectBefore = (svg, color = 'rgba(230, 230, 230, 0.5)') => {
-  const parsed = $(svg);
-  const thisSVG = parsed[0];
+function getSVGViewBoxSize(thisSVG) {
   let width;
   let height;
   if (thisSVG.hasAttribute("viewBox")) {
@@ -74,15 +72,57 @@ const addRectBefore = (svg, color = 'rgba(230, 230, 230, 0.5)') => {
     width = thisSVG.getAttribute("width");
     height = thisSVG.getAttribute("height");
   }
+  return {width, height};
+}
 
-  const rect = `<rect x="0" y="0" width="${width}" height="${height}" fill="${color}" />`;
-
+function addBeforeText(parsed, rect) {
   const find = parsed.find("text:first");
   if (find.length) {
     find.before(rect);
   } else {
     parsed.append(rect);
   }
+}
+
+const addShadowFilter = (svg) => {
+  const parsed = $(svg);
+  let newIdNum = 0;
+  let id;
+  while (true) {
+    id = `id${newIdNum}`;
+    if (parsed.find(`[id^=${id}]`).length > 0) {
+      newIdNum++;
+      continue;
+    }
+    break;
+  }
+  const {width, height} = getSVGViewBoxSize(parsed[0]);
+  const cx = width / 2;
+  const cy = height / 2;
+  const r = Math.ceil(width / Math.sqrt(2));
+  const radGrad = `
+    <radialGradient cx="${cx}" cy="${cy}" r="${r}" 
+        gradientUnits="userSpaceOnUse" spreadMethod="pad" id="${id}">
+        <stop offset="0" stop-color="rgba(0, 0, 0, 0)"></stop>
+        <stop offset="0.7" stop-color="rgba(0, 0, 0, 0)"></stop>
+        <stop offset="1" stop-color="rgba(0, 0, 0, 0.6)"></stop>
+    </radialGradient>`;
+  let findDefs = parsed.find("defs:first");
+  if (findDefs.length > 0) {
+    findDefs.append(radGrad);
+  } else {
+    parsed.prepend(`<defs>${radGrad}</defs>`);
+  }
+  const rect = `<rect x="0" y="0" width="${width}" height="${height}" fill="url(#${id})" />`;
+  addBeforeText(parsed, rect);
+  return parsed[0].outerHTML;
+}
+const addRectBefore = (svg, color = 'rgba(230, 230, 230, 0.5)') => {
+  const parsed = $(svg);
+  let {width, height} = getSVGViewBoxSize(parsed[0]);
+
+  const rect = `<rect x="0" y="0" width="${width}" height="${height}" fill="${color}" />`;
+  addBeforeText(parsed, rect);
   return parsed[0].outerHTML;
 }
 
@@ -111,6 +151,7 @@ const prettifyXml = function (sourceXml) {
 module.exports = {
   getColors: getColors,
   addRectBefore: addRectBefore,
+  addShadowFilter: addShadowFilter,
   prettifyXml: prettifyXml,
   svgWithSize: svgWithSize,
   getSVGSize: getSVGSize,

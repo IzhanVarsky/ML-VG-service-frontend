@@ -210,7 +210,7 @@ export default function Form() {
             </InputWrapper>
             <Switch
               size="md"
-              label="Use filters"
+              label="Use color filters"
               {...form.getInputProps('use_filters')}
             />
 
