@@ -4,7 +4,7 @@ const re = new RegExp(correct_color_regex);
 function findColorByAttrName(obj, attr) {
   return obj
     .find(`[${attr}]`)
-    .filter((i, obj) => re.test(obj.getAttribute(attr).trim()))
+    .filter((i, obj) => re.test(obj.getAttribute(attr).trim().toLowerCase()))
     .map((i, x) => ({x, attr, value: x.getAttribute(attr)}));
 }
 
@@ -15,9 +15,7 @@ function extractColors(parsed) {
 }
 
 const getColors = (svg) => {
-  const parsed = $(svg);
-  const res_objs = extractColors(parsed);
-  return res_objs.map(obj => ({
+  return extractColors($(svg)).map(obj => ({
     attr: obj.attr,
     value: obj.value
   }))

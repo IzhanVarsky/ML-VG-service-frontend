@@ -139,7 +139,6 @@ export default function Form() {
               accept={["audio/*"]}
               onDrop={(files) => {
                 form.setFieldValue('audio_file', files[0]);
-                console.log("files[0]", files[0]);
                 setArtistAndTrackNames(files[0].name);
                 setShowError(false);
               }}

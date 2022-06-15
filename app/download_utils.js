@@ -1,4 +1,4 @@
-const config = "http://localhost:5001";
+import config from './config.json';
 
 function downloadBase64File(contentType, base64Data, fileName) {
   const link = document.createElement("a");
@@ -15,11 +15,10 @@ function downloadTextFile(text, filename) {
 }
 
 function downloadPNGFromServer(data) {
-  console.log()
   const formData = new FormData()
   formData.append("svg", data);
   $.ajax({
-    url: `${config}/rasterize`,
+    url: `${config.host}/rasterize`,
     type: 'POST',
     data: formData,
     processData: false,
@@ -39,7 +38,7 @@ function getJSON(data, callback) {
   const formData = new FormData()
   formData.append("svg", data);
   $.ajax({
-    url: `${config}/svg_to_json`,
+    url: `${config.host}/svg_to_json`,
     type: 'POST',
     data: formData,
     processData: false,
@@ -67,7 +66,7 @@ function extractColors(image, n, callback, callback_err) {
   formData.append("algo_type", 1);
   formData.append("use_random", false);
   $.ajax({
-    url: `${config}/extract_colors`,
+    url: `${config.host}/extract_colors`,
     type: 'POST',
     data: formData,
     processData: false,

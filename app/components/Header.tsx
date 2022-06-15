@@ -1,7 +1,6 @@
 import { Header as MantineHeader, Text, Space, Container } from '@mantine/core';
 import Shape from './Shape';
 
-
 export default function Header() {
   return (
     <MantineHeader height="5rem" style={{ borderBottom: 0 }}>
