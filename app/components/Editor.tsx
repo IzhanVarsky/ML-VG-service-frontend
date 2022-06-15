@@ -272,10 +272,15 @@ export default function Main() {
               </Tabs.Tab>
               <Tabs.Tab disabled style={{ pointerEvents: 'none' }}
                         icon={
-                          <Button component="a" variant="outline"
-                                  style={{ pointerEvents: 'all', padding: '0 10px' }}
+                          <Button component="span" variant="outline"
+                                  style={{ pointerEvents: 'all' }}
                                   onClick={() => tryUpdateStateWithPrettified()}>
-                            <Text style={{ paddingTop: '4%' }}>Prettify SVG</Text>
+                            <Center style={{
+                              height: "inherit",
+                              display: "flex",
+                              justifyContent: "center",
+                              alignItems: "center"
+                            }}>Prettify SVG</Center>
                           </Button>
                         }/>
             </Tabs>
