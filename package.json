@@ -4,7 +4,7 @@
   "scripts": {
     "build": "remix build",
     "dev": "set PORT=3000 && remix dev",
-    "start": "set PORT=3000 && remix-serve build"
+    "start": "PORT=5001 remix-serve build"
   },
   "dependencies": {
     "@mantine/core": "^4.2.8",

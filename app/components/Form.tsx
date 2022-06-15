@@ -1,17 +1,17 @@
 import {
-  InputWrapper,
-  Stack,
   Button,
-  TextInput,
-  RadioGroup,
-  Radio,
-  Switch,
-  NumberInput,
-  Text,
-  Loader,
   Container,
-  NativeSelect,
   Grid,
+  InputWrapper,
+  Loader,
+  NativeSelect,
+  NumberInput,
+  Radio,
+  RadioGroup,
+  Stack,
+  Switch,
+  Text,
+  TextInput,
 } from '@mantine/core';
 import Shape from './Shape';
 import { useForm } from '@mantine/form';
@@ -47,6 +47,40 @@ export default function Form() {
   const [selectedCover, setSelectedCover, covers, setCovers] = useOutletContext();
   const [isLoading, setIsLoading] = useState(false);
   const [showError, setShowError] = useState(false);
+  const [artistName, setArtistName] = useState('');
+  const [trackName, setTrackName] = useState('');
+
+  const splitByLast = (text: string, SEP: string = ".") => {
+    const index = text.lastIndexOf(SEP);
+    return index < 0 ? [text] : [text.slice(0, index), text.slice(index + SEP.length)];
+  }
+
+  const updArtistName = (name) => {
+    form.setFieldValue("track_artist", name);
+    setArtistName(name);
+  }
+  const updTrackName = (name) => {
+    form.setFieldValue("track_name", name);
+    setTrackName(name);
+  }
+
+  const setArtistAndTrackNames = (audioFilename) => {
+    const fname = splitByLast(audioFilename, ".");
+    if (fname.length < 2) {
+      updArtistName(audioFilename);
+      updTrackName('');
+      return
+    }
+    const SEP = " - ";
+    const arr = splitByLast(fname[0], SEP);
+    if (arr.length == 2) {
+      updArtistName(arr[0]);
+      updTrackName(arr[1]);
+    } else {
+      updArtistName(arr[0]);
+      updTrackName('');
+    }
+  }
 
   const sendData = (data) => {
     setIsLoading(true);
@@ -77,8 +111,8 @@ export default function Form() {
   const form = useForm({
     initialValues: {
       audio_file: undefined,
-      track_artist: 'XXX',
-      track_name: 'YYY',
+      track_artist: { artistName },
+      track_name: { trackName },
       emotion: 'anger',
       gen_type: "1",
       use_captioner: "1",
@@ -105,6 +139,8 @@ export default function Form() {
               accept={["audio/*"]}
               onDrop={(files) => {
                 form.setFieldValue('audio_file', files[0]);
+                console.log("files[0]", files[0]);
+                setArtistAndTrackNames(files[0].name);
                 setShowError(false);
               }}
               style={{
@@ -115,7 +151,7 @@ export default function Form() {
               {() =>
                 <Grid columns={8} align='center'>
                   <Grid.Col span={1}>
-                    <FileMusic color={showError ? '#ff3b3b' : 'grey'} size={30} />
+                    <FileMusic color={showError ? '#ff3b3b' : 'grey'} size={30}/>
                   </Grid.Col>
                   <Grid.Col span={7}>
                     {form.values['audio_file']
@@ -129,33 +165,38 @@ export default function Form() {
               }
             </Dropzone>
             <TextInput
+              placeholder={"Artist name"}
               label="Artist name"
               required
-              {...form.getInputProps('track_artist')}
+              onChange={(event) => updArtistName(event.currentTarget.value)}
+              value={artistName}
             />
             <TextInput
+              placeholder={"Track name"}
               label="Track name"
               required
-              {...form.getInputProps('track_name')}
+              onChange={(event) => updTrackName(event.currentTarget.value)}
+              value={trackName}
             />
             <RadioGroup
               label="Generator type"
               required
               {...form.getInputProps('gen_type')}
             >
-              <Radio value="1" label="1" />
-              <Radio value="2" label="2" />
+              <Radio value="1" label="1"/>
+              <Radio value="2" label="2"/>
             </RadioGroup>
             <RadioGroup
               label="Captioner type"
               required
               {...form.getInputProps('use_captioner')}
             >
-              <Radio value="1" label="1" />
-              <Radio value="2" label="2" />
+              <Radio value="1" label="1"/>
+              <Radio value="2" label="2"/>
             </RadioGroup>
             <NumberInput
               placeholder="Number of covers"
+              label="Number of covers"
               min={1}
               max={20}
               required
@@ -175,7 +216,7 @@ export default function Form() {
             />
 
             {isLoading
-              ? <Container><Loader size='xl' /></Container>
+              ? <Container><Loader size='xl'/></Container>
               : <Button type='submit' variant='gradient'>Generate</Button>}
           </Stack>
         </form>

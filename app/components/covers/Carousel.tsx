@@ -11,11 +11,13 @@ export default function Carousel() {
         {covers.map((cover, index) => {
           return (
             <Grid.Col span={1} key={index}>
-              <Center >
+              <Center>
                 <Image
                   key={index}
                   src={'data:image/png;base64, ' + cover.base64}
-                  onClick={() => { setSelectedCover(index) }}
+                  onClick={() => {
+                    setSelectedCover(index)
+                  }}
                   style={{
                     outline: index == selectedCover ? "5px solid #228be6" : "0",
                     cursor: 'pointer',
@@ -27,6 +29,6 @@ export default function Carousel() {
           )
         })}
       </Grid>
-    </Shape >
+    </Shape>
   )
 }

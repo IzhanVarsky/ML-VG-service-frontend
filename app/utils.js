@@ -1,111 +1,120 @@
-function colorArrays(svg) {
-    let parsed = $(svg);
-    let fill_find = parsed.find("[fill^='rgb']");
-    let stroke_find = parsed.find("[stroke^='rgb']");
-    return {fill_find, stroke_find};
+const correct_color_regex = "^(#([\\da-f]{3}){1,2}|(rgb|hsl)a\\((\\d{1,3}%?,\\s?){3}(1|0?\\.\\d+)\\)|(rgb|hsl)\\(\\d{1,3}%?(,\\s?\\d{1,3}%?){2}\\))$";
+const re = new RegExp(correct_color_regex);
+
+function findColorByAttrName(obj, attr) {
+  return obj
+    .find(`[${attr}]`)
+    .filter((i, obj) => re.test(obj.getAttribute(attr).trim()))
+    .map((i, x) => ({x, attr, value: x.getAttribute(attr)}));
+}
+
+function extractColors(parsed) {
+  return ["fill", "stroke", "stop-color"]
+    .map(name => findColorByAttrName(parsed, name))
+    .reduce((flatten, arr) => [...flatten, ...arr]);
 }
 
 const getColors = (svg) => {
-    let colors = [];
-    let {fill_find, stroke_find} = colorArrays(svg);
-    fill_find.each((i, el) => colors.push(el.getAttribute("fill")))
-    stroke_find.each((i, el) => colors.push(el.getAttribute("stroke")))
-    // return {colors, selectors:[fill_find, stroke_find]};
-    return colors;
+  const parsed = $(svg);
+  const res_objs = extractColors(parsed);
+  return res_objs.map(obj => ({
+    attr: obj.attr,
+    value: obj.value
+  }))
 }
 
 const changeColorByIndex = (svg, ind, newColor) => {
-    let parsed = $(svg);
-    let fill_find = parsed.find("[fill^='rgb']");
-    let stroke_find = parsed.find("[stroke^='rgb']");
-    if (ind < fill_find.length) {
-        fill_find[ind].setAttribute("fill", newColor)
-    } else if (ind < fill_find.length + stroke_find.length) {
-        stroke_find[ind - fill_find.length].setAttribute("stroke", newColor)
-    }
-    return parsed[0].outerHTML;
+  const parsed = $(svg);
+  const res_objs = extractColors(parsed);
+  if (ind < res_objs.length) {
+    const obj = res_objs[ind];
+    obj.x.setAttribute(obj.attr, newColor);
+  }
+  return parsed[0].outerHTML;
 }
 
 const changeAllColors = (svg, newColors) => {
-    let parsed = $(svg);
-    console.log('Before', parsed[0].outerHTML);
-    let fill_find = parsed.find("[fill^='rgb']");
-    let stroke_find = parsed.find("[stroke^='rgb']");
-    fill_find.each((i, el) => el.setAttribute("fill", newColors[i]));
-    stroke_find.each((i, el) => el.setAttribute("stroke", newColors[i + fill_find.length]));
-    console.log('After', parsed[0].outerHTML);
-    return parsed[0].outerHTML;
+  const parsed = $(svg);
+  const res_objs = extractColors(parsed);
+  res_objs.forEach((el, i) => el.x.setAttribute(el.attr, newColors[i]))
+  return parsed[0].outerHTML;
 }
 
 const getSVGSize = (svg) => {
-    try {
-        const parsed = $(svg)[0];
-        const w = parseInt(parsed.getAttribute("width"));
-        const h = parseInt(parsed.getAttribute("height"));
-        return {w, h};
-    } catch (e) {
-        return {w: 0, h: 0}
-    }
+  try {
+    const parsed = $(svg)[0];
+    const w = parseInt(parsed.getAttribute("width"));
+    const h = parseInt(parsed.getAttribute("height"));
+    return {w, h};
+  } catch (e) {
+    return {w: 0, h: 0}
+  }
 }
 
 const svgWithSize = (svg, size) => {
-    try {
-        const parsed = $(svg)[0];
-        parsed.setAttribute("width", size);
-        parsed.setAttribute("height", size);
-        return parsed.outerHTML;
-    } catch (e) {
-        return svg;
-    }
+  try {
+    const parsed = $(svg)[0];
+    parsed.setAttribute("width", size);
+    parsed.setAttribute("height", size);
+    return parsed.outerHTML;
+  } catch (e) {
+    return svg;
+  }
 }
 
-const addRectBefore = (svg, color = 'rgb(230, 230, 230)') => {
-    // TODO: change to RGBA (delete fill-opacity)
-    let parsed = $(svg);
-    let viewBox = parsed[0].getAttribute("viewBox").split(" ");
-    const width = viewBox[2];
-    const height = viewBox[3];
+const addRectBefore = (svg, color = 'rgba(230, 230, 230, 0.5)') => {
+  const parsed = $(svg);
+  const thisSVG = parsed[0];
+  let width;
+  let height;
+  if (thisSVG.hasAttribute("viewBox")) {
+    const viewBox = thisSVG.getAttribute("viewBox").split(" ");
+    width = viewBox[2];
+    height = viewBox[3];
+  } else {
+    width = thisSVG.getAttribute("width");
+    height = thisSVG.getAttribute("height");
+  }
 
-    const rect = `<rect x="0" y="0" width="${width}" height="${height}" fill="${color}" fill-opacity="0.5" />`;
+  const rect = `<rect x="0" y="0" width="${width}" height="${height}" fill="${color}" />`;
 
-    let find = parsed.find("text:first");
-    console.log('find', find);
-    if (find.length) {
-        find.before(rect);
-    } else {
-        parsed.append(rect);
-    }
-    return parsed[0].outerHTML;
+  const find = parsed.find("text:first");
+  if (find.length) {
+    find.before(rect);
+  } else {
+    parsed.append(rect);
+  }
+  return parsed[0].outerHTML;
 }
 
 const prettifyXml = function (sourceXml) {
-    const xmlDoc = new DOMParser().parseFromString(sourceXml, 'application/xml');
-    const xsltDoc = new DOMParser().parseFromString([
-        // describes how we want to modify the XML - indent everything
-        '<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform">',
-        '  <xsl:strip-space elements="*"/>',
-        '  <xsl:template match="para[content-style][not(text())]">', // change to just text() to strip space in text nodes
-        '    <xsl:value-of select="normalize-space(.)"/>',
-        '  </xsl:template>',
-        '  <xsl:template match="node()|@*">',
-        '    <xsl:copy><xsl:apply-templates select="node()|@*"/></xsl:copy>',
-        '  </xsl:template>',
-        '  <xsl:output indent="yes"/>',
-        '</xsl:stylesheet>',
-    ].join('\n'), 'application/xml');
+  const xmlDoc = new DOMParser().parseFromString(sourceXml, 'application/xml');
+  const xsltDoc = new DOMParser().parseFromString([
+    // describes how we want to modify the XML - indent everything
+    '<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform">',
+    '  <xsl:strip-space elements="*"/>',
+    '  <xsl:template match="para[content-style][not(text())]">', // change to just text() to strip space in text nodes
+    '    <xsl:value-of select="normalize-space(.)"/>',
+    '  </xsl:template>',
+    '  <xsl:template match="node()|@*">',
+    '    <xsl:copy><xsl:apply-templates select="node()|@*"/></xsl:copy>',
+    '  </xsl:template>',
+    '  <xsl:output indent="yes"/>',
+    '</xsl:stylesheet>',
+  ].join('\n'), 'application/xml');
 
-    const xsltProcessor = new XSLTProcessor();
-    xsltProcessor.importStylesheet(xsltDoc);
-    const resultDoc = xsltProcessor.transformToDocument(xmlDoc);
-    return new XMLSerializer().serializeToString(resultDoc);
+  const xsltProcessor = new XSLTProcessor();
+  xsltProcessor.importStylesheet(xsltDoc);
+  const resultDoc = xsltProcessor.transformToDocument(xmlDoc);
+  return new XMLSerializer().serializeToString(resultDoc);
 };
 
 module.exports = {
-    getColors: getColors,
-    addRectBefore: addRectBefore,
-    prettifyXml: prettifyXml,
-    svgWithSize: svgWithSize,
-    getSVGSize: getSVGSize,
-    changeColorByIndex: changeColorByIndex,
-    changeAllColors: changeAllColors,
+  getColors: getColors,
+  addRectBefore: addRectBefore,
+  prettifyXml: prettifyXml,
+  svgWithSize: svgWithSize,
+  getSVGSize: getSVGSize,
+  changeColorByIndex: changeColorByIndex,
+  changeAllColors: changeAllColors,
 };

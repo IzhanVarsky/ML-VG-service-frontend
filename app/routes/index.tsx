@@ -20,14 +20,14 @@ export default class Index extends React.Component {
 
     return (
       <AppShell
-        navbar={<Stack><Header /><Form /></Stack>}
+        navbar={<Stack><Header/><Form/></Stack>}
         styles={{
           main: {
             padding: 0,
           },
         }}
       >
-        <Covers />
+        <Covers/>
       </AppShell>
     );
   }

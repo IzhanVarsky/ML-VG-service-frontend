@@ -6,7 +6,7 @@ export default function Header() {
   return (
     <MantineHeader height="5rem" style={{ borderBottom: 0 }}>
       <Shape>
-        <Space w="xl" />
+        <Space w="xl"/>
         <Text
           size='xl'
           align='center'

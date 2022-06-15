@@ -1,7 +1,7 @@
-import {useOutletContext} from '@remix-run/react';
+import { useOutletContext } from '@remix-run/react';
 import Carousel from './Carousel';
 import Viewer from './Viewer';
-import {Text, Center} from '@mantine/core';
+import { Text, Center } from '@mantine/core';
 import Shape from '../Shape';
 
 export default function Covers() {

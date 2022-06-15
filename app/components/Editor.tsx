@@ -13,7 +13,7 @@ import {
   Textarea
 } from '@mantine/core';
 import Shape from '~/components/Shape';
-import {Link, useOutletContext} from '@remix-run/react';
+import { Link, useOutletContext } from '@remix-run/react';
 import {
   AdjustmentsAlt,
   ArrowBackUp,
@@ -26,7 +26,7 @@ import {
   Palette,
   Refresh,
 } from 'tabler-icons-react';
-import {downloadPNGFromServer, downloadTextFile, extractColors, getJSON} from "~/download_utils";
+import { downloadPNGFromServer, downloadTextFile, extractColors, getJSON } from "~/download_utils";
 import {
   addRectBefore,
   changeAllColors,
@@ -37,12 +37,12 @@ import {
   svgWithSize
 } from '~/utils';
 import SVG from './SVG';
-import {useState} from 'react';
-import {Dropzone} from '@mantine/dropzone';
+import { useState } from 'react';
+import { Dropzone } from '@mantine/dropzone';
 import useHistoryState from '~/HistoryState';
 
 const randomColor = () => {
-  let rgba = [];
+  const rgba = [];
   for (let i = 0; i < 3; i++) {
     rgba.push(Math.floor(Math.random() * 255));
   }
@@ -56,7 +56,7 @@ export default function Main() {
   const [state, setState, undo, redo] = useHistoryState(covers.length ? {
     svg: prettifyXml(covers[selectedCover].svg),
     colors: getColors(covers[selectedCover].svg),
-  } : {svg: '', colors: []});
+  } : { svg: '', colors: [] });
   const [imageSizeToDownload, setImageSizeToDownload] = useState(getSVGSize(state.svg).w);
 
   const updateStatePrettified = (newState) => {
@@ -88,19 +88,18 @@ export default function Main() {
   }
 
   const updWithNewColors = (newColors) => {
-    let newSVG = changeAllColors(state.svg, newColors);
+    const newSVG = changeAllColors(state.svg, newColors);
+    const newColorsState = newColors.map((el, i) => ({ attr: state.colors[i].attr, value: el }));
     updateStatePrettified({
       svg: newSVG,
-      colors: newColors
+      colors: newColorsState
     })
   }
 
   const updateColorByIndex = (ind) => (newColor) => {
-    console.log("ind", ind, "newcolor", newColor)
-    let newsvg = changeColorByIndex(state.svg, ind, newColor);
     updateStatePrettified({
-      svg: newsvg,
-      colors: state.colors.map((c, i) => i === ind ? newColor : c),
+      svg: changeColorByIndex(state.svg, ind, newColor),
+      colors: state.colors.map((el, i) => i === ind ? { attr: el.attr, value: newColor } : el),
     });
   }
 
@@ -112,7 +111,7 @@ export default function Main() {
       }
     }
 
-    let newColors = state.colors;
+    const newColors = state.colors.map((el, i) => el.value);
     shuffle(newColors);
     updWithNewColors(newColors);
   }
@@ -120,8 +119,8 @@ export default function Main() {
   return (
     <>
       <Link to="/">
-        <Button m='md' leftIcon={<ArrowBigLeft/>} style={{margin: 5, marginLeft: 16}}>
-          Go back
+        <Button m='md' leftIcon={<ArrowBigLeft/>} style={{ margin: 5, marginLeft: 16 }}>
+          Go back to Main
         </Button>
       </Link>
       <Shape>
@@ -148,18 +147,19 @@ export default function Main() {
           <Grid.Col span={1}>
             <Tabs>
               <Tabs.Tab label="Edit Options" icon={<AdjustmentsAlt size={14}/>}>
-                <Stack style={{height: '70vh'}}>
+                <Stack style={{ height: '70vh' }}>
                   <ScrollArea>
                     {state.colors.map((color, index) =>
                       <Center key={index}>
+                        <Text>{color.attr}:</Text>
                         <ColorInput
-                          style={{margin: '10px', width: '50%'}}
-                          value={color}
+                          style={{ margin: '10px', width: '50%' }}
+                          value={color.value}
                           format='rgba'
                           onChange={updateColorByIndex(index)}
                           rightSection={
                             <ActionIcon onClick={() => updateColorByIndex(index)(randomColor())}>
-                              <Refresh size={16} />
+                              <Refresh size={16}/>
                             </ActionIcon>
                           }
                         />
@@ -184,14 +184,14 @@ export default function Main() {
                       }, () => setIsLoading(false));
                     }}>
                     {() =>
-                      <Group style={{pointerEvents: 'none'}}>
+                      <Group style={{ pointerEvents: 'none' }}>
                         <Palette color='grey'/>
                         <Text color='grey'>Drop image to style transfer</Text>
                       </Group>
                     }
                   </Dropzone>
                   <Button
-                    style={{minHeight: '5vh'}}
+                    style={{ minHeight: '5vh' }}
                     onClick={() => updateSVGWithColors(addRectBefore(state.svg))}>
                     Add filter
                   </Button>
@@ -200,7 +200,7 @@ export default function Main() {
               <Tabs.Tab label="Edit Raw SVG" icon={<FileText size={14}/>}>
                 <Textarea
                   placeholder='Write SVG . . .'
-                  style={{minHeight: '70vh'}}
+                  style={{ minHeight: '70vh' }}
                   minRows={10}
                   maxRows={21}
                   autosize

@@ -24,7 +24,7 @@ export default class Edit extends React.Component {
           },
         }}
       >
-        <Editor />
+        <Editor/>
       </AppShell>
     );
   }

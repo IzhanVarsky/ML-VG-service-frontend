@@ -1,1 +1,1 @@
-docker run --rm -p 3000:3000 covergan_front:latest
+docker run --rm -p 5001:5001 covergan_front:latest

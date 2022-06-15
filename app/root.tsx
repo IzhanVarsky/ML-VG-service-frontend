@@ -27,17 +27,17 @@ export default function App() {
 
   return (
     <html lang="en">
-      <head>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-        <Meta />
-        <Links />
-      </head>
-      <body>
-        <Outlet context={[selectedCover, setSelectedCover, covers, setCovers]} />
-        <ScrollRestoration />
-        <Scripts />
-        <LiveReload />
-      </body>
+    <head>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+      <Meta/>
+      <Links/>
+    </head>
+    <body>
+    <Outlet context={[selectedCover, setSelectedCover, covers, setCovers]}/>
+    <ScrollRestoration/>
+    <Scripts/>
+    <LiveReload/>
+    </body>
     </html>
   );
 }
