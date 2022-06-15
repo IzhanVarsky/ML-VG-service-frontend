@@ -109,7 +109,6 @@ export default function Main() {
   }
 
   const updateColorByIndex = (ind) => (newColor) => {
-    console.log("ind", ind, "newColor", newColor);
     updateStatePrettified({
       svg: changeColorByIndex(state.svg, ind, newColor),
       colors: state.colors.map((el, i) => i === ind ? { attr: el.attr, value: newColor } : el),
@@ -171,7 +170,6 @@ export default function Main() {
                           style={{ margin: '10px', width: '50%' }}
                           value={color.value}
                           format='rgba'
-                          onAbort={(event) => console.log("Event", event)}
                           onChange={updateColorByIndex(index)}
                           rightSection={
                             <ActionIcon onClick={() => updateColorByIndex(index)(randomColor())}>
@@ -241,11 +239,13 @@ export default function Main() {
               <Tabs.Tab label="Download" icon={<Download size={14}/>}>
                 <Stack style={{
                   padding: '0 25%',
-                  justifyContent: 'center', minHeight: '70vh'
+                  justifyContent: 'flex-start', minHeight: '70vh'
                 }}>
                   <NumberInput
                     defaultValue={imageSizeToDownload}
                     onChange={(val) => setImageSizeToDownload(val)}
+                    min={0}
+                    max={10000}
                     placeholder="Image size"
                     label="Image size"
                     required
