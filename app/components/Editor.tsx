@@ -97,6 +97,7 @@ export default function Main() {
   }
 
   const updateColorByIndex = (ind) => (newColor) => {
+    console.log("ind", ind, "newColor", newColor);
     updateStatePrettified({
       svg: changeColorByIndex(state.svg, ind, newColor),
       colors: state.colors.map((el, i) => i === ind ? { attr: el.attr, value: newColor } : el),
@@ -156,6 +157,7 @@ export default function Main() {
                           style={{ margin: '10px', width: '50%' }}
                           value={color.value}
                           format='rgba'
+                          onAbort={(event) => console.log("Event", event)}
                           onChange={updateColorByIndex(index)}
                           rightSection={
                             <ActionIcon onClick={() => updateColorByIndex(index)(randomColor())}>
@@ -199,6 +201,7 @@ export default function Main() {
               </Tabs.Tab>
               <Tabs.Tab label="Edit Raw SVG" icon={<FileText size={14}/>}>
                 <Textarea
+                  autoFocus={true}
                   placeholder='Write SVG . . .'
                   style={{ minHeight: '70vh' }}
                   minRows={10}
