@@ -10,7 +10,7 @@ import {
   Stack,
   Tabs,
   Text,
-  Textarea
+  Textarea,
 } from '@mantine/core';
 import Shape from '~/components/Shape';
 import { Link, useOutletContext } from '@remix-run/react';
@@ -64,6 +64,17 @@ export default function Main() {
     setState({
       svg: prettifyXml(newState.svg),
       colors: newState.colors
+    })
+  }
+
+  const tryUpdateStateWithPrettified = () => {
+    let p = prettifyXml(state.svg);
+    if (p.includes('parsererror')) {
+      return
+    }
+    setState({
+      svg: p,
+      colors: state.colors
     })
   }
 
@@ -149,7 +160,7 @@ export default function Main() {
             </Center>
           </Grid.Col>
           <Grid.Col span={1}>
-            <Tabs>
+            <Tabs grow>
               <Tabs.Tab label="Edit Options" icon={<AdjustmentsAlt size={14}/>}>
                 <Stack style={{ height: '70vh' }}>
                   <ScrollArea>
@@ -259,6 +270,14 @@ export default function Main() {
                   </Button>
                 </Stack>
               </Tabs.Tab>
+              <Tabs.Tab disabled style={{ pointerEvents: 'none' }}
+                        icon={
+                          <Button component="a" variant="outline"
+                                  style={{ pointerEvents: 'all', padding: '0 10px' }}
+                                  onClick={() => tryUpdateStateWithPrettified()}>
+                            <Text style={{ paddingTop: '4%' }}>Prettify SVG</Text>
+                          </Button>
+                        }/>
             </Tabs>
           </Grid.Col>
         </Grid>
