@@ -53,7 +53,7 @@ const randomColor = () => {
 export default function Main() {
   const [selectedCover, setSelectedCover, covers, setCovers] = useOutletContext();
   const [isLoading, setIsLoading] = useState(false);
-  const [state, setState, undo, redo] = useHistoryState(covers.length ? {
+  const [state, setState, undo, redo, history, pointer] = useHistoryState(covers.length ? {
     svg: prettifyXml(covers[selectedCover].svg),
     colors: getColors(covers[selectedCover].svg),
   } : { svg: '', colors: [] });
@@ -132,12 +132,14 @@ export default function Main() {
             </Center>
             <Center>
               <Button m='md'
+                      color={pointer == 0 ? 'gray' : ''}
                       onClick={undo}
                       leftIcon={<ArrowBackUp/>}
               >
                 Undo
               </Button>
               <Button m='md'
+                      color={pointer + 1 == history.length ? 'gray' : ''}
                       onClick={redo}
                       leftIcon={<ArrowForwardUp/>}
               >
