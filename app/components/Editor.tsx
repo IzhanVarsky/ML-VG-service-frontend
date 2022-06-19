@@ -59,6 +59,7 @@ export default function Main() {
     colors: getColors(covers[selectedCover].svg),
   } : { svg: '', colors: [] });
   const [imageSizeToDownload, setImageSizeToDownload] = useState(getSVGSize(state.svg).w);
+  const [activeTab, setActiveTab] = useState(0)
 
   const updateStatePrettified = (newState) => {
     setState({
@@ -68,7 +69,9 @@ export default function Main() {
   }
 
   const tryUpdateStateWithPrettified = () => {
+    console.log("START")
     let p = prettifyXml(state.svg);
+    console.log("p:", p);
     if (p.includes('parsererror')) {
       return
     }
@@ -91,7 +94,11 @@ export default function Main() {
     if (prettifyXml(svg).includes('parsererror')) {
       colors = state.colors;
     } else {
-      colors = getColors(svg);
+      try {
+        colors = getColors(svg);
+      } catch (e) {
+        colors = state.colors
+      }
     }
     setState({
       svg,
@@ -128,6 +135,21 @@ export default function Main() {
     updWithNewColors(newColors);
   }
 
+  const preprocessSVGToRender = (svg) => {
+    if (svg.trim() == "") {
+      return "<span>SVG is empty</span>"
+    }
+    try {
+      let parsed = $(svg);
+      if (parsed.prop("tagName") == "svg") {
+        return svg
+      }
+      return "<span>Incorrect SVG</span>"
+    } catch (e) {
+      return "<span>Couldn't parse SVG</span>"
+    }
+  }
+
   return (
     <>
       <Link to="/">
@@ -139,7 +161,7 @@ export default function Main() {
         <Grid justify='space-around' align="center" columns={2}>
           <Grid.Col span={1}>
             <Center>
-              <SVG svg={state.svg}/>
+              <SVG svg={preprocessSVGToRender(state.svg)}/>
             </Center>
             <Center>
               <Button m='md'
@@ -159,7 +181,11 @@ export default function Main() {
             </Center>
           </Grid.Col>
           <Grid.Col span={1}>
-            <Tabs grow>
+            <Tabs active={activeTab} onTabChange={(active: number, tabKey: string) => {
+              if (active != 3) {
+                setActiveTab(active)
+              }
+            }} grow>
               <Tabs.Tab label="Edit Options" icon={<AdjustmentsAlt size={14}/>}>
                 <Stack style={{ height: '70vh' }}>
                   <ScrollArea>
@@ -180,12 +206,13 @@ export default function Main() {
                       </Center>
                     )}
                   </ScrollArea>
-                  <Button
-                    style={{ minHeight: '5vh' }}
-                    onClick={shuffleColors}
-                  >
-                    Shuffle colors
-                  </Button>
+                  <Grid>
+                    <Grid.Col>
+                      <Button onClick={shuffleColors} style={{ width: '100%' }}>
+                        Shuffle colors
+                      </Button>
+                    </Grid.Col>
+                  </Grid>
                   <Dropzone
                     multiple={false}
                     accept={["image/*"]}
@@ -270,7 +297,7 @@ export default function Main() {
                   </Button>
                 </Stack>
               </Tabs.Tab>
-              <Tabs.Tab disabled style={{ pointerEvents: 'none' }}
+              <Tabs.Tab style={{ pointerEvents: 'none' }}
                         icon={
                           <Button component="span" variant="outline"
                                   style={{ pointerEvents: 'all' }}

@@ -126,27 +126,39 @@ const addRectBefore = (svg, color = 'rgba(230, 230, 230, 0.5)') => {
   return parsed[0].outerHTML;
 }
 
-const prettifyXml = function (sourceXml) {
-  const xmlDoc = new DOMParser().parseFromString(sourceXml, 'application/xml');
-  const xsltDoc = new DOMParser().parseFromString([
-    // describes how we want to modify the XML - indent everything
-    '<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform">',
-    '  <xsl:strip-space elements="*"/>',
-    '  <xsl:template match="para[content-style][not(text())]">', // change to just text() to strip space in text nodes
-    '    <xsl:value-of select="normalize-space(.)"/>',
-    '  </xsl:template>',
-    '  <xsl:template match="node()|@*">',
-    '    <xsl:copy><xsl:apply-templates select="node()|@*"/></xsl:copy>',
-    '  </xsl:template>',
-    '  <xsl:output indent="yes"/>',
-    '</xsl:stylesheet>',
-  ].join('\n'), 'application/xml');
+const prettifyXmlLib = require('prettify-xml')
+const prettifyXml = (input) => prettifyXmlLib(input, {indent: 2, newline: '\n'})
 
-  const xsltProcessor = new XSLTProcessor();
-  xsltProcessor.importStylesheet(xsltDoc);
-  const resultDoc = xsltProcessor.transformToDocument(xmlDoc);
-  return new XMLSerializer().serializeToString(resultDoc);
-};
+// const prettifyXml = function (sourceXml) {
+//   const xmlDoc = new DOMParser().parseFromString(sourceXml, 'application/xml');
+//   const xsltDoc = new DOMParser().parseFromString([
+//     // describes how we want to modify the XML - indent everything
+//     '<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform">',
+//     '  <xsl:strip-space elements="*"/>',
+//     '  <xsl:template match="para[content-style][not(text())]">', // change to just text() to strip space in text nodes
+//     '    <xsl:value-of select="normalize-space(.)"/>',
+//     '  </xsl:template>',
+//     '  <xsl:template match="node()|@*">',
+//     '    <xsl:copy><xsl:apply-templates select="node()|@*"/></xsl:copy>',
+//     '  </xsl:template>',
+//     '  <xsl:output indent="yes"/>',
+//     '</xsl:stylesheet>',
+//   ].join('\n'), 'application/xml');
+//
+//   var resultDoc;
+//   if (window.ActiveXObject) {
+//     // IE method
+//     resultDoc = new ActiveXObject("MSXML2.DOMDocument");
+//     xmlDoc.transformNodeToObject(xsltDoc, resultDoc);
+//   } else {
+//     // Other browsers
+//     const xsltProcessor = new XSLTProcessor();
+//     xsltProcessor.importStylesheet(xsltDoc);
+//     resultDoc = xsltProcessor.transformToDocument(xmlDoc);
+//   }
+//   let res = new XMLSerializer().serializeToString(resultDoc);
+//   return res;
+// };
 
 module.exports = {
   getColors: getColors,
