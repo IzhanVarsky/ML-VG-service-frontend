@@ -27,7 +27,7 @@ const useHistoryState: <T>(
       let valueToAdd = value;
       if (typeof value === "function") {
         valueToAdd = (value as (prev?: T) => T)(state);
-      } else if (pointer > 0) {
+      } else if (pointer >= 0) {
         if (typeof value === "object" &&
           typeof history[pointer] === "object" &&
           JSON.stringify(value) === JSON.stringify(history[pointer])) {

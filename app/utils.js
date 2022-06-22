@@ -5,7 +5,7 @@ const re = new RegExp(correct_color_regex);
 function findColorByAttrName(obj, attr) {
   return obj
     .find(`[${attr}]`)
-    .filter((i, obj) => re.test(obj.getAttribute(attr).trim().toLowerCase()))
+    .filter((i, x) => re.test(x.getAttribute(attr).trim().toLowerCase()))
     .map((i, x) => ({x, attr, value: x.getAttribute(attr)}));
 }
 
@@ -16,10 +16,12 @@ function extractColors(parsed) {
 }
 
 const getColors = (svg) => {
-  return extractColors($(svg)).map(obj => ({
-    attr: obj.attr,
-    value: obj.value
-  }))
+  return extractColors($(svg)).map(obj => {
+    return ({
+      attr: `${obj.x.tagName.toLowerCase()}["${obj.attr}"]`,
+      value: obj.value
+    })
+  })
 }
 
 const changeColorByIndex = (svg, ind, newColor) => {
@@ -50,11 +52,11 @@ const getSVGSize = (svg) => {
   }
 }
 
-const svgWithSize = (svg, size) => {
+const svgWithSize = (svg, width, height) => {
   try {
     const parsed = $(svg)[0];
-    parsed.setAttribute("width", size);
-    parsed.setAttribute("height", size);
+    parsed.setAttribute("width", width);
+    parsed.setAttribute("height", height);
     return parsed.outerHTML;
   } catch (e) {
     return svg;
@@ -126,6 +128,7 @@ const addRectBefore = (svg, color = 'rgba(230, 230, 230, 0.5)') => {
   return parsed[0].outerHTML;
 }
 
+// TODO: try use http://www.eslinstructor.net/vkbeautify/
 const prettifyXmlLib = require('prettify-xml')
 const prettifyXml = (input) => prettifyXmlLib(input, {indent: 2, newline: '\n'})
 

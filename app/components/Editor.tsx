@@ -2,7 +2,7 @@ import {
   ActionIcon,
   Button,
   Center,
-  ColorInput,
+  ColorInput, Container,
   Grid,
   Group,
   NumberInput,
@@ -18,13 +18,13 @@ import {
   AdjustmentsAlt,
   ArrowBackUp,
   ArrowBigLeft,
-  ArrowForwardUp,
+  ArrowForwardUp, BarrierBlock,
   Braces,
   Download,
   FileText,
   LayoutBoardSplit,
   Palette,
-  Refresh,
+  Refresh, Shadow, Trash,
 } from 'tabler-icons-react';
 import { downloadPNGFromServer, downloadTextFile, extractColors, getJSON } from "~/download_utils";
 import {
@@ -39,7 +39,7 @@ import {
 } from '~/utils';
 import SVG from './SVG';
 import { useState } from 'react';
-import { Dropzone } from '@mantine/dropzone';
+import { Dropzone, FullScreenDropzone } from '@mantine/dropzone';
 import useHistoryState from '~/HistoryState';
 
 const randomColor = () => {
@@ -58,7 +58,8 @@ export default function Main() {
     svg: prettifyXml(covers[selectedCover].svg),
     colors: getColors(covers[selectedCover].svg),
   } : { svg: '', colors: [] });
-  const [imageSizeToDownload, setImageSizeToDownload] = useState(getSVGSize(state.svg).w);
+  const [imageWidthToDownload, setImageWidthToDownload] = useState(getSVGSize(state.svg).w);
+  const [imageHeightToDownload, setImageHeightToDownload] = useState(getSVGSize(state.svg).h);
   const [activeTab, setActiveTab] = useState(0)
 
   const updateStatePrettified = (newState) => {
@@ -69,9 +70,8 @@ export default function Main() {
   }
 
   const tryUpdateStateWithPrettified = () => {
-    console.log("START")
     let p = prettifyXml(state.svg);
-    console.log("p:", p);
+    // TODO: no parsererror!
     if (p.includes('parsererror')) {
       return
     }
@@ -82,7 +82,7 @@ export default function Main() {
   }
 
   const updateSVGWithColors = (svg) => {
-    updateStatePrettified({
+    setState({
       svg,
       colors: getColors(svg)
     })
@@ -109,14 +109,14 @@ export default function Main() {
   const updWithNewColors = (newColors) => {
     const newSVG = changeAllColors(state.svg, newColors);
     const newColorsState = newColors.map((el, i) => ({ attr: state.colors[i].attr, value: el }));
-    updateStatePrettified({
+    setState({
       svg: newSVG,
       colors: newColorsState
     })
   }
 
   const updateColorByIndex = (ind) => (newColor) => {
-    updateStatePrettified({
+    setState({
       svg: changeColorByIndex(state.svg, ind, newColor),
       colors: state.colors.map((el, i) => i === ind ? { attr: el.attr, value: newColor } : el),
     });
@@ -165,6 +165,13 @@ export default function Main() {
             </Center>
             <Center>
               <Button m='md'
+                      color={state.svg == "" ? 'gray' : ''}
+                      onClick={() => setState({ svg: '', colors: [] })}
+                      leftIcon={<Trash/>}
+              >
+                Delete
+              </Button>
+              <Button m='md'
                       color={pointer == 0 ? 'gray' : ''}
                       onClick={undo}
                       leftIcon={<ArrowBackUp/>}
@@ -179,11 +186,37 @@ export default function Main() {
                 Redo
               </Button>
             </Center>
+            <Dropzone
+              accept={['image/svg+xml']}
+              onDrop={async (files) => {
+                const x = await files[0].text();
+                updCoverNotPrettified(x);
+              }}
+            >
+              {() =>
+                <Group position="center" spacing="xl" style={{ pointerEvents: 'none' }}>
+                  <LayoutBoardSplit color='grey' size={60}/>
+                  <div>
+                    <Text color='grey' size="xl" inline>
+                      Drag SVG image here or click to select file
+                    </Text>
+                    <Text color='dimmed' size="sm" inline mt={7}>
+                      You can edit it after uploading!
+                    </Text>
+                  </div>
+                </Group>
+              }
+            </Dropzone>
           </Grid.Col>
           <Grid.Col span={1}>
             <Tabs active={activeTab} onTabChange={(active: number, tabKey: string) => {
+              if (active == 2) {
+                let svgSize = getSVGSize(state.svg);
+                setImageWidthToDownload(svgSize.w);
+                setImageHeightToDownload(svgSize.h);
+              }
               if (active != 3) {
-                setActiveTab(active)
+                setActiveTab(active);
               }
             }} grow>
               <Tabs.Tab label="Edit Options" icon={<AdjustmentsAlt size={14}/>}>
@@ -208,8 +241,8 @@ export default function Main() {
                   </ScrollArea>
                   <Grid>
                     <Grid.Col>
-                      <Button onClick={shuffleColors} style={{ width: '100%' }}>
-                        Shuffle colors
+                      <Button leftIcon={<Refresh size={20}/>} onClick={shuffleColors} style={{ width: '100%' }}>
+                        Shuffle All Colors
                       </Button>
                     </Grid.Col>
                   </Grid>
@@ -235,16 +268,18 @@ export default function Main() {
                     <Grid.Col span={4}>
                       <Center>
                         <Button
+                          leftIcon={<Shadow size={20}/>}
                           onClick={() => updateSVGWithColors(addShadowFilter(state.svg))}>
-                          Add shadow filter
+                          Add Shadow Filter
                         </Button>
                       </Center>
                     </Grid.Col>
                     <Grid.Col span={4}>
                       <Center>
                         <Button
+                          leftIcon={<BarrierBlock size={20}/>}
                           onClick={() => updateSVGWithColors(addRectBefore(state.svg))}>
-                          Add color filter
+                          Add Color Filter
                         </Button>
                       </Center>
                     </Grid.Col>
@@ -268,30 +303,46 @@ export default function Main() {
                   padding: '0 25%',
                   justifyContent: 'flex-start', minHeight: '70vh'
                 }}>
-                  <NumberInput
-                    defaultValue={imageSizeToDownload}
-                    onChange={(val) => setImageSizeToDownload(val)}
-                    min={0}
-                    max={10000}
-                    placeholder="Image size"
-                    label="Image size"
-                    required
-                  />
+                  <Grid justify="space-around" align="center">
+                    <NumberInput
+                      defaultValue={imageWidthToDownload}
+                      onChange={(val) => setImageWidthToDownload(val)}
+                      min={0}
+                      max={10000}
+                      placeholder="Image width"
+                      label="Image width"
+                      style={{ width: '40%' }}
+                      required
+                    />
+                    <NumberInput
+                      defaultValue={imageHeightToDownload}
+                      onChange={(val) => setImageHeightToDownload(val)}
+                      min={0}
+                      max={10000}
+                      placeholder="Image height"
+                      label="Image height"
+                      style={{ width: '40%' }}
+                      required
+                    />
+                  </Grid>
                   <Button
                     leftIcon={<LayoutBoardSplit size={14}/>}
-                    onClick={() => downloadTextFile(svgWithSize(state.svg, imageSizeToDownload), "edited.svg")}
+                    onClick={() =>
+                      downloadTextFile(svgWithSize(state.svg, imageWidthToDownload, imageHeightToDownload),
+                        "edited.svg")}
                   >
                     Download SVG
                   </Button>
                   <Button
                     leftIcon={<Palette size={14}/>}
-                    onClick={() => downloadPNGFromServer(svgWithSize(state.svg, imageSizeToDownload))}
+                    onClick={() =>
+                      downloadPNGFromServer(svgWithSize(state.svg, imageWidthToDownload, imageHeightToDownload))}
                   >
                     Download PNG
                   </Button>
                   <Button
                     leftIcon={<Braces size={14}/>}
-                    onClick={() => getJSON(svgWithSize(state.svg, imageSizeToDownload))}
+                    onClick={() => getJSON(svgWithSize(state.svg, imageWidthToDownload))}
                   >
                     Download JSON
                   </Button>
