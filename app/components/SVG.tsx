@@ -1,8 +1,8 @@
 import { Container, Text } from '@mantine/core';
 import { svgWithSize } from "~/utils";
 
-export default function SVG({ svg, size = "50vh" }) {
-  let html = svgWithSize(svg, size);
+export default function SVG({ svg, w = "50vh", h = "50vh" }) {
+  let html = svgWithSize(svg, w, h);
   return (
     <Container>
       {html === "" ?

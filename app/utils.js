@@ -44,8 +44,20 @@ const changeAllColors = (svg, newColors) => {
 const getSVGSize = (svg) => {
   try {
     const parsed = $(svg)[0];
-    const w = parseInt(parsed.getAttribute("width"));
-    const h = parseInt(parsed.getAttribute("height"));
+    let w = 512;
+    let h = 512;
+    if (!parsed.hasAttribute("width") || !parsed.hasAttribute("height")) {
+      if (parsed.getAttribute("viewBox") !== undefined) {
+        const viewBox = parsed.getAttribute("viewBox").split(" ");
+        w = viewBox[2];
+        h = viewBox[3];
+      }
+    } else {
+      w = parsed.getAttribute("width");
+      h = parsed.getAttribute("height");
+    }
+    w = parseInt(w.toString());
+    h = parseInt(h.toString());
     return {w, h};
   } catch (e) {
     return {w: 0, h: 0}
@@ -55,8 +67,15 @@ const getSVGSize = (svg) => {
 const svgWithSize = (svg, width, height) => {
   try {
     const parsed = $(svg)[0];
-    parsed.setAttribute("width", width);
-    parsed.setAttribute("height", height);
+    let w, h;
+    if (width !== undefined && height !== undefined) {
+      w = width;
+      h = height;
+    } else {
+      [w, h] = getSVGSize(svg);
+    }
+    parsed.setAttribute("width", w);
+    parsed.setAttribute("height", h);
     return parsed.outerHTML;
   } catch (e) {
     return svg;

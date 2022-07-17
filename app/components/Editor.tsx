@@ -2,7 +2,7 @@ import {
   ActionIcon,
   Button,
   Center,
-  ColorInput, Container,
+  ColorInput,
   Grid,
   Group,
   NumberInput,
@@ -12,21 +12,27 @@ import {
   Text,
   Textarea,
 } from '@mantine/core';
+import { optimize } from 'svgo';
 import Shape from '~/components/Shape';
 import { Link, useOutletContext } from '@remix-run/react';
 import {
   AdjustmentsAlt,
   ArrowBackUp,
   ArrowBigLeft,
-  ArrowForwardUp, BarrierBlock,
+  ArrowForwardUp,
+  Axe,
+  BarrierBlock,
   Braces,
   Download,
   FileText,
   LayoutBoardSplit,
   Palette,
-  Refresh, Shadow, Trash,
+  Refresh,
+  Shadow,
+  Trash,
 } from 'tabler-icons-react';
 import { downloadPNGFromServer, downloadTextFile, extractColors, getJSON } from "~/download_utils";
+import { flattenTransformsFromStr } from "~/flatten_transforms";
 import {
   addRectBefore,
   addShadowFilter,
@@ -39,7 +45,7 @@ import {
 } from '~/utils';
 import SVG from './SVG';
 import { useState } from 'react';
-import { Dropzone, FullScreenDropzone } from '@mantine/dropzone';
+import { Dropzone } from '@mantine/dropzone';
 import useHistoryState from '~/HistoryState';
 
 const randomColor = () => {
@@ -150,6 +156,19 @@ export default function Main() {
     }
   }
 
+  const optimizeSVG = function () {
+    const result = optimize(state.svg);
+    updCoverNotPrettified(result.data);
+  }
+
+  const flattenGroups = function () {
+
+  }
+
+  const flattenTransformations = function () {
+    updCoverNotPrettified(flattenTransformsFromStr(state.svg));
+  }
+
   return (
     <>
       <Link to="/">
@@ -161,7 +180,7 @@ export default function Main() {
         <Grid justify='space-around' align="center" columns={2}>
           <Grid.Col span={1}>
             <Center>
-              <SVG svg={preprocessSVGToRender(state.svg)}/>
+              <SVG svg={preprocessSVGToRender(state.svg)} w="45vh" h="45vh"/>
             </Center>
             <Center>
               <Button m='md'
@@ -305,7 +324,7 @@ export default function Main() {
                 }}>
                   <Grid justify="space-around" align="center">
                     <NumberInput
-                      defaultValue={imageWidthToDownload}
+                      value={imageWidthToDownload}
                       onChange={(val) => setImageWidthToDownload(val)}
                       min={0}
                       max={10000}
@@ -315,7 +334,7 @@ export default function Main() {
                       required
                     />
                     <NumberInput
-                      defaultValue={imageHeightToDownload}
+                      value={imageHeightToDownload}
                       onChange={(val) => setImageHeightToDownload(val)}
                       min={0}
                       max={10000}
@@ -361,6 +380,43 @@ export default function Main() {
                             }}>Prettify SVG</Center>
                           </Button>
                         }/>
+              <Tabs.Tab label="Optimizations" icon={<Axe size={14}/>}>
+                <Stack style={{
+                  padding: '0 25%',
+                  justifyContent: 'flex-start', minHeight: '70vh'
+                }}>
+                  <Button component="span" variant="outline"
+                          style={{ pointerEvents: 'all' }}
+                          onClick={() => optimizeSVG()}>
+                    <Center style={{
+                      height: "inherit",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center"
+                    }}>Optimize</Center>
+                  </Button>
+                  {/*<Button component="span" variant="outline"*/}
+                  {/*        style={{ pointerEvents: 'all' }}*/}
+                  {/*        onClick={() => flattenGroups()}>*/}
+                  {/*  <Center style={{*/}
+                  {/*    height: "inherit",*/}
+                  {/*    display: "flex",*/}
+                  {/*    justifyContent: "center",*/}
+                  {/*    alignItems: "center"*/}
+                  {/*  }}>Flatten Group Tags</Center>*/}
+                  {/*</Button>*/}
+                  <Button component="span" variant="outline"
+                          style={{ pointerEvents: 'all' }}
+                          onClick={() => flattenTransformations()}>
+                    <Center style={{
+                      height: "inherit",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center"
+                    }}>Flatten Transformations</Center>
+                  </Button>
+                </Stack>
+              </Tabs.Tab>
             </Tabs>
           </Grid.Col>
         </Grid>
