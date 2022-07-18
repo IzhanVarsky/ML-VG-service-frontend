@@ -16,7 +16,7 @@ export default function Viewer() {
       <Tabs position="center" grow>
         <Tabs.Tab label="SVG">
           <Stack>
-            <SVG svg={cover.svg}/>
+            <SVG svg={cover.svg} w={"50vh"} h={"50vh"}/>
             <Grid justify='space-around'>
               <Button
                 onClick={() => downloadTextFile(cover.svg, "image.svg")}

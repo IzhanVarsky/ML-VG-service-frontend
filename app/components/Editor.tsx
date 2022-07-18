@@ -5,8 +5,8 @@ import {
   ColorInput,
   Grid,
   Group,
-  NumberInput,
-  ScrollArea,
+  NumberInput, NumberInputHandlers,
+  ScrollArea, Slider,
   Stack,
   Tabs,
   Text,
@@ -14,6 +14,10 @@ import {
 } from '@mantine/core';
 import { optimize } from 'svgo';
 import Shape from '~/components/Shape';
+// import DraggableComponent from '~/components/Draggable';
+import { useDraggable } from "~/use-draggable";
+import Draggable from '~/components/Draggable2';
+import MyDraggable from '~/components/MyDraggable';
 import { Link, useOutletContext } from '@remix-run/react';
 import {
   AdjustmentsAlt,
@@ -45,7 +49,7 @@ import {
   svgWithSize
 } from '~/utils';
 import SVG from './SVG';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Dropzone } from '@mantine/dropzone';
 import useHistoryState from '~/HistoryState';
 
@@ -68,6 +72,8 @@ export default function Main() {
   const [imageWidthToDownload, setImageWidthToDownload] = useState(getSVGSize(state.svg).w);
   const [imageHeightToDownload, setImageHeightToDownload] = useState(getSVGSize(state.svg).h);
   const [activeTab, setActiveTab] = useState(0)
+
+  const [zoomValue, setZoomValue] = useState(100);
 
   const updateStatePrettified = (newState) => {
     setState({
@@ -144,16 +150,16 @@ export default function Main() {
 
   const preprocessSVGToRender = (svg) => {
     if (svg.trim() == "") {
-      return "<span>SVG is empty</span>"
+      return "Error: SVG is empty"
     }
     try {
       let parsed = $(svg);
       if (parsed.prop("tagName") == "svg") {
         return svg
       }
-      return "<span>Incorrect SVG</span>"
+      return "Error: Incorrect SVG"
     } catch (e) {
-      return "<span>Couldn't parse SVG</span>"
+      return "Error: Couldn't parse SVG"
     }
   }
 
@@ -178,6 +184,8 @@ export default function Main() {
     updCoverNotPrettified(res3.data);
   }
 
+  const [ref, pressed, setPosition] = useDraggable();
+
   return (
     <>
       <Link to="/">
@@ -188,8 +196,45 @@ export default function Main() {
       <Shape>
         <Grid justify='space-around' align="center" columns={2}>
           <Grid.Col span={1}>
+            <ScrollArea style={{ width: '45vw', height: '45vh' }} type="always" offsetScrollbars>
+              {/*<div style={{ overflowY: 'auto', overflowX: 'auto', width: '100%', height: '100%' }}>*/}
+              <div
+                ref={ref}
+                style={{ width: 'fit-content', height: 'fit-content', margin: 'auto' }}
+                dangerouslySetInnerHTML={{
+                  __html:
+                    svgWithSize(preprocessSVGToRender(state.svg),
+                      undefined, undefined, zoomValue)
+                }}/>
+              {/*</div>*/}
+            </ScrollArea>
             <Center>
-              <SVG svg={preprocessSVGToRender(state.svg)} w="45vw" h="45vh"/>
+              <Group spacing={5}>
+                <ActionIcon size={42} variant="default"
+                            onClick={() => {
+                              setZoomValue(zoomValue / 2.0);
+                              setPosition({ x: 0, y: 0 })
+                            }}>
+                  –
+                </ActionIcon>
+                <NumberInput
+                  hideControls
+                  value={zoomValue}
+                  onChange={(val) => setZoomValue(val)}
+                  max={2000}
+                  min={0}
+                  precision={3}
+                  styles={{ input: { width: 100, textAlign: 'center' } }}
+                  parser={(value) => value.replace('%', '')}
+                  formatter={(value) => `${value}%`}
+                />
+                <ActionIcon size={42} variant="default" onClick={() => {
+                  setZoomValue(zoomValue * 2)
+                  setPosition({ x: 0, y: 0 })
+                }}>
+                  +
+                </ActionIcon>
+              </Group>
             </Center>
             <Center>
               <Button m='md'

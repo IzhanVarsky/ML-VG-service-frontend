@@ -64,7 +64,7 @@ const getSVGSize = (svg) => {
   }
 }
 
-const svgWithSize = (svg, width, height) => {
+const svgWithSize = (svg, width, height, scale = 100.0) => {
   try {
     const parsed = $(svg)[0];
     let {w, h} = getSVGSize(svg);
@@ -75,6 +75,8 @@ const svgWithSize = (svg, width, height) => {
       w = width;
       h = height;
     }
+    w *= scale / 100.0;
+    h *= scale / 100.0;
     parsed.setAttribute("width", w);
     parsed.setAttribute("height", h);
     return parsed.outerHTML;
