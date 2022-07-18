@@ -67,17 +67,19 @@ const getSVGSize = (svg) => {
 const svgWithSize = (svg, width, height) => {
   try {
     const parsed = $(svg)[0];
-    let w, h;
+    let {w, h} = getSVGSize(svg);
+    if (!parsed.hasAttribute("viewBox")) {
+      parsed.setAttribute("viewBox", `0 0 ${w} ${h}`)
+    }
     if (width !== undefined && height !== undefined) {
       w = width;
       h = height;
-    } else {
-      [w, h] = getSVGSize(svg);
     }
     parsed.setAttribute("width", w);
     parsed.setAttribute("height", h);
     return parsed.outerHTML;
   } catch (e) {
+    console.log("Caught error!!!", e);
     return svg;
   }
 }

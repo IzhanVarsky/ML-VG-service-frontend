@@ -1,3 +1,4 @@
+// origin: https://gist.github.com/timo22345/9413158
 /*
 Usage example: http://jsfiddle.net/Nv78L/1/embedded/result/
 
@@ -61,7 +62,9 @@ function flatten(elem, toCubics, toAbsolute, rectAsArgs, dec) {
     for (let child_num = 0; child_num < elem.children.length; child_num++) {
       flatten(elem.children[child_num], toCubics, toAbsolute, rectAsArgs, dec);
     }
-    elem.removeAttribute('transform');
+    if (elem.tagName !== "text") {
+      elem.removeAttribute('transform');
+    }
     return;
   }
   if (!(elem instanceof SVGCircleElement ||
@@ -72,12 +75,9 @@ function flatten(elem, toCubics, toAbsolute, rectAsArgs, dec) {
     elem instanceof SVGPolylineElement ||
     elem instanceof SVGPathElement)) {
     return;
-  } else {
-    console.log("SVGElem:", elem);
   }
 
   let path_elem = convertToPath(elem, rectAsArgs);
-  console.log("Converted to path:", path_elem.outerHTML);
   //console.log('path_elem', $(path_elem).wrap('<div />').parent().html() );
   //$(path_elem).unwrap();
 
@@ -118,10 +118,7 @@ function flatten(elem, toCubics, toAbsolute, rectAsArgs, dec) {
   // Get the relation matrix that converts path coordinates
   // to SVGroot's coordinate space
   // console.log("pathDOM", pathDOM.outerHTML);
-  console.log("svgDOM", svgDOM.outerHTML);
-  console.log(svgDOM.getScreenCTM());
   var matrix = svgDOM.getScreenCTM().inverse().multiply(pathDOM.getScreenCTM());
-  console.log("MATRIX:", matrix);
   // The following code can bake transformations
   // both normalized and non-normalized data
   // Coordinates have to be Absolute in the following
@@ -246,7 +243,6 @@ function flatten(elem, toCubics, toAbsolute, rectAsArgs, dec) {
   if (toAbsolute) newcoords = pathToAbsolute(newcoords);
   path_elem.setAttribute('d', convertToString(newcoords));
   path_elem.removeAttribute('transform');
-  console.log("+++ updated path elem:", path_elem);
 }
 
 // Converts all shapes to path retaining attributes.
@@ -317,14 +313,14 @@ function convertToPath(oldElem, rectAsArgs) {
       d = 'M' + oldElem.getAttribute('points') + 'Z';
       break;
     case 'rect':
-      var rx = +oldElem.getAttribute('rx'),
-        ry = +oldElem.getAttribute('ry'),
+      var
         b = oldElem.getBBox(),
         x = b.x,
         y = b.y,
         w = b.width,
         h = b.height;
-
+      rx = oldElem.hasAttribute("rx") ? +oldElem.getAttribute('rx') : -1;
+      ry = oldElem.hasAttribute("ry") ? +oldElem.getAttribute('ry') : -1;
       // Validity checks from http://www.w3.org/TR/SVG/shapes.html#RectElement:
       // If neither ‘rx’ nor ‘ry’ are properly specified, then set both rx and ry to 0. (This will result in square corners.)
       if (!valid(rx) && !valid(ry)) rx = ry = 0;
@@ -1044,11 +1040,11 @@ function createElementFromHTML(htmlString) {
   return div.firstChild;
 }
 
-const flattenTransformsFromStr = (svg) => {
+const applyTransformsFromStr = (svg) => {
   let element = createElementFromHTML(svg);
   console.log("Element from HTML!", element);
   element['display'] = 'none';
-  element['id'] = 'addedSVG';
+  // element['id'] = 'addedSVG';
   document.body.appendChild(element);
   flatten(element);
   let res = element.outerHTML;
@@ -1057,5 +1053,5 @@ const flattenTransformsFromStr = (svg) => {
 }
 
 module.exports = {
-  flattenTransformsFromStr: flattenTransformsFromStr
+  applyTransformsFromStr: applyTransformsFromStr
 };

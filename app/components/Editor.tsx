@@ -32,7 +32,8 @@ import {
   Trash,
 } from 'tabler-icons-react';
 import { downloadPNGFromServer, downloadTextFile, extractColors, getJSON } from "~/download_utils";
-import { flattenTransformsFromStr } from "~/flatten_transforms";
+import { applyTransformsFromStr } from "~/flatten_transforms";
+import { flattenedGroups } from "~/flatten_groups";
 import {
   addRectBefore,
   addShadowFilter,
@@ -162,11 +163,19 @@ export default function Main() {
   }
 
   const flattenGroups = function () {
-
+    let res = flattenedGroups(state.svg);
+    updCoverNotPrettified(res);
   }
 
-  const flattenTransformations = function () {
-    updCoverNotPrettified(flattenTransformsFromStr(state.svg));
+  const applyTransforms = function () {
+    updCoverNotPrettified(applyTransformsFromStr(state.svg));
+  }
+
+  const removeGroupsApplyTransformsOptimize = () => {
+    let res1 = flattenedGroups(state.svg);
+    let res2 = applyTransformsFromStr(res1);
+    let res3 = optimize(res2);
+    updCoverNotPrettified(res3.data);
   }
 
   return (
@@ -180,7 +189,7 @@ export default function Main() {
         <Grid justify='space-around' align="center" columns={2}>
           <Grid.Col span={1}>
             <Center>
-              <SVG svg={preprocessSVGToRender(state.svg)} w="45vh" h="45vh"/>
+              <SVG svg={preprocessSVGToRender(state.svg)} w="45vw" h="45vh"/>
             </Center>
             <Center>
               <Button m='md'
@@ -393,27 +402,37 @@ export default function Main() {
                       display: "flex",
                       justifyContent: "center",
                       alignItems: "center"
-                    }}>Optimize</Center>
+                    }}>Optimize (SVGO)</Center>
                   </Button>
-                  {/*<Button component="span" variant="outline"*/}
-                  {/*        style={{ pointerEvents: 'all' }}*/}
-                  {/*        onClick={() => flattenGroups()}>*/}
-                  {/*  <Center style={{*/}
-                  {/*    height: "inherit",*/}
-                  {/*    display: "flex",*/}
-                  {/*    justifyContent: "center",*/}
-                  {/*    alignItems: "center"*/}
-                  {/*  }}>Flatten Group Tags</Center>*/}
-                  {/*</Button>*/}
                   <Button component="span" variant="outline"
                           style={{ pointerEvents: 'all' }}
-                          onClick={() => flattenTransformations()}>
+                          onClick={() => flattenGroups()}>
                     <Center style={{
                       height: "inherit",
                       display: "flex",
                       justifyContent: "center",
                       alignItems: "center"
-                    }}>Flatten Transformations</Center>
+                    }}>Flatten Transforms from groups + remove groups</Center>
+                  </Button>
+                  <Button component="span" variant="outline"
+                          style={{ pointerEvents: 'all' }}
+                          onClick={() => applyTransforms()}>
+                    <Center style={{
+                      height: "inherit",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center"
+                    }}>Apply Transformations</Center>
+                  </Button>
+                  <Button component="span" variant="outline"
+                          style={{ pointerEvents: 'all' }}
+                          onClick={() => removeGroupsApplyTransformsOptimize()}>
+                    <Center style={{
+                      height: "inherit",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center"
+                    }}>Remove groups, apply transforms, optimize</Center>
                   </Button>
                 </Stack>
               </Tabs.Tab>
