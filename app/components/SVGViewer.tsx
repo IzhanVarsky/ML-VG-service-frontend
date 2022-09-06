@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useDraggable } from "~/use-draggable";
 import { ActionIcon, Grid, Group, NumberInput, Radio, RadioGroup } from "@mantine/core";
+import ChipSVGBackground from "~/components/ChipSVGBackground";
 
 export default function SVGViewer({ svg, boxHeight }) {
   const [backgroundColorState, setBackgroundColorState] = useState("");
@@ -15,7 +16,9 @@ export default function SVGViewer({ svg, boxHeight }) {
         overflow: 'auto',
         backgroundImage: backgroundColorState == '' ? 'url(images/checkerboard-tiled.png)' : 'none',
         marginBottom: '10px',
-        padding: '25px 0'
+        padding: '25px 0',
+        border: '1px solid lightgray',
+        borderRadius: '5px'
       }}>
         <div style={{ transform: 'scale(' + (zoomValue / 100.0).toString() + ')' }}>
           <div
@@ -24,16 +27,23 @@ export default function SVGViewer({ svg, boxHeight }) {
             dangerouslySetInnerHTML={{ __html: svg }}/>
         </div>
       </div>
-      <Grid justify='space-around' align="center" columns={3}>
-        <Grid.Col span={2}>
-          <RadioGroup value={backgroundColorState} onChange={setBackgroundColorState}>
-            <Radio value="" label="Checkered"/>
-            <Radio value="#FFFFFF" label="White"/>
-            <Radio value="#F7F8F9" label="LightGray"/>
-            <Radio value="#161B1D" label="Black"/>
-          </RadioGroup>
-        </Grid.Col>
-        <Grid.Col span={1}>
+      <Grid justify='space-around' align="center">
+        <Group>
+          <Grid
+            justify='space-between' align="center"
+            style={{ width: '150px', backgroundColor: '#EAEEF0', borderRadius: '5px', padding: '5px' }}
+          >
+            <ChipSVGBackground backgroundColor='#FFFFFF'
+                               usersBackgroundColor={backgroundColorState}
+                               setUsersBackgroundColor={setBackgroundColorState}
+            />
+            <ChipSVGBackground backgroundColor='#F7F8F9' usersBackgroundColor={backgroundColorState}
+                               setUsersBackgroundColor={setBackgroundColorState}/>
+            <ChipSVGBackground backgroundColor='#161B1D' usersBackgroundColor={backgroundColorState}
+                               setUsersBackgroundColor={setBackgroundColorState}/>
+            <ChipSVGBackground usersBackgroundColor={backgroundColorState}
+                               setUsersBackgroundColor={setBackgroundColorState}/>
+          </Grid>
           <Group spacing={5}>
             <ActionIcon size={42} variant="default"
                         onClick={() => {
@@ -60,7 +70,7 @@ export default function SVGViewer({ svg, boxHeight }) {
               +
             </ActionIcon>
           </Group>
-        </Grid.Col>
+        </Group>
       </Grid>
     </>
   )
