@@ -20,7 +20,7 @@ const throttle = (f) => {
 
 const id = (x) => x;
 // complex logic should be a hook, not a component
-const useDraggable = ({ onDrag = id } = {}) => {
+const useDraggable = (zoomValue) => {
   // this state doesn't change often, so it's fine
   const [pressed, setPressed] = useState(false);
 
@@ -110,10 +110,10 @@ const useDraggable = ({ onDrag = id } = {}) => {
       // needed to handle that case. TODO
       const elem = ref.current;
       delta.current = {
-        x: delta.current.x + event.movementX,
-        y: delta.current.y + event.movementY
+        x: delta.current.x + (event.movementX / (zoomValue / 100.0)),
+        y: delta.current.y + (event.movementY / (zoomValue / 100.0))
       };
-      const { x, y } = (position.current = onDrag(delta.current));
+      const { x, y } = (position.current = delta.current);
       elem.style.transform = `translate(${x}px, ${y}px)`;
     });
     const handleMouseUp = (e) => {
@@ -134,7 +134,7 @@ const useDraggable = ({ onDrag = id } = {}) => {
     // if `onDrag` wasn't defined with `useCallback`, we'd have to
     // resubscribe to 2 DOM events here, not to say it would mess
     // with `throttle` and reset its internal timer
-  }, [pressed, onDrag]);
+  }, [pressed, zoomValue]);
 
   // actually it makes sense to return an array only when
   // you expect that on the caller side all of the fields

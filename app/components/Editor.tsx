@@ -5,8 +5,8 @@ import {
   ColorInput,
   Grid,
   Group,
-  NumberInput, NumberInputHandlers,
-  ScrollArea, Slider,
+  NumberInput,
+  ScrollArea,
   Stack,
   Tabs,
   Text,
@@ -14,10 +14,6 @@ import {
 } from '@mantine/core';
 import { optimize } from 'svgo';
 import Shape from '~/components/Shape';
-// import DraggableComponent from '~/components/Draggable';
-import { useDraggable } from "~/use-draggable";
-import Draggable from '~/components/Draggable2';
-import MyDraggable from '~/components/MyDraggable';
 import { Link, useOutletContext } from '@remix-run/react';
 import {
   AdjustmentsAlt,
@@ -48,10 +44,10 @@ import {
   prettifyXml,
   svgWithSize
 } from '~/utils';
-import SVG from './SVG';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { Dropzone } from '@mantine/dropzone';
 import useHistoryState from '~/HistoryState';
+import SVGViewer from "~/components/SVGViewer";
 
 const randomColor = () => {
   const rgba = [];
@@ -62,7 +58,7 @@ const randomColor = () => {
   return `rgba(${rgba[0]}, ${rgba[1]}, ${rgba[2]}, ${rgba[3]})`
 };
 
-export default function Main() {
+export default function Editor() {
   const [selectedCover, setSelectedCover, covers, setCovers] = useOutletContext();
   const [isLoading, setIsLoading] = useState(false);
   const [state, setState, undo, redo, history, pointer] = useHistoryState(covers.length ? {
@@ -72,8 +68,6 @@ export default function Main() {
   const [imageWidthToDownload, setImageWidthToDownload] = useState(getSVGSize(state.svg).w);
   const [imageHeightToDownload, setImageHeightToDownload] = useState(getSVGSize(state.svg).h);
   const [activeTab, setActiveTab] = useState(0)
-
-  const [zoomValue, setZoomValue] = useState(100);
 
   const updateStatePrettified = (newState) => {
     setState({
@@ -184,8 +178,6 @@ export default function Main() {
     updCoverNotPrettified(res3.data);
   }
 
-  const [ref, pressed, setPosition] = useDraggable();
-
   return (
     <>
       <Link to="/">
@@ -196,46 +188,7 @@ export default function Main() {
       <Shape>
         <Grid justify='space-around' align="center" columns={2}>
           <Grid.Col span={1}>
-            <ScrollArea style={{ width: '45vw', height: '45vh' }} type="always" offsetScrollbars>
-              {/*<div style={{ overflowY: 'auto', overflowX: 'auto', width: '100%', height: '100%' }}>*/}
-              <div
-                ref={ref}
-                style={{ width: 'fit-content', height: 'fit-content', margin: 'auto' }}
-                dangerouslySetInnerHTML={{
-                  __html:
-                    svgWithSize(preprocessSVGToRender(state.svg),
-                      undefined, undefined, zoomValue)
-                }}/>
-              {/*</div>*/}
-            </ScrollArea>
-            <Center>
-              <Group spacing={5}>
-                <ActionIcon size={42} variant="default"
-                            onClick={() => {
-                              setZoomValue(zoomValue / 2.0);
-                              setPosition({ x: 0, y: 0 })
-                            }}>
-                  –
-                </ActionIcon>
-                <NumberInput
-                  hideControls
-                  value={zoomValue}
-                  onChange={(val) => setZoomValue(val)}
-                  max={2000}
-                  min={0}
-                  precision={3}
-                  styles={{ input: { width: 100, textAlign: 'center' } }}
-                  parser={(value) => value.replace('%', '')}
-                  formatter={(value) => `${value}%`}
-                />
-                <ActionIcon size={42} variant="default" onClick={() => {
-                  setZoomValue(zoomValue * 2)
-                  setPosition({ x: 0, y: 0 })
-                }}>
-                  +
-                </ActionIcon>
-              </Group>
-            </Center>
+            <SVGViewer svg={state.svg} boxHeight={'45vh'}/>
             <Center>
               <Button m='md'
                       color={state.svg == "" ? 'gray' : ''}

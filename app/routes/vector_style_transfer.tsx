@@ -1,10 +1,10 @@
 import { AppShell } from '@mantine/core';
-import React from 'react';
 import Navigation from '~/components/Navigation';
-import Editor from '~/components/Editor';
+import React from 'react';
 import AbstractPage from "~/AbstractPage";
+import MainVectorStyleTransfer from '~/components/MainVectorStyleTransfer';
 
-export default class Edit extends AbstractPage {
+export default class VectorStyleTransfer extends AbstractPage {
   returnFunc() {
     return (
       <AppShell
@@ -15,7 +15,7 @@ export default class Edit extends AbstractPage {
           },
         }}
       >
-        <Editor/>
+        <MainVectorStyleTransfer/>
       </AppShell>
     );
   }
