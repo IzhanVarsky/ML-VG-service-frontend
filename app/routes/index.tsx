@@ -1,5 +1,5 @@
 import { AppShell, Stack } from '@mantine/core';
-import Header from '~/components/Header';
+import CoverGANLogo from '~/components/CoverGANLogo';
 import Form from '~/components/Form';
 import Navigation from '~/components/Navigation';
 import Covers from '~/components/covers/Covers';
@@ -11,7 +11,7 @@ export default class Index extends AbstractPage {
     return (
       <AppShell
         footer={<Navigation/>}
-        navbar={<Stack><Header/><Form/></Stack>}
+        navbar={<Stack><CoverGANLogo/><Form/></Stack>}
         styles={{
           main: {
             padding: 0,

@@ -1,9 +1,9 @@
-import { Header as MantineHeader, Text, Space, Container } from '@mantine/core';
+import { Header, Text, Space, Container } from '@mantine/core';
 import Shape from './Shape';
 
-export default function Header() {
+export default function CoverGANLogo() {
   return (
-    <MantineHeader height="5rem" style={{ borderBottom: 0 }}>
+    <Header height="5rem" style={{ borderBottom: 0 }}>
       <Shape>
         <Space w="xl"/>
         <Text
@@ -17,6 +17,6 @@ export default function Header() {
           - - - CoverGAN - - -
         </Text>
       </Shape>
-    </MantineHeader>
+    </Header>
   )
 }
