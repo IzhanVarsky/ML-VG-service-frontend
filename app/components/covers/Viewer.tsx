@@ -13,8 +13,12 @@ export default function Viewer() {
 
   return (
     <Shape>
-      <Tabs position="center" grow>
-        <Tabs.Tab label="SVG">
+      <Tabs defaultValue="svg">
+        <Tabs.List grow>
+          <Tabs.Tab value="svg">SVG</Tabs.Tab>
+          <Tabs.Tab value="png">PNG</Tabs.Tab>
+        </Tabs.List>
+        <Tabs.Panel value="svg" pt="xs">
           <Stack>
             <SVG svg={cover.svg} w={"50vh"} h={"50vh"}/>
             <Grid justify='space-around'>
@@ -26,15 +30,15 @@ export default function Viewer() {
               </Link>
             </Grid>
           </Stack>
-        </Tabs.Tab>
-        <Tabs.Tab label="PNG">
+        </Tabs.Panel>
+        <Tabs.Panel value="png" pt="xs">
           <Stack>
-            <AspectRatio ratio={1} sx={{ maxHeight: '50vh' }}>
+            <Container sx={{ maxHeight: '50vh' }}>
               <Image
                 height='50vh'
                 src={src}
               />
-            </AspectRatio>
+            </Container>
             <Grid justify='center'>
               <Button
                 onClick={() => downloadBase64File("image/png", cover.base64, "image.png")}
@@ -43,7 +47,7 @@ export default function Viewer() {
               </Button>
             </Grid>
           </Stack>
-        </Tabs.Tab>
+        </Tabs.Panel>
       </Tabs>
     </Shape>
   )

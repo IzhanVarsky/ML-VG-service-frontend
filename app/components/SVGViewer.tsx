@@ -16,14 +16,14 @@ export default function SVGViewer({ svg, boxHeight }) {
         overflow: 'auto',
         backgroundImage: backgroundColorState == '' ? 'url(images/checkerboard-tiled.png)' : 'none',
         marginBottom: '10px',
-        padding: '25px 0',
+        padding: '25px 5px',
         border: '1px solid lightgray',
         borderRadius: '5px'
       }}>
         <div style={{ transform: 'scale(' + (zoomValue / 100.0).toString() + ')' }}>
           <div
             ref={ref}
-            style={{ cursor: pressed ? 'grabbing' : 'grab', width: 'fit-content' }}
+            style={{ cursor: pressed ? 'grabbing' : 'grab' }}
             dangerouslySetInnerHTML={{ __html: svg }}/>
         </div>
       </div>

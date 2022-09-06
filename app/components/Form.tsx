@@ -2,12 +2,10 @@ import {
   Button,
   Container,
   Grid,
-  InputWrapper,
   Loader,
   NativeSelect,
   NumberInput,
   Radio,
-  RadioGroup,
   Stack,
   Switch,
   Text,
@@ -136,32 +134,36 @@ export default function Form() {
             <Text>Select music file</Text>
             <Dropzone
               multiple={false}
-              accept={["audio/*"]}
               onDrop={(files) => {
                 form.setFieldValue('audio_file', files[0]);
                 setArtistAndTrackNames(files[0].name);
                 setShowError(false);
               }}
+              onReject={(files) => console.log('rejected files', files)}
+              // maxSize={3 * 1024 ** 2}
+              accept={["audio/*"]}
               style={{
                 borderColor: showError ? '#ffa3a3' : '',
-                backgroundColor: showError ? '#fff6f5' : ''
+                backgroundColor: showError ? '#fff6f5' : '',
+                padding: '8px'
               }}
             >
-              {() =>
-                <Grid columns={8} align='center'>
-                  <Grid.Col span={1}>
-                    <FileMusic color={showError ? '#ff3b3b' : 'grey'} size={30}/>
-                  </Grid.Col>
-                  <Grid.Col span={7}>
-                    {form.values['audio_file']
-                      ? <Text
-                        color='grey'
-                        style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}
-                      >{form.values['audio_file'].name}</Text>
-                      : <Text color={showError ? 'red' : 'grey'}>Drag or click</Text>}
-                  </Grid.Col>
-                </Grid>
-              }
+              <Grid align='center' columns={8}
+                    style={{ margin: 0 }}>
+                <Grid.Col span={1}>
+                  <FileMusic
+                    color={showError ? '#ff3b3b' : 'grey'}
+                    size={'30px'}/>
+                </Grid.Col>
+                <Grid.Col span={7}>
+                  {form.values['audio_file']
+                    ? <Text
+                      color='grey'
+                      style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}
+                    >{form.values['audio_file'].name}</Text>
+                    : <Text color={showError ? 'red' : 'grey'}>Drag or click</Text>}
+                </Grid.Col>
+              </Grid>
             </Dropzone>
             <TextInput
               placeholder={"Artist name"}
@@ -177,32 +179,33 @@ export default function Form() {
               onChange={(event) => updTrackName(event.currentTarget.value)}
               value={trackName}
             />
-            <RadioGroup
+            <Radio.Group
               label="Generator type"
               required
               {...form.getInputProps('gen_type')}
+              // spacing="xs"
+              // size="md"
             >
               <Radio value="1" label="Old"/>
               <Radio value="2" label="New 1"/>
               <Radio value="3" label="New 2"/>
               <Radio value="4" label="New 3"/>
               <Radio value="5" label="New 4"/>
-            </RadioGroup>
-            <RadioGroup
+            </Radio.Group>
+            <Radio.Group
               label="Captioner type"
               required
               {...form.getInputProps('use_captioner')}
             >
               <Radio value="True" label="Old"/>
               <Radio value="False" label="New"/>
-            </RadioGroup>
-            <InputWrapper label="Emotion">
-              <NativeSelect
-                data={emotions}
-                required
-                {...form.getInputProps('emotion')}
-              />
-            </InputWrapper>
+            </Radio.Group>
+            <NativeSelect
+              label="Emotion"
+              data={emotions}
+              required
+              {...form.getInputProps('emotion')}
+            />
             <NumberInput
               placeholder="Number of covers"
               label="Number of covers"
