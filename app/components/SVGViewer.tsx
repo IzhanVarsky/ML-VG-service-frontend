@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDraggable } from "~/use-draggable";
-import { ActionIcon, Grid, Group, NumberInput, Radio, RadioGroup } from "@mantine/core";
+import { ActionIcon, Grid, Group, NumberInput } from "@mantine/core";
 import ChipSVGBackground from "~/components/ChipSVGBackground";
 
 export default function SVGViewer({ svg, boxHeight }) {
@@ -10,6 +10,7 @@ export default function SVGViewer({ svg, boxHeight }) {
   return (
     <>
       <div style={{
+        textAlign: 'center',
         backgroundColor: backgroundColorState,
         height: boxHeight,
         width: '100%',
