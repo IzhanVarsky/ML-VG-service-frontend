@@ -11,19 +11,13 @@ export default function Navigation() {
             <Text size="lg">ML Vector Tools (c)</Text>
           </Grid.Col>
           <Grid.Col span={1} style={{ textAlign: "center" }}>
-            <Link to="/">
-              Main Page
-            </Link>
+            <Text><Link to="/">Main Page</Link></Text>
           </Grid.Col>
           <Grid.Col span={1} style={{ textAlign: "center" }}>
-            <Link to="/edit">
-              Editor
-            </Link>
+            <Text><Link to="/edit">Editor</Link></Text>
           </Grid.Col>
           <Grid.Col span={1} style={{ textAlign: "center" }}>
-            <Link to="/vector_style_transfer">
-              Vector Style Transfer
-            </Link>
+            <Text><Link to="/vector_style_transfer">Vector Style Transfer</Link></Text>
           </Grid.Col>
         </Grid>
       </Shape>
