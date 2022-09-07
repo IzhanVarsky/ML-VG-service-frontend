@@ -3,6 +3,7 @@ import { Link, useOutletContext } from '@remix-run/react';
 import Shape from '../Shape';
 import { downloadTextFile, downloadBase64File } from "app/download_utils";
 import SVG from '../SVG';
+import { useState } from "react";
 
 export default function Viewer() {
   const [selectedCover, setSelectedCover, covers, setCovers] = useOutletContext();
@@ -10,13 +11,20 @@ export default function Viewer() {
   const src = cover.src
     ? cover.src
     : 'data:image/png;base64, ' + cover.base64;
+  const [activeTab, setActiveTab] = useState("svg");
 
   return (
     <Shape>
-      <Tabs defaultValue="svg">
+      <Tabs value={activeTab} onTabChange={(s: string) => setActiveTab(s)}>
         <Tabs.List grow>
-          <Tabs.Tab value="svg">SVG</Tabs.Tab>
-          <Tabs.Tab value="png">PNG</Tabs.Tab>
+          <Tabs.Tab value="svg"
+                    style={{ color: activeTab == 'svg' ? '#228be6' : '' }}>
+            SVG
+          </Tabs.Tab>
+          <Tabs.Tab value="png"
+                    style={{ color: activeTab == 'png' ? '#228be6' : '' }}>
+            PNG
+          </Tabs.Tab>
         </Tabs.List>
         <Tabs.Panel value="svg" pt="xs">
           <Stack>
