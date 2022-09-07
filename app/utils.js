@@ -2,6 +2,8 @@ const correct_color_regex =
   "^(#([\\da-f]{3}){1,2}|(rgb|hsl)a\\((\\d{1,3}%?,\\s?){3}(1|1\\.0+|0|0?\\.\\d+)\\)|(rgb|hsl)\\(\\d{1,3}%?(,\\s?\\d{1,3}%?){2}\\))$";
 const re = new RegExp(correct_color_regex);
 
+// TODO: use the `parseSvg` method from `node_modules/svgo/lib/parser.js`
+
 function findColorByAttrName(obj, attr) {
   return obj
     .find(`[${attr}]`)
@@ -15,35 +17,48 @@ function extractColors(parsed) {
     .reduce((flatten, arr) => [...flatten, ...arr]);
 }
 
-const getColors = (svg) => {
-  return extractColors($(svg)).map(obj => {
+function getSVGTagFromFullSVG(full_parsed) {
+  // TODO: add checks for errors
+  for (let i = 0; i < full_parsed.length; i++) {
+    if (full_parsed[i].tagName === "svg") {
+      return $(full_parsed[i]);
+    }
+  }
+  return full_parsed // TODO: should be error
+}
+
+function JQueryToHTML(full_parsed) {
+  return $('<a></a>').append(full_parsed.clone()).html()
+}
+
+const getColors = (svg) =>
+  extractColors(getSVGTagFromFullSVG($(svg))).map(obj => {
     return ({
       attr: `${obj.x.tagName.toLowerCase()}["${obj.attr}"]`,
       value: obj.value
     })
   })
-}
 
 const changeColorByIndex = (svg, ind, newColor) => {
-  const parsed = $(svg);
-  const res_objs = extractColors(parsed);
+  const full_parsed = $(svg);
+  const res_objs = extractColors(getSVGTagFromFullSVG(full_parsed));
   if (ind < res_objs.length) {
     const obj = res_objs[ind];
     obj.x.setAttribute(obj.attr, newColor);
   }
-  return parsed[0].outerHTML;
+  return JQueryToHTML(full_parsed);
 }
 
 const changeAllColors = (svg, newColors) => {
-  const parsed = $(svg);
-  const res_objs = extractColors(parsed);
+  const full_parsed = $(svg);
+  const res_objs = extractColors(getSVGTagFromFullSVG(full_parsed));
   res_objs.forEach((el, i) => el.x.setAttribute(el.attr, newColors[i]))
-  return parsed[0].outerHTML;
+  return JQueryToHTML(full_parsed);
 }
 
 const getSVGSize = (svg) => {
   try {
-    const parsed = $(svg)[0];
+    const parsed = getSVGTagFromFullSVG($(svg))[0];
     let w = 512;
     let h = 512;
     if (!parsed.hasAttribute("width") || !parsed.hasAttribute("height")) {
@@ -66,7 +81,8 @@ const getSVGSize = (svg) => {
 
 const svgWithSize = (svg, width, height, scale = 100.0) => {
   try {
-    const parsed = $(svg)[0];
+    let full_parsed = $(svg);
+    const parsed = getSVGTagFromFullSVG(full_parsed)[0];
     let {w, h} = getSVGSize(svg);
     if (!parsed.hasAttribute("viewBox")) {
       parsed.setAttribute("viewBox", `0 0 ${w} ${h}`)
@@ -79,7 +95,7 @@ const svgWithSize = (svg, width, height, scale = 100.0) => {
     h *= scale / 100.0;
     parsed.setAttribute("width", w);
     parsed.setAttribute("height", h);
-    return parsed.outerHTML;
+    return JQueryToHTML(full_parsed);
   } catch (e) {
     console.log("Caught error!!!", e);
     return svg;
@@ -110,7 +126,8 @@ function addBeforeText(parsed, rect) {
 }
 
 const addShadowFilter = (svg) => {
-  const parsed = $(svg);
+  const full_parsed = $(svg);
+  const parsed = getSVGTagFromFullSVG(full_parsed);
   let newIdNum = 0;
   let id;
   while (true) {
@@ -140,15 +157,17 @@ const addShadowFilter = (svg) => {
   }
   const rect = `<rect x="0" y="0" width="${width}" height="${height}" fill="url(#${id})" />`;
   addBeforeText(parsed, rect);
-  return parsed[0].outerHTML;
+  return JQueryToHTML(full_parsed);
 }
+
 const addRectBefore = (svg, color = 'rgba(230, 230, 230, 0.5)') => {
-  const parsed = $(svg);
+  const full_parsed = $(svg);
+  const parsed = getSVGTagFromFullSVG(full_parsed);
   let {width, height} = getSVGViewBoxSize(parsed[0]);
 
   const rect = `<rect x="0" y="0" width="${width}" height="${height}" fill="${color}" />`;
   addBeforeText(parsed, rect);
-  return parsed[0].outerHTML;
+  return JQueryToHTML(full_parsed);
 }
 
 // TODO: try use http://www.eslinstructor.net/vkbeautify/

@@ -1,7 +1,7 @@
-import { Button, Grid, Image, Stack, Tabs, AspectRatio, Container } from '@mantine/core';
+import { Button, Container, Grid, Image, Stack, Tabs } from '@mantine/core';
 import { Link, useOutletContext } from '@remix-run/react';
 import Shape from '../Shape';
-import { downloadTextFile, downloadBase64File } from "app/download_utils";
+import { downloadBase64File, downloadTextFile } from "app/download_utils";
 import SVG from '../SVG';
 import { useState } from "react";
 

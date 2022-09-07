@@ -1,0 +1,80 @@
+import { Button, Center, Stack, } from '@mantine/core';
+import { updCoverNotPrettified } from "~/svg_checkers_transformers";
+import { flattenedGroups } from "~/flatten_groups";
+import { applyTransformsFromStr } from "~/flatten_transforms";
+import { optimize } from 'svgo';
+
+export default function OptimizationsTabPanel({ state, setState }) {
+  const optimizeSVG = function () {
+    const result = optimize(state.svg);
+    let res_state = updCoverNotPrettified(state, result.data);
+    setState(res_state);
+  }
+
+  const flattenGroups = function () {
+    let res = flattenedGroups(state.svg);
+    let res_state = updCoverNotPrettified(state, res);
+    setState(res_state);
+  }
+
+  const applyTransforms = function () {
+    let res_state = updCoverNotPrettified(state, applyTransformsFromStr(state.svg));
+    setState(res_state);
+  }
+
+  const removeGroupsApplyTransformsOptimize = () => {
+    let res1 = flattenedGroups(state.svg);
+    let res2 = applyTransformsFromStr(res1);
+    let res3 = optimize(res2);
+    let res_state = updCoverNotPrettified(state, res3.data);
+    setState(res_state);
+  }
+
+  return (
+    <Stack style={{
+      padding: '0 25%',
+      justifyContent: 'flex-start', minHeight: '70vh'
+    }}>
+      <Button component="span" variant="outline"
+              style={{ pointerEvents: 'all' }}
+              onClick={() => optimizeSVG()}>
+        <Center style={{
+          height: "inherit",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center"
+        }}>Optimize (SVGO)</Center>
+      </Button>
+      <Button component="span" variant="outline"
+              style={{ pointerEvents: 'all' }}
+              onClick={() => flattenGroups()}>
+        <Center style={{
+          height: "inherit",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center"
+        }}>Flatten Transforms from groups + remove groups</Center>
+      </Button>
+      <Button component="span" variant="outline"
+              style={{ pointerEvents: 'all' }}
+              onClick={() => applyTransforms()}>
+        <Center style={{
+          height: "inherit",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center"
+        }}>Apply Transformations</Center>
+      </Button>
+      <Button component="span" variant="outline"
+              style={{ pointerEvents: 'all' }}
+              onClick={() => removeGroupsApplyTransformsOptimize()}>
+        <Center style={{
+          height: "inherit",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center"
+        }}>Remove groups, apply transforms, optimize</Center>
+      </Button>
+    </Stack>
+  )
+}
