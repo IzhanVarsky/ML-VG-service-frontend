@@ -91,9 +91,15 @@ const svgWithSize = (svg, width, height, scale = 100.0) => {
       w = width;
       h = height;
     }
-    w *= scale / 100.0;
-    h *= scale / 100.0;
-    parsed.setAttribute("width", w);
+    if (scale !== 100.0) {
+      w *= scale / 100.0;
+      h *= scale / 100.0;
+    }
+    if (width !== "none") {
+      parsed.setAttribute("width", w);
+    } else {
+      parsed.removeAttribute("width");
+    }
     parsed.setAttribute("height", h);
     return JQueryToHTML(full_parsed);
   } catch (e) {

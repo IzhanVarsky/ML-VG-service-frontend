@@ -9,7 +9,7 @@ export const updCoverNotPrettified = (state, svg) => {
     try {
       colors = getColors(svg);
     } catch (e) {
-      colors = state.colors
+      colors = state.colors;
     }
   }
   return {svg, colors};

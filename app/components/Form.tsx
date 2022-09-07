@@ -153,6 +153,7 @@ export default function Form() {
                 <Grid.Col span={1}>
                   <FileMusic
                     color={showError ? '#ff3b3b' : 'grey'}
+                    style={{ display: 'block', margin: 'auto' }}
                     size={'30px'}/>
                 </Grid.Col>
                 <Grid.Col span={7}>
