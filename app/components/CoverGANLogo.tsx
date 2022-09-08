@@ -12,7 +12,7 @@ export default function CoverGANLogo() {
           weight={800}
           variant="gradient"
           gradient={{ from: 'indigo', to: 'red', deg: 10 }}
-          style={{ fontFamily: 'Greycliff CF, sans-serif' }}
+          style={{ fontFamily: 'Greycliff CF, sans-serif', userSelect: 'none' }}
         >
           - - - CoverGAN - - -
         </Text>

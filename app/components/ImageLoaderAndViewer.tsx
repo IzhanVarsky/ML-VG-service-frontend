@@ -1,8 +1,9 @@
 import SVGViewer from "~/components/SVGViewer";
-import { Button, Center, Grid, Stack, Text } from "@mantine/core";
-import { LayoutBoardSplit } from "tabler-icons-react";
+import { Button, Center, Grid, Group, Stack, Text } from "@mantine/core";
+import { Atom, Download, LayoutBoardSplit, Shadow } from "tabler-icons-react";
 import { Dropzone } from "@mantine/dropzone";
 import { useState } from "react";
+import { downloadTextFile } from "~/download_utils";
 
 export default function ImageLoaderAndViewer({
                                                image,
@@ -67,11 +68,28 @@ export default function ImageLoaderAndViewer({
           </Grid>
         </Dropzone>
         :
-        <Center>
-          <Button
-            onClick={() => callbackRunApp()}
-            style={{ width: 'fit-content', marginTop: '10px' }}>Run SVG Style Transfer!</Button>
-        </Center>
+        <>
+          <Group position='center' style={{ marginTop: '10px' }}>
+            <Center>
+              <Button
+                leftIcon={<Atom size={20}/>}
+                style={{ width: 'fit-content' }}
+                onClick={() => callbackRunApp()}>
+                Run SVG Style Transfer!
+              </Button>
+            </Center>
+            <Center>
+              <Button
+                leftIcon={<Download size={20}/>}
+                style={{ width: 'fit-content' }}
+                onClick={() => {
+                  if (image !== "") downloadTextFile(image)
+                }}>
+                Download result
+              </Button>
+            </Center>
+          </Group>
+        </>
       }
     </Stack>
   )

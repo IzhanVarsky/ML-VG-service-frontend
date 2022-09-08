@@ -1,20 +1,20 @@
 import config from './config.json';
 
-function downloadBase64File(contentType, base64Data, fileName) {
+export function downloadBase64File(contentType, base64Data, fileName) {
   const link = document.createElement("a");
   link.href = `data:${contentType};base64,${base64Data}`;
   link.download = fileName;
   link.click();
 }
 
-function downloadTextFile(text, filename) {
+export function downloadTextFile(text, filename) {
   const link = document.createElement('a');
   link.href = 'data:text/plain;charset=utf-8,' + encodeURIComponent(text);
   link.download = filename;
   link.click();
 }
 
-function downloadPNGFromServer(data) {
+export function downloadPNGFromServer(data) {
   const formData = new FormData()
   formData.append("svg", data);
   $.ajax({
@@ -34,7 +34,7 @@ function downloadPNGFromServer(data) {
   });
 }
 
-function getJSON(data, callback) {
+export function getJSON(data, callback) {
   const formData = new FormData()
   formData.append("svg", data);
   $.ajax({
@@ -59,7 +59,7 @@ function getJSON(data, callback) {
   });
 }
 
-function extractColors(image, n, callback, callback_err) {
+export function extractColors(image, n, callback, callback_err) {
   const formData = new FormData()
   formData.append("img", image);
   formData.append("color_count", n);
@@ -86,10 +86,24 @@ function extractColors(image, n, callback, callback_err) {
   });
 }
 
-module.exports = {
-  downloadBase64File: downloadBase64File,
-  downloadTextFile: downloadTextFile,
-  getJSON: getJSON,
-  extractColors: extractColors,
-  downloadPNGFromServer: downloadPNGFromServer,
-};
+export function runVectorStyleTransfer(style_img, content_img, callback, err_callback) {
+  const formData = new FormData()
+  formData.append("style_svg", style_img);
+  formData.append("content_svg", content_img);
+  $.ajax({
+    url: `${config.host}/vector_style_transfer`,
+    type: 'POST',
+    data: formData,
+    processData: false,
+    contentType: false,
+    cache: false,
+    success: (response) => {
+      console.log('SUCC', response);
+      callback(response.result.res_svg);
+    },
+    error: (e) => {
+      console.log('ERR', e);
+      err_callback(e);
+    }
+  });
+}

@@ -8,7 +8,7 @@ import DownloadTabPanel from "~/components/DownloadTabPanel";
 import OptimizationsTabPanel from "~/components/OptimizationsTabPanel";
 
 export default function EditorTabs({ state, setState }) {
-  const [activeTab, setActiveTab] = useState("Edit Options");
+  const [activeTab, setActiveTab] = useState(state.svg === "" ? "Edit Raw SVG" : "Edit Options");
   const [imageWidthToDownload, setImageWidthToDownload] = useState(getSVGSize(state.svg).w);
   const [imageHeightToDownload, setImageHeightToDownload] = useState(getSVGSize(state.svg).h);
 
@@ -27,6 +27,7 @@ export default function EditorTabs({ state, setState }) {
     >
       <Tabs.List grow style={{ marginBottom: '12px' }}>
         <Tabs.Tab value={"Edit Options"}
+                  disabled={state.svg === ""}
                   icon={<AdjustmentsAlt size={14}/>}
                   style={{ color: activeTab == 'Edit Options' ? '#228be6' : '' }}
         >
@@ -36,9 +37,11 @@ export default function EditorTabs({ state, setState }) {
                   style={{ color: activeTab == 'Edit Raw SVG' ? '#228be6' : '' }}
                   icon={<FileText size={14}/>}>Edit Raw SVG</Tabs.Tab>
         <Tabs.Tab value={"Download"}
+                  disabled={state.svg === ""}
                   style={{ color: activeTab == 'Download' ? '#228be6' : '' }}
                   icon={<Download size={14}/>}>Download</Tabs.Tab>
         <Tabs.Tab value={"Prettify SVG"}
+                  disabled={state.svg === ""}
                   style={{ pointerEvents: 'none' }}
                   icon={
                     <Button component="span" variant="outline"
@@ -57,6 +60,7 @@ export default function EditorTabs({ state, setState }) {
                   }
         />
         <Tabs.Tab value={"Optimizations"}
+                  disabled={state.svg === ""}
                   style={{ color: activeTab == 'Optimizations' ? '#228be6' : '' }}
                   icon={<Axe size={14}/>}>Optimizations</Tabs.Tab>
       </Tabs.List>
@@ -66,7 +70,7 @@ export default function EditorTabs({ state, setState }) {
       </Tabs.Panel>
       <Tabs.Panel value="Edit Raw SVG">
         <Textarea
-          autoFocus={true}
+          autoFocus={true} // TODO: doesn't work
           placeholder='Write SVG . . .'
           style={{ minHeight: '70vh' }}
           minRows={10}
