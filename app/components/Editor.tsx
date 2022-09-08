@@ -30,7 +30,9 @@ export default function Editor() {
                                      setState={setState}
                                      pointer={pointer}
                                      undo={undo}
-                                     redo={redo}/>
+                                     redo={redo}
+                                     history={history}
+            />
           </Grid.Col>
           <Grid.Col span={1}>
             <EditorTabs state={state} setState={setState}/>

@@ -40,6 +40,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
+import {getSVGTagFromFullSVG} from "~/utils";
+
 var p2s = /,?([achlmqrstvxz]),?/gi;
 var convertToString = function (arr) {
   return arr.join(',').replace(p2s, '$1');
@@ -1040,8 +1042,10 @@ function createElementFromHTML(htmlString) {
   return div.firstChild;
 }
 
-const applyTransformsFromStr = (svg) => {
-  let element = createElementFromHTML(svg);
+export const applyTransformsFromStr = (svg) => {
+  const full_parsed = $(svg);
+  let only_svg = getSVGTagFromFullSVG(full_parsed)[0].outerHTML;
+  let element = createElementFromHTML(only_svg);
   console.log("Element from HTML!", element);
   element['display'] = 'none';
   // element['id'] = 'addedSVG';
@@ -1051,7 +1055,3 @@ const applyTransformsFromStr = (svg) => {
   document.body.removeChild(element);
   return res;
 }
-
-module.exports = {
-  applyTransformsFromStr: applyTransformsFromStr
-};

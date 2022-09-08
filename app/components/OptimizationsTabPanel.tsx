@@ -1,6 +1,6 @@
 import { Button, Center, Stack, } from '@mantine/core';
 import { updCoverNotPrettified } from "~/svg_checkers_transformers";
-import { flattenedGroups } from "~/flatten_groups";
+import { flattenedGroups, optimize_svg_pipeline } from "~/flatten_groups";
 import { applyTransformsFromStr } from "~/flatten_transforms";
 import { optimize } from 'svgo';
 
@@ -12,8 +12,7 @@ export default function OptimizationsTabPanel({ state, setState }) {
   }
 
   const flattenGroups = function () {
-    let res = flattenedGroups(state.svg);
-    let res_state = updCoverNotPrettified(state, res);
+    let res_state = updCoverNotPrettified(state, flattenedGroups(state.svg));
     setState(res_state);
   }
 
@@ -23,10 +22,7 @@ export default function OptimizationsTabPanel({ state, setState }) {
   }
 
   const removeGroupsApplyTransformsOptimize = () => {
-    let res1 = flattenedGroups(state.svg);
-    let res2 = applyTransformsFromStr(res1);
-    let res3 = optimize(res2);
-    let res_state = updCoverNotPrettified(state, res3.data);
+    let res_state = updCoverNotPrettified(state, optimize_svg_pipeline(state.svg));
     setState(res_state);
   }
 

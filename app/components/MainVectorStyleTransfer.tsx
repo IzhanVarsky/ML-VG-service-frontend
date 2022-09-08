@@ -106,7 +106,8 @@ export default function MainVectorStyleTransfer() {
                             (error) => {
                               setAppRunning(false);
                               setAppError(true);
-                            }
+                            },
+                            false
                           );
                         }}>
                         Run SVG Style Transfer!

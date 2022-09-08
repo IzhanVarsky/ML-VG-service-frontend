@@ -4,20 +4,20 @@ const re = new RegExp(correct_color_regex);
 
 // TODO: use the `parseSvg` method from `node_modules/svgo/lib/parser.js`
 
-function findColorByAttrName(obj, attr) {
+export function findColorByAttrName(obj, attr) {
   return obj
     .find(`[${attr}]`)
     .filter((i, x) => re.test(x.getAttribute(attr).trim().toLowerCase()))
     .map((i, x) => ({x, attr, value: x.getAttribute(attr)}));
 }
 
-function extractColors(parsed) {
+export function extractColors(parsed) {
   return ["fill", "stroke", "stop-color"]
     .map(name => findColorByAttrName(parsed, name))
     .reduce((flatten, arr) => [...flatten, ...arr]);
 }
 
-function getSVGTagFromFullSVG(full_parsed) {
+export function getSVGTagFromFullSVG(full_parsed) {
   // TODO: add checks for errors
   for (let i = 0; i < full_parsed.length; i++) {
     if (full_parsed[i].tagName === "svg") {
@@ -27,11 +27,11 @@ function getSVGTagFromFullSVG(full_parsed) {
   return full_parsed // TODO: should be error
 }
 
-function JQueryToHTML(full_parsed) {
+export function JQueryToHTML(full_parsed) {
   return $('<a></a>').append(full_parsed.clone()).html()
 }
 
-const getColors = (svg) =>
+export const getColors = (svg) =>
   extractColors(getSVGTagFromFullSVG($(svg))).map(obj => {
     return ({
       attr: `${obj.x.tagName.toLowerCase()}["${obj.attr}"]`,
@@ -39,7 +39,7 @@ const getColors = (svg) =>
     })
   })
 
-const changeColorByIndex = (svg, ind, newColor) => {
+export const changeColorByIndex = (svg, ind, newColor) => {
   const full_parsed = $(svg);
   const res_objs = extractColors(getSVGTagFromFullSVG(full_parsed));
   if (ind < res_objs.length) {
@@ -49,14 +49,14 @@ const changeColorByIndex = (svg, ind, newColor) => {
   return JQueryToHTML(full_parsed);
 }
 
-const changeAllColors = (svg, newColors) => {
+export const changeAllColors = (svg, newColors) => {
   const full_parsed = $(svg);
   const res_objs = extractColors(getSVGTagFromFullSVG(full_parsed));
   res_objs.forEach((el, i) => el.x.setAttribute(el.attr, newColors[i]))
   return JQueryToHTML(full_parsed);
 }
 
-const getSVGSize = (svg) => {
+export const getSVGSize = (svg) => {
   try {
     const parsed = getSVGTagFromFullSVG($(svg))[0];
     let w = 512;
@@ -79,7 +79,7 @@ const getSVGSize = (svg) => {
   }
 }
 
-const svgWithSize = (svg, width, height, scale = 100.0) => {
+export const svgWithSize = (svg, width, height, scale = 100.0) => {
   try {
     let full_parsed = $(svg);
     const parsed = getSVGTagFromFullSVG(full_parsed)[0];
@@ -131,7 +131,7 @@ function addBeforeText(parsed, rect) {
   }
 }
 
-const addShadowFilter = (svg) => {
+export const addShadowFilter = (svg) => {
   const full_parsed = $(svg);
   const parsed = getSVGTagFromFullSVG(full_parsed);
   let newIdNum = 0;
@@ -166,7 +166,7 @@ const addShadowFilter = (svg) => {
   return JQueryToHTML(full_parsed);
 }
 
-const addRectBefore = (svg, color = 'rgba(230, 230, 230, 0.5)') => {
+export const addRectBefore = (svg, color = 'rgba(230, 230, 230, 0.5)') => {
   const full_parsed = $(svg);
   const parsed = getSVGTagFromFullSVG(full_parsed);
   let {width, height} = getSVGViewBoxSize(parsed[0]);
@@ -178,7 +178,7 @@ const addRectBefore = (svg, color = 'rgba(230, 230, 230, 0.5)') => {
 
 // TODO: try use http://www.eslinstructor.net/vkbeautify/
 const prettifyXmlLib = require('prettify-xml')
-const prettifyXml = (input) => prettifyXmlLib(input, {indent: 2, newline: '\n'})
+export const prettifyXml = (input) => prettifyXmlLib(input, {indent: 2, newline: '\n'})
 
 // const prettifyXml = function (sourceXml) {
 //   const xmlDoc = new DOMParser().parseFromString(sourceXml, 'application/xml');
@@ -210,14 +210,3 @@ const prettifyXml = (input) => prettifyXmlLib(input, {indent: 2, newline: '\n'})
 //   let res = new XMLSerializer().serializeToString(resultDoc);
 //   return res;
 // };
-
-module.exports = {
-  getColors: getColors,
-  addRectBefore: addRectBefore,
-  addShadowFilter: addShadowFilter,
-  prettifyXml: prettifyXml,
-  svgWithSize: svgWithSize,
-  getSVGSize: getSVGSize,
-  changeColorByIndex: changeColorByIndex,
-  changeAllColors: changeAllColors,
-};

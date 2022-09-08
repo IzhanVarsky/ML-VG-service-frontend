@@ -4,7 +4,7 @@ import { Dropzone } from '@mantine/dropzone';
 import { updCoverNotPrettified } from '~/svg_checkers_transformers';
 import { useState } from "react";
 
-export default function SVGViewerControlButtons({ state, setState, pointer, undo, redo }) {
+export default function SVGViewerControlButtons({ state, setState, pointer, undo, redo, history }) {
   const [isLoading, setIsLoading] = useState(false);
   return (
     <>

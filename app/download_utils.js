@@ -1,4 +1,5 @@
 import config from './config.json';
+import {optimize_svg_pipeline} from "~/flatten_groups";
 
 export function downloadBase64File(contentType, base64Data, fileName) {
   const link = document.createElement("a");
@@ -86,10 +87,15 @@ export function extractColors(image, n, callback, callback_err) {
   });
 }
 
-export function runVectorStyleTransfer(style_img, content_img, callback, err_callback) {
-  const formData = new FormData()
-  formData.append("style_svg", style_img);
-  formData.append("content_svg", content_img);
+export function runVectorStyleTransfer(style_img, content_img, callback, err_callback, use_optimizing = false) {
+  const formData = new FormData();
+  if (use_optimizing) {
+    formData.append("style_svg", optimize_svg_pipeline(style_img));
+    formData.append("content_svg", optimize_svg_pipeline(content_img));
+  } else {
+    formData.append("style_svg", style_img);
+    formData.append("content_svg", content_img);
+  }
   $.ajax({
     url: `${config.host}/vector_style_transfer`,
     type: 'POST',
