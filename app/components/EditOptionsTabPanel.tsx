@@ -77,47 +77,57 @@ export default function EditOptionsTabPanel({ state, setState }) {
 
   return (
     <Stack style={{ height: '70vh' }}>
-      <ScrollArea>
-        {state.colors.map((color, index) =>
-          <Center key={index}>
-            <Text>{color.attr}:</Text>
-            <ColorInput
-              style={{ margin: '10px', width: '50%' }}
-              value={color.value}
-              format='rgba'
-              onChange={updateColorByIndex(index)}
-              rightSection={
-                <ActionIcon onClick={() => updateColorByIndex(index)(randomColor())}>
-                  <Refresh size={16}/>
-                </ActionIcon>
-              }
-            />
+      {state.colors.length !== 0 ?
+        <>
+          <ScrollArea>
+            {state.colors.map((color, index) =>
+              <Center key={index}>
+                <Text>{color.attr}:</Text>
+                <ColorInput
+                  style={{ margin: '10px', width: '50%' }}
+                  value={color.value}
+                  format='rgba'
+                  onChange={updateColorByIndex(index)}
+                  rightSection={
+                    <ActionIcon onClick={() => updateColorByIndex(index)(randomColor())}>
+                      <Refresh size={16}/>
+                    </ActionIcon>
+                  }
+                />
+              </Center>
+            )}
+          </ScrollArea>
+          <Grid>
+            <Grid.Col>
+              <Button leftIcon={<Refresh size={20}/>} onClick={shuffleColors} style={{ width: '100%' }}>
+                Shuffle All Colors
+              </Button>
+            </Grid.Col>
+          </Grid>
+          <Dropzone
+            multiple={false}
+            accept={["image/*"]}
+            loading={isLoading}
+            onDrop={(files) => {
+              setIsLoading(true);
+              extractColors(files[0], state.colors.length, newColors => {
+                updWithNewColors(newColors);
+                setIsLoading(false)
+              }, () => setIsLoading(false));
+            }}>
+            <Group style={{ pointerEvents: 'none' }}>
+              <Palette color='grey'/>
+              <Text color='grey'>Drop image to style transfer</Text>
+            </Group>
+          </Dropzone>
+        </>
+        :
+        <>
+          <Center>
+            <Text>--- No colors found on the image ---</Text>
           </Center>
-        )}
-      </ScrollArea>
-      <Grid>
-        <Grid.Col>
-          <Button leftIcon={<Refresh size={20}/>} onClick={shuffleColors} style={{ width: '100%' }}>
-            Shuffle All Colors
-          </Button>
-        </Grid.Col>
-      </Grid>
-      <Dropzone
-        multiple={false}
-        accept={["image/*"]}
-        loading={isLoading}
-        onDrop={(files) => {
-          setIsLoading(true)
-          extractColors(files[0], state.colors.length, newColors => {
-            updWithNewColors(newColors);
-            setIsLoading(false)
-          }, () => setIsLoading(false));
-        }}>
-        <Group style={{ pointerEvents: 'none' }}>
-          <Palette color='grey'/>
-          <Text color='grey'>Drop image to style transfer</Text>
-        </Group>
-      </Dropzone>
+        </>
+      }
       <Grid justify={'center'} align={'center'}>
         <Grid.Col span={4}>
           <Center>

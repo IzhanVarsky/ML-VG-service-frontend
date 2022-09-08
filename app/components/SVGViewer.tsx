@@ -18,7 +18,8 @@ export default function SVGViewer({ svg, boxHeight }) {
         overflow: 'auto',
         backgroundImage: backgroundColorState == '' ? 'url(images/checkerboard-tiled.png)' : 'none',
         marginBottom: '15px',
-        padding: '25px 5px',
+        // padding: '25px 5px',
+        padding: '25px 0',
         border: '1px solid lightgray',
         borderRadius: '5px'
       }}>

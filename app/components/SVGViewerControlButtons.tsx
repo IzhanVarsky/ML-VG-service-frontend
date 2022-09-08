@@ -2,8 +2,10 @@ import { Button, Center, Group, Text, } from '@mantine/core';
 import { ArrowBackUp, ArrowForwardUp, LayoutBoardSplit, Trash, } from 'tabler-icons-react';
 import { Dropzone } from '@mantine/dropzone';
 import { updCoverNotPrettified } from '~/svg_checkers_transformers';
+import { useState } from "react";
 
 export default function SVGViewerControlButtons({ state, setState, pointer, undo, redo }) {
+  const [isLoading, setIsLoading] = useState(false);
   return (
     <>
       <Center>
@@ -32,9 +34,13 @@ export default function SVGViewerControlButtons({ state, setState, pointer, undo
       <Dropzone
         accept={['image/svg+xml']}
         onDrop={async (files) => {
+          setIsLoading(true);
           const x = await files[0].text();
           setState(updCoverNotPrettified(state, x));
+          setIsLoading(false);
         }}
+        multiple={false}
+        loading={isLoading}
       >
         <Group position="center" spacing="xl" style={{ pointerEvents: 'none' }}>
           <LayoutBoardSplit color='grey' size={60}/>
