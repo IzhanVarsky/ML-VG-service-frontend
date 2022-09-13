@@ -67,53 +67,52 @@ export default function MainVectorStyleTransfer() {
                   :
                   <SVGViewer svg={resultImage} boxHeight={'45vh'}/>
               }
-              <Group position='center' style={{ marginTop: '10px' }}>
-                <Center>
-                  {
-                    resultImage !== "" ?
-                      <Button
-                        leftIcon={<Download size={20}/>}
-                        style={{ width: 'fit-content' }}
-                        onClick={() => downloadTextFile(resultImage, 'vector_style_transfer_result.svg')}>
-                        Download result
-                      </Button>
-                      :
-                      <Button
-                        leftIcon={<Atom size={20}/>}
-                        style={{
-                          width: 'fit-content',
-                          backgroundColor: appError ? 'red' : '#228be6'
-                        }}
-                        loading={appRunning}
-                        onClick={() => {
-                          let checks_passed = true;
-                          if (styleImage === "") {
-                            setStyleError(true);
-                            checks_passed = false;
-                          }
-                          if (contentImage === "") {
-                            setContentError(true);
-                            checks_passed = false;
-                          }
-                          if (!checks_passed) return;
-                          setAppRunning(true);
-                          setAppError(false);
-                          runVectorStyleTransfer(styleImage, contentImage,
-                            (res_svg) => {
-                              setResultImage(res_svg);
-                              setAppRunning(false);
-                            },
-                            (error) => {
-                              setAppRunning(false);
-                              setAppError(true);
-                            },
-                            false
-                          );
-                        }}>
-                        Run SVG Style Transfer!
-                      </Button>
-                  }
-                </Center>
+              <Group position='center' style={{ marginTop: '10px' }} spacing='md'>
+                <Button
+                  leftIcon={<Atom size={20}/>}
+                  style={{
+                    width: 'fit-content',
+                    backgroundColor: appError ? 'red' : '#228be6'
+                  }}
+                  loading={appRunning}
+                  onClick={() => {
+                    let checks_passed = true;
+                    if (styleImage === "") {
+                      setStyleError(true);
+                      checks_passed = false;
+                    }
+                    if (contentImage === "") {
+                      setContentError(true);
+                      checks_passed = false;
+                    }
+                    if (!checks_passed) return;
+                    setAppRunning(true);
+                    setAppError(false);
+                    runVectorStyleTransfer(styleImage, contentImage,
+                      (res_svg) => {
+                        setResultImage(res_svg);
+                        setAppRunning(false);
+                      },
+                      (error) => {
+                        setAppRunning(false);
+                        setAppError(true);
+                      },
+                      false
+                    );
+                  }}>
+                  Run SVG Style Transfer!
+                </Button>
+                {
+                  resultImage !== "" ?
+                    <Button
+                      leftIcon={<Download size={20}/>}
+                      style={{ width: 'fit-content' }}
+                      onClick={() => downloadTextFile(resultImage, 'vector_style_transfer_result.svg')}>
+                      Download result
+                    </Button>
+                    :
+                    <></>
+                }
               </Group>
             </Stack>
           </Grid.Col>
