@@ -30,6 +30,10 @@ export default function SVGViewer({ svg, boxHeight }) {
             dangerouslySetInnerHTML={{ __html: svg }}
             // dangerouslySetInnerHTML={{ __html: svgWithSize(svg, "none", "44vh") }}
           />
+          {/*<div ref={ref} style={{ cursor: pressed ? 'grabbing' : 'grab' }}>*/}
+            {/*<object data={`data:image/svg+xml;utf8,${svg}`} type="image/svg+xml"/>*/}
+            {/*<img src={`data:image/svg+xml;utf8,${svg}`}/>*/}
+          {/*</div>*/}
         </div>
       </div>
       <Grid justify='center' align="center">
