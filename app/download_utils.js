@@ -19,7 +19,7 @@ export function downloadPNGFromServer(data) {
   const formData = new FormData()
   formData.append("svg", data);
   $.ajax({
-    url: `${config.host}/rasterize`,
+    url: `${config.covergan_backend_host}/rasterize`,
     type: 'POST',
     data: formData,
     processData: false,
@@ -39,7 +39,7 @@ export function getJSON(data, callback) {
   const formData = new FormData()
   formData.append("svg", data);
   $.ajax({
-    url: `${config.host}/svg_to_json`,
+    url: `${config.covergan_backend_host}/svg_to_json`,
     type: 'POST',
     data: formData,
     processData: false,
@@ -67,7 +67,7 @@ export function extractColors(image, n, callback, callback_err) {
   formData.append("algo_type", 1);
   formData.append("use_random", false);
   $.ajax({
-    url: `${config.host}/extract_colors`,
+    url: `${config.covergan_backend_host}/extract_colors`,
     type: 'POST',
     data: formData,
     processData: false,
@@ -97,7 +97,7 @@ export function runVectorStyleTransfer(style_img, content_img, callback, err_cal
     formData.append("content_svg", content_img);
   }
   $.ajax({
-    url: `${config.host}/vector_style_transfer`,
+    url: `${config.vector_style_transfer_backend_host}/vector_style_transfer`,
     type: 'POST',
     data: formData,
     processData: false,

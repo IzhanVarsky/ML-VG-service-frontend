@@ -1,3 +1,4 @@
 {
-  "host": "http://109.188.135.85:1123"
+  "covergan_backend_host": "http://109.188.135.85:9013",
+  "vector_style_transfer_backend_host": "http://109.188.135.85:9012"
 }

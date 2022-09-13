@@ -88,7 +88,7 @@ export default function Form() {
       formData.append(key, data[key]);
     }
     $.ajax({
-      url: `${config.host}/generate`,
+      url: `${config.covergan_backend_host}/generate`,
       type: 'POST',
       data: formData,
       processData: false,
