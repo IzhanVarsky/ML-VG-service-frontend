@@ -84,7 +84,7 @@ export default function OptimizationsTabPanel({ state, setState }) {
                     setState(updCoverNotPrettified(state, svg));
                     setDiffvgRunning(false);
                   },
-                  () => setDiffvgRunning(false);
+                  () => setDiffvgRunning(false)
                 )
               }}>
         <Center style={{
