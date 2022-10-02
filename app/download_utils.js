@@ -113,3 +113,24 @@ export function runVectorStyleTransfer(style_img, content_img, callback, err_cal
     }
   });
 }
+
+export function diffvg_optimize(data, callback, error_callback) {
+  const formData = new FormData()
+  formData.append("svg", data);
+  $.ajax({
+    url: `${config.covergan_backend_host}/diffvg_optimize`,
+    type: 'POST',
+    data: formData,
+    processData: false,
+    contentType: false,
+    cache: false,
+    success: (response) => {
+      console.log('SUCC', response);
+      callback(response.result.res_svg);
+    },
+    error: (e) => {
+      console.log('ERR', e);
+      error_callback();
+    }
+  });
+}
