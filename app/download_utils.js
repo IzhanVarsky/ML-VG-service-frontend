@@ -15,7 +15,7 @@ export function downloadTextFile(text, filename) {
   link.click();
 }
 
-export function downloadPNGFromServer(data) {
+export function downloadPNGFromServer(data, succCallback, errCallback) {
   const formData = new FormData()
   formData.append("svg", data);
   $.ajax({
@@ -27,10 +27,17 @@ export function downloadPNGFromServer(data) {
     cache: false,
     success: (response) => {
       console.log('SUCC', response);
-      downloadBase64File("image/png", response.result.res_png1, "rasterized.png");
+      if (succCallback) {
+        succCallback(response.result.res_png1)
+      } else {
+        downloadBase64File("image/png", response.result.res_png1, "rasterized.png");
+      }
     },
     error: (e) => {
       console.log('ERR', e);
+      if (errCallback) {
+        errCallback(e);
+      }
     }
   });
 }

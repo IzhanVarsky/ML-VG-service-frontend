@@ -18,6 +18,7 @@ import { downloadTextFile, runVectorStyleTransfer } from "~/download_utils";
 import SVGViewer from "~/components/SVGViewer";
 import { Atom, Download, InfoCircle } from "tabler-icons-react";
 import InputParameters from "~/components/vector_style_transfer/InputParameters";
+import BITMAPImageLoaderAndViewer from "~/components/vector_style_transfer/BITMAPImageLoaderAndViewer";
 
 export default function MainVectorStyleTransfer() {
   const [styleImage, setStyleImage] = useState("");
@@ -40,8 +41,8 @@ export default function MainVectorStyleTransfer() {
 
   const form = useForm({
     initialValues: {
+      contentSVG: "",
       styleSVG: "",
-      contentSVG: ""
     },
   });
 
@@ -65,7 +66,7 @@ export default function MainVectorStyleTransfer() {
             />
           </Grid.Col>
           <Grid.Col span={1}>
-            <ImageLoaderAndViewer image={styleImage}
+            <BITMAPImageLoaderAndViewer image={styleImage}
                                   setImage={setStyleImage}
                                   imageType={"Style"}
                                   updateForm={(x) => form.setFieldValue("styleSVG", x)}
