@@ -3,9 +3,9 @@ import { AdjustmentsAlt, Axe, Download, FileText, } from 'tabler-icons-react';
 import { getSVGSize, prettifyXml } from '~/utils';
 import { useState } from 'react';
 import { updCoverNotPrettified } from "~/svg_checkers_transformers";
-import EditOptionsTabPanel from "~/components/EditOptionsTabPanel";
-import DownloadTabPanel from "~/components/DownloadTabPanel";
-import OptimizationsTabPanel from "~/components/OptimizationsTabPanel";
+import EditOptionsTabPanel from "~/components/editor/EditOptionsTabPanel";
+import DownloadTabPanel from "~/components/editor/DownloadTabPanel";
+import OptimizationsTabPanel from "~/components/editor/OptimizationsTabPanel";
 
 export default function EditorTabs({ state, setState }) {
   const [activeTab, setActiveTab] = useState(state.svg === "" ? "Edit Raw SVG" : "Edit Options");

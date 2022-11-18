@@ -1,12 +1,12 @@
 import { Button, Grid, } from '@mantine/core';
 import Shape from '~/components/Shape';
-import EditorTabs from '~/components/EditorTabs';
+import EditorTabs from '~/components/editor/EditorTabs';
 import { Link, useOutletContext } from '@remix-run/react';
 import { ArrowBigLeft, } from 'tabler-icons-react';
 import { getColors, prettifyXml } from '~/utils';
 import useHistoryState from '~/HistoryState';
 import SVGViewer from "~/components/SVGViewer";
-import SVGViewerControlButtons from "~/components/SVGViewerControlButtons";
+import SVGViewerControlButtons from "~/components/editor/SVGViewerControlButtons";
 
 export default function Editor() {
   const [selectedCover, setSelectedCover, covers, setCovers] = useOutletContext();
