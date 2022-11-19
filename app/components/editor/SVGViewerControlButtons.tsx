@@ -1,16 +1,19 @@
 import { Button, Center, Group, Text, } from '@mantine/core';
 import { ArrowBackUp, ArrowForwardUp, LayoutBoardSplit, Trash, } from 'tabler-icons-react';
 import { Dropzone } from '@mantine/dropzone';
-import { updCoverNotPrettified } from '~/svg_checkers_transformers';
+import { getSVGAndColorsState } from '~/svg_checkers_transformers';
 import { useState } from "react";
 
-export default function SVGViewerControlButtons({ state, setState, pointer, undo, redo, history }) {
+export default function SVGViewerControlButtons({
+                                                  svg, setState, pointer, undo, redo, history,
+                                                  isColorFindingEnabled
+                                                }) {
   const [isLoading, setIsLoading] = useState(false);
   return (
     <>
       <Center>
         <Button m='md'
-                color={state.svg == "" ? 'gray' : ''}
+                color={svg == "" ? 'gray' : ''}
                 onClick={() => setState({ svg: '', colors: [] })}
                 leftIcon={<Trash/>}
         >
@@ -36,7 +39,7 @@ export default function SVGViewerControlButtons({ state, setState, pointer, undo
         onDrop={async (files) => {
           setIsLoading(true);
           const x = await files[0].text();
-          setState(updCoverNotPrettified(state, x));
+          setState(getSVGAndColorsState(x, isColorFindingEnabled));
           setIsLoading(false);
         }}
         multiple={false}

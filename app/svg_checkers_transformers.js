@@ -14,3 +14,15 @@ export const updCoverNotPrettified = (state, svg) => {
   }
   return {svg, colors};
 }
+
+export const getSVGAndColorsState = (svg, isColorFindingEnabled) => {
+  if (isColorFindingEnabled) {
+    return getStateWithNewSVGAndColors(svg)
+  }
+  return {
+    svg: svg,
+    colors: []
+  }
+}
+
+export const getStateWithNewSVGAndColors = (svg) => ({svg, colors: getColors(svg)})

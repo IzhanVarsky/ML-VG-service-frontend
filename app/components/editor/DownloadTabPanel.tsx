@@ -4,7 +4,7 @@ import { downloadPNGFromServer, downloadTextFile, getJSON } from "~/download_uti
 import { svgWithSize } from '~/utils';
 
 export default function DownloadTabPanel({
-                                           state,
+                                           svg,
                                            imageWidthToDownload, setImageWidthToDownload,
                                            imageHeightToDownload, setImageHeightToDownload
                                          }) {
@@ -38,7 +38,7 @@ export default function DownloadTabPanel({
       <Button
         leftIcon={<LayoutBoardSplit size={14}/>}
         onClick={() =>
-          downloadTextFile(svgWithSize(state.svg, imageWidthToDownload, imageHeightToDownload),
+          downloadTextFile(svgWithSize(svg, imageWidthToDownload, imageHeightToDownload),
             "edited.svg")}
       >
         Download SVG
@@ -46,13 +46,13 @@ export default function DownloadTabPanel({
       <Button
         leftIcon={<Palette size={14}/>}
         onClick={() =>
-          downloadPNGFromServer(svgWithSize(state.svg, imageWidthToDownload, imageHeightToDownload))}
+          downloadPNGFromServer(svgWithSize(svg, imageWidthToDownload, imageHeightToDownload))}
       >
         Download PNG
       </Button>
       <Button
         leftIcon={<Braces size={14}/>}
-        onClick={() => getJSON(svgWithSize(state.svg, imageWidthToDownload))}
+        onClick={() => getJSON(svgWithSize(svg, imageWidthToDownload))}
       >
         Download JSON
       </Button>

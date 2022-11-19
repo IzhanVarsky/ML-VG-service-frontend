@@ -1,32 +1,34 @@
 import { Button, Center, Stack, } from '@mantine/core';
-import { updCoverNotPrettified } from "~/svg_checkers_transformers";
+import { getSVGAndColorsState} from "~/svg_checkers_transformers";
 import { flattenedGroups, optimize_svg_pipeline } from "~/flatten_groups";
 import { applyTransformsFromStr } from "~/flatten_transforms";
 import { optimize } from 'svgo';
 import { diffvg_optimize } from "~/download_utils";
 import { useState } from "react";
 
-export default function OptimizationsTabPanel({ state, setState }) {
+export default function OptimizationsTabPanel({ stateSVG, setState, isColorFindingEnabled }) {
   const [diffvgRunning, setDiffvgRunning] = useState(false);
 
+  const getNewState = (svg) => getSVGAndColorsState(svg, isColorFindingEnabled)
+
   const optimizeSVG = function () {
-    const result = optimize(state.svg);
-    let res_state = updCoverNotPrettified(state, result.data);
+    const result = optimize(stateSVG);
+    let res_state = getNewState(result.data);
     setState(res_state);
   }
 
   const flattenGroups = function () {
-    let res_state = updCoverNotPrettified(state, flattenedGroups(state.svg));
+    let res_state = getNewState(flattenedGroups(stateSVG));
     setState(res_state);
   }
 
   const applyTransforms = function () {
-    let res_state = updCoverNotPrettified(state, applyTransformsFromStr(state.svg));
+    let res_state = getNewState(applyTransformsFromStr(stateSVG));
     setState(res_state);
   }
 
   const removeGroupsApplyTransformsOptimize = () => {
-    let res_state = updCoverNotPrettified(state, optimize_svg_pipeline(state.svg));
+    let res_state = getNewState(optimize_svg_pipeline(stateSVG));
     setState(res_state);
   }
 
@@ -80,8 +82,8 @@ export default function OptimizationsTabPanel({ state, setState }) {
               style={{ pointerEvents: 'all' }}
               onClick={() => {
                 setDiffvgRunning(true);
-                diffvg_optimize(state.svg, (svg) => {
-                    setState(updCoverNotPrettified(state, svg));
+                diffvg_optimize(stateSVG, (svg) => {
+                    setState(getNewState(svg));
                     setDiffvgRunning(false);
                   },
                   () => setDiffvgRunning(false)
