@@ -1,4 +1,4 @@
-import { Button, Center, Tabs, Textarea, } from '@mantine/core';
+import { Button, Center, Tabs, } from '@mantine/core';
 import { AdjustmentsAlt, Axe, Download, FileText, } from 'tabler-icons-react';
 import { getSVGSize, prettifyXml } from '~/utils';
 import { useState } from 'react';
@@ -6,6 +6,9 @@ import { updCoverNotPrettified } from "~/svg_checkers_transformers";
 import EditOptionsTabPanel from "~/components/editor/EditOptionsTabPanel";
 import DownloadTabPanel from "~/components/editor/DownloadTabPanel";
 import OptimizationsTabPanel from "~/components/editor/OptimizationsTabPanel";
+import CodeMirror from '@uiw/react-codemirror';
+import { xml } from '@codemirror/lang-xml';
+import { bbedit } from '@uiw/codemirror-theme-bbedit';
 
 export default function EditorTabs({ state, setState }) {
   const [activeTab, setActiveTab] = useState(state.svg === "" ? "Edit Raw SVG" : "Edit Options");
@@ -69,15 +72,17 @@ export default function EditorTabs({ state, setState }) {
         <EditOptionsTabPanel state={state} setState={setState}/>
       </Tabs.Panel>
       <Tabs.Panel value="Edit Raw SVG">
-        <Textarea
+        <CodeMirror
           autoFocus={true} // TODO: doesn't work
           placeholder='Write SVG . . .'
-          style={{ minHeight: '70vh' }}
-          minRows={10}
-          maxRows={21}
-          autosize
+          height={'70vh'}
+          extensions={[xml()]}
           value={state.svg}
-          onChange={event => setState(updCoverNotPrettified(state, event.currentTarget.value))}
+          onChange={(value, viewUpdate) => {
+            setState(updCoverNotPrettified(state, value))
+            console.log(viewUpdate);
+          }}
+          theme={bbedit}
         />
       </Tabs.Panel>
       <Tabs.Panel value="Download">
