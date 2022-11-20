@@ -89,7 +89,7 @@ export default function BITMAPImageLoaderAndViewer({
                       textAlign: 'center'
                     }}
                     inline>
-                Drag SVG {imageType} image here or click to select file
+                Drag {imageType === "Content" ? "SVG " : ""}{imageType} image here or click to select file
               </Text>
             }
           </Grid.Col>
