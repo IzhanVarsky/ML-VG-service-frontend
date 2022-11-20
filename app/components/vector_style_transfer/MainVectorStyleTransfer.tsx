@@ -1,29 +1,19 @@
-import {
-  Button,
-  Center,
-  Checkbox,
-  Grid,
-  Group,
-  HoverCard,
-  NumberInput,
-  SegmentedControl,
-  Stack,
-  Text
-} from "@mantine/core";
+import { Button, Center, Grid, Group, Stack, Text } from "@mantine/core";
 import Shape from "~/components/Shape";
-import ImageLoaderAndViewer from "~/components/vector_style_transfer/ImageLoaderAndViewer";
 import { useState } from "react";
 import { useForm } from "@mantine/form";
 import { downloadTextFile, runVectorStyleTransfer } from "~/download_utils";
 import SVGViewer from "~/components/SVGViewer";
-import { Atom, Download, InfoCircle } from "tabler-icons-react";
+import { Atom, Download } from "tabler-icons-react";
 import InputParameters from "~/components/vector_style_transfer/InputParameters";
 import BITMAPImageLoaderAndViewer from "~/components/vector_style_transfer/BITMAPImageLoaderAndViewer";
 
 export default function MainVectorStyleTransfer() {
-  const [styleImage, setStyleImage] = useState("");
+  const [style, setStyle] = useState("");
+  const [styleMimeType, setStyleMimeType] = useState("");
+  const [contentSVG, setContentSVG] = useState("");
+
   const [styleError, setStyleError] = useState(false);
-  const [contentImage, setContentImage] = useState("");
   const [contentError, setContentError] = useState(false);
   const [resultImage, setResultImage] = useState("");
   const [appRunning, setAppRunning] = useState(false);
@@ -39,13 +29,6 @@ export default function MainVectorStyleTransfer() {
   const [ABMethod, setABMethod] = useState('method1');
   const [ABCoef, setABCoef] = useState(1);
 
-  const form = useForm({
-    initialValues: {
-      contentSVG: "",
-      styleSVG: "",
-    },
-  });
-
   return (
     <>
       <Text size='xl'
@@ -57,21 +40,20 @@ export default function MainVectorStyleTransfer() {
       <Shape>
         <Grid justify='space-around' align="flex-start" columns={3}>
           <Grid.Col span={1}>
-            <ImageLoaderAndViewer image={contentImage}
-                                  setImage={setContentImage}
-                                  imageType={"Content"}
-                                  updateForm={(x) => form.setFieldValue("contentSVG", x)}
-                                  showError={contentError}
-                                  setShowError={setContentError}
+            <BITMAPImageLoaderAndViewer imageType={"Content"}
+                                        updateForm={(x) => setContentSVG(x)}
+                                        showError={contentError}
+                                        setShowError={setContentError}
             />
           </Grid.Col>
           <Grid.Col span={1}>
-            <BITMAPImageLoaderAndViewer image={styleImage}
-                                  setImage={setStyleImage}
-                                  imageType={"Style"}
-                                  updateForm={(x) => form.setFieldValue("styleSVG", x)}
-                                  showError={styleError}
-                                  setShowError={setStyleError}
+            <BITMAPImageLoaderAndViewer imageType={"Style"}
+                                        updateForm={(x, y) => {
+                                          setStyle(x);
+                                          setStyleMimeType(y);
+                                        }}
+                                        showError={styleError}
+                                        setShowError={setStyleError}
             />
           </Grid.Col>
           <Grid.Col span={1}>
@@ -88,7 +70,26 @@ export default function MainVectorStyleTransfer() {
                     </Center>
                   </>
                   :
-                  <SVGViewer svg={resultImage} boxHeight={'45vh'}/>
+                  <Center style={{
+                    height: '45vh',
+                    padding: '1vh 1vw',
+                    // marginBottom: '57px',
+                    border: '1px solid lightgray',
+                    borderRadius: '5px'
+                  }}>
+                    {resultImage === "" ?
+                      <></>
+                      :
+                      <img style={{
+                        height: '100%',
+                        width: '100%',
+                        objectFit: 'contain',
+                      }}
+                           src={"data:image/svg+xml;base64, " +
+                             window.btoa(unescape(encodeURIComponent(resultImage)))}
+                           alt={"UploadedImage"}/>
+                    }
+                  </Center>
               }
               <Group position='center' style={{ marginTop: '10px' }} spacing='md'>
                 <Button
@@ -100,18 +101,18 @@ export default function MainVectorStyleTransfer() {
                   loading={appRunning}
                   onClick={() => {
                     let checks_passed = true;
-                    if (styleImage === "") {
+                    if (style === "") {
                       setStyleError(true);
                       checks_passed = false;
                     }
-                    if (contentImage === "") {
+                    if (contentSVG === "") {
                       setContentError(true);
                       checks_passed = false;
                     }
                     if (!checks_passed) return;
                     setAppRunning(true);
                     setAppError(false);
-                    runVectorStyleTransfer(styleImage, contentImage,
+                    runVectorStyleTransfer(contentSVG, style, styleMimeType,
                       (res_svg) => {
                         setResultImage(res_svg);
                         setAppRunning(false);

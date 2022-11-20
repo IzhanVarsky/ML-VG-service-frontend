@@ -94,14 +94,17 @@ export function extractColors(image, n, callback, callback_err) {
   });
 }
 
-export function runVectorStyleTransfer(style_img, content_img, callback, err_callback, use_optimizing = false) {
+export function runVectorStyleTransfer(content_img, style_img, styleMimeType,
+                                       callback, err_callback, use_optimizing = false) {
   const formData = new FormData();
   if (use_optimizing) {
-    formData.append("style_svg", optimize_svg_pipeline(style_img));
     formData.append("content_svg", optimize_svg_pipeline(content_img));
+    formData.append("style", optimize_svg_pipeline(style_img));
+    formData.append("style_mime_type", styleMimeType);
   } else {
-    formData.append("style_svg", style_img);
     formData.append("content_svg", content_img);
+    formData.append("style", style_img);
+    formData.append("style_mime_type", styleMimeType);
   }
   $.ajax({
     url: `${config.vector_style_transfer_backend_host}/vector_style_transfer`,

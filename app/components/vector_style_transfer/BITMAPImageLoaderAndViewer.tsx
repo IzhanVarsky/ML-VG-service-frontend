@@ -1,14 +1,9 @@
-import SVGViewer from "~/components/SVGViewer";
-import { Button, Center, Grid, Group, Stack, Text } from "@mantine/core";
-import { Atom, Download, LayoutBoardSplit, Shadow } from "tabler-icons-react";
+import { Center, Grid, Stack, Text } from "@mantine/core";
+import { LayoutBoardSplit } from "tabler-icons-react";
 import { Dropzone } from "@mantine/dropzone";
 import { useState } from "react";
-import { downloadPNGFromServer, downloadTextFile } from "~/download_utils";
-import { svgWithSize } from "~/utils";
 
 export default function BITMAPImageLoaderAndViewer({
-                                                     image,
-                                                     setImage,
                                                      imageType,
                                                      updateForm,
                                                      showError = false,
@@ -17,14 +12,15 @@ export default function BITMAPImageLoaderAndViewer({
                                                    }) {
   const [isLoading, setIsLoading] = useState(false);
   const [filename, setFilename] = useState("");
+  const [image, setImage] = useState("");
 
   return (
     <Stack>
       <Text size='lg' align="center" weight={700}>{imageType} Image</Text>
       <Center style={{
         height: '45vh',
-        padding: '25px 0',
-        marginBottom: '57px',
+        padding: '1vh 1vw',
+        // marginBottom: '57px',
         border: '1px solid lightgray',
         borderRadius: '5px'
       }}>
@@ -32,34 +28,39 @@ export default function BITMAPImageLoaderAndViewer({
           <></>
           :
           <img style={{
-            maxHeight: '45vh',
-            maxWidth: '100%',
+            height: '100%',
+            width: '100%',
             objectFit: 'contain',
           }}
-               src={"data:image/png;base64, " + image}
-               alt={"Uploaded Style-Image"}/>
+               src={image}
+               alt={"UploadedImage"}/>
         }
       </Center>
       <Dropzone
         loading={isLoading}
-        accept={['image/svg+xml']}
+        accept={[imageType === "Content" ? "image/svg+xml" : "image/*"]}
         onDrop={async (files) => {
           setIsLoading(true);
-          const x = await files[0].text();
-          downloadPNGFromServer(svgWithSize(x),
-            (res) => {
-              //TODO: ADD resizing to show small picture well
-              // and to not waste time for big images.
-              setFilename(files[0].name);
-              setImage(res);
-              updateForm(files[0]);
-              setIsLoading(false);
-              setShowError(false);
-            },
-            (err) => {
-              setIsLoading(false);
-              setShowError(true);
-            })
+          const uploadedFile = files[0];
+          if (uploadedFile.type === "image/svg+xml") {
+            const x = await uploadedFile.text();
+            updateForm(x, uploadedFile.type);
+          }
+
+          // TODO: maybe: ADD resizing (for SVG) to show small picture well
+          let reader = new FileReader();
+          reader.onload = (e) => {
+            let result = e.target.result;
+            setImage(result);
+            if (imageType === "Style" && uploadedFile.type !== "image/svg+xml") {
+              updateForm(result, uploadedFile.type);
+            }
+            setIsLoading(false);
+          };
+          reader.readAsDataURL(uploadedFile);
+
+          setFilename(uploadedFile.name);
+          setShowError(false);
         }}
         style={{
           borderColor: showError ? '#ffa3a3' : '',
