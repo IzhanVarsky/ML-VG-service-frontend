@@ -95,17 +95,30 @@ export function extractColors(image, n, callback, callback_err) {
 }
 
 export function runVectorStyleTransfer(content_img, style_img, styleMimeType,
-                                       callback, err_callback, use_optimizing = false) {
+                                       iterationsNumber, learningRateIsDefault,
+                                       lrPoint, lrColor, lrStroke,
+                                       contourLoss, perceptionLoss,
+                                       ABMethod, ABCoef,
+                                       succCallback, errCallback, use_optimizing = false) {
   const formData = new FormData();
   if (use_optimizing) {
     formData.append("content_svg", optimize_svg_pipeline(content_img));
     formData.append("style", optimize_svg_pipeline(style_img));
-    formData.append("style_mime_type", styleMimeType);
   } else {
     formData.append("content_svg", content_img);
     formData.append("style", style_img);
-    formData.append("style_mime_type", styleMimeType);
   }
+  formData.append("style_mime_type", styleMimeType);
+  formData.append("iter_num", iterationsNumber);
+  formData.append("is_lr_default", learningRateIsDefault);
+  formData.append("lr_point", lrPoint);
+  formData.append("lr_color", lrColor);
+  formData.append("lr_stroke_width", lrStroke);
+  formData.append("contour_loss_weight", contourLoss);
+  formData.append("perception_loss_weight", perceptionLoss);
+  formData.append("alpha_blending_method", ABMethod);
+  formData.append("alpha_blending_coef", ABCoef);
+
   $.ajax({
     url: `${config.vector_style_transfer_backend_host}/vector_style_transfer`,
     type: 'POST',
@@ -115,11 +128,11 @@ export function runVectorStyleTransfer(content_img, style_img, styleMimeType,
     cache: false,
     success: (response) => {
       console.log('SUCC', response);
-      callback(response.result.res_svg);
+      succCallback(response.result.res_svg);
     },
     error: (e) => {
       console.log('ERR', e);
-      err_callback(e);
+      errCallback(e);
     }
   });
 }

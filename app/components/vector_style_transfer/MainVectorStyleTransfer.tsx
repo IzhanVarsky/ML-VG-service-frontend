@@ -112,7 +112,12 @@ export default function MainVectorStyleTransfer() {
                     if (!checks_passed) return;
                     setAppRunning(true);
                     setAppError(false);
-                    runVectorStyleTransfer(contentSVG, style, styleMimeType,
+                    runVectorStyleTransfer(
+                      contentSVG, style, styleMimeType,
+                      iterationsNumber, learningRateIsDefault,
+                      lrPoint, lrColor, lrStroke,
+                      contourLoss, perceptionLoss,
+                      ABMethod, ABCoef,
                       (res_svg) => {
                         setResultImage(res_svg);
                         setAppRunning(false);
