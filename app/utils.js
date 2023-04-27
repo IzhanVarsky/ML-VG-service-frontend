@@ -8,7 +8,7 @@ export function findColorByAttrName(obj, attr) {
   return obj
     .find(`[${attr}]`)
     .filter((i, x) => re.test(x.getAttribute(attr).trim().toLowerCase()))
-    .map((i, x) => ({x, attr, value: x.getAttribute(attr)}));
+    .map((i, x) => ({ x, attr, value: x.getAttribute(attr) }));
 }
 
 export function extractColors(parsed) {
@@ -73,9 +73,9 @@ export const getSVGSize = (svg) => {
     }
     w = parseInt(w.toString());
     h = parseInt(h.toString());
-    return {w, h};
+    return { w, h };
   } catch (e) {
-    return {w: 0, h: 0}
+    return { w: 0, h: 0 }
   }
 }
 
@@ -83,7 +83,7 @@ export const svgWithSize = (svg, width, height, scale = 100.0) => {
   try {
     let full_parsed = $(svg);
     const parsed = getSVGTagFromFullSVG(full_parsed)[0];
-    let {w, h} = getSVGSize(svg);
+    let { w, h } = getSVGSize(svg);
     if (!parsed.hasAttribute("viewBox")) {
       parsed.setAttribute("viewBox", `0 0 ${w} ${h}`)
     }
@@ -119,7 +119,7 @@ function getSVGViewBoxSize(thisSVG) {
     width = thisSVG.getAttribute("width");
     height = thisSVG.getAttribute("height");
   }
-  return {width, height};
+  return { width, height };
 }
 
 function addBeforeText(parsed, rect) {
@@ -144,7 +144,7 @@ export const addShadowFilter = (svg) => {
     }
     break;
   }
-  const {width, height} = getSVGViewBoxSize(parsed[0]);
+  const { width, height } = getSVGViewBoxSize(parsed[0]);
   const cx = width / 2;
   const cy = height / 2;
   const r = Math.ceil(width / Math.sqrt(2));
@@ -169,7 +169,7 @@ export const addShadowFilter = (svg) => {
 export const addRectBefore = (svg, color = 'rgba(230, 230, 230, 0.5)') => {
   const full_parsed = $(svg);
   const parsed = getSVGTagFromFullSVG(full_parsed);
-  let {width, height} = getSVGViewBoxSize(parsed[0]);
+  let { width, height } = getSVGViewBoxSize(parsed[0]);
 
   const rect = `<rect x="0" y="0" width="${width}" height="${height}" fill="${color}" />`;
   addBeforeText(parsed, rect);
@@ -178,7 +178,7 @@ export const addRectBefore = (svg, color = 'rgba(230, 230, 230, 0.5)') => {
 
 // TODO: try use http://www.eslinstructor.net/vkbeautify/
 const prettifyXmlLib = require('prettify-xml')
-export const prettifyXml = (input) => prettifyXmlLib(input, {indent: 2, newline: '\n'})
+export const prettifyXml = (input) => prettifyXmlLib(input, { indent: 2, newline: '\n' })
 
 // const prettifyXml = function (sourceXml) {
 //   const xmlDoc = new DOMParser().parseFromString(sourceXml, 'application/xml');

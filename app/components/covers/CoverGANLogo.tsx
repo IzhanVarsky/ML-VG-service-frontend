@@ -1,5 +1,5 @@
 import { Text, Space } from '@mantine/core';
-import Shape from './Shape';
+import Shape from '../Shape';
 
 export default function CoverGANLogo() {
   return (

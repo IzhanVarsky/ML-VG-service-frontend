@@ -1,7 +1,7 @@
-import {optimize} from 'svgo';
-import {getSVGTagFromFullSVG, JQueryToHTML} from "~/utils";
+import { optimize } from 'svgo';
+import { getSVGTagFromFullSVG, JQueryToHTML } from "~/utils";
 
-const {applyTransformsFromStr} = require("~/flatten_transforms");
+const { applyTransformsFromStr } = require("~/flatten_transforms");
 export const flattenedGroups = (svg) => {
   const full_parsed = $(svg);
   let element = getSVGTagFromFullSVG(full_parsed)[0];

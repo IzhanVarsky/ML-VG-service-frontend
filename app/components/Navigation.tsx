@@ -1,23 +1,26 @@
 import Shape from "~/components/Shape";
-import { Link } from "@remix-run/react";
 import { Grid, Text } from "@mantine/core";
+import { CoverGANLink, MainPageLink, SVGEditorLink, VectorNSTLink } from "~/components/Links";
 
 export default function Navigation() {
   return (
     <>
       <Shape>
-        <Grid align="center" columns={7}>
+        <Grid align="center" columns={8}>
           <Grid.Col span={4}>
-            <Text size="lg">ML Vector Tools (c)</Text>
+            <Text size="lg">ML Vector Tools (c) | 2022 - 2023</Text>
           </Grid.Col>
           <Grid.Col span={1} style={{ textAlign: "center" }}>
-            <Text><Link to="/">Main Page</Link></Text>
+            <Text><MainPageLink/></Text>
           </Grid.Col>
           <Grid.Col span={1} style={{ textAlign: "center" }}>
-            <Text><Link to="/edit">Editor</Link></Text>
+            <Text><CoverGANLink/></Text>
           </Grid.Col>
           <Grid.Col span={1} style={{ textAlign: "center" }}>
-            <Text><Link to="/vector_style_transfer">Vector Style Transfer</Link></Text>
+            <Text><VectorNSTLink/></Text>
+          </Grid.Col>
+          <Grid.Col span={1} style={{ textAlign: "center" }}>
+            <Text><SVGEditorLink/></Text>
           </Grid.Col>
         </Grid>
       </Shape>

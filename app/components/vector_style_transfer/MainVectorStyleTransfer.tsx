@@ -1,12 +1,56 @@
 import { Button, Center, Grid, Group, Stack, Text } from "@mantine/core";
 import Shape from "~/components/Shape";
 import { useState } from "react";
-import { useForm } from "@mantine/form";
 import { downloadTextFile, runVectorStyleTransfer } from "~/download_utils";
-import SVGViewer from "~/components/SVGViewer";
 import { Atom, Download } from "tabler-icons-react";
 import InputParameters from "~/components/vector_style_transfer/InputParameters";
 import BITMAPImageLoaderAndViewer from "~/components/vector_style_transfer/BITMAPImageLoaderAndViewer";
+
+let default_params = {
+  iterationsNumber: 100,
+  learningRateIsDefault: true,
+  lrPoint: 0.8,
+  lrColor: 0.01,
+  lrStroke: 0.1,
+  contourLoss: 100,
+  perceptionLoss: 1,
+  styleLoss: 0,
+  contentLoss: 0,
+  xingLoss: 0,
+  optimizeOpacity: true,
+  initType: 'with_content',
+  with_content: {
+    num_paths: -1,
+    min_num_segments: -1,
+    max_num_segments: -1,
+    radius: -1,
+    stroke_width: -1,
+  },
+  with_rand_clipdraw: {
+    num_paths: 256,
+    min_num_segments: 1,
+    max_num_segments: 4,
+    radius: 0.1,
+    stroke_width: 1.0,
+  },
+  with_rand_LIVE: {
+    num_paths: 128,
+    min_num_segments: 1,
+    max_num_segments: 4,
+    radius: 5,
+    stroke_width: 0.0,
+  },
+  with_circles_LIVE: {
+    num_paths: 128,
+    min_num_segments: 4,
+    max_num_segments: 4,
+    radius: 5,
+    stroke_width: 1.0,
+  },
+  maxStrokeWidth: 1.0,
+  ABMethod: 'method1',
+  ABCoef: 1,
+}
 
 export default function MainVectorStyleTransfer() {
   const [style, setStyle] = useState("");
@@ -19,15 +63,7 @@ export default function MainVectorStyleTransfer() {
   const [appRunning, setAppRunning] = useState(false);
   const [appError, setAppError] = useState(false);
 
-  const [iterationsNumber, setIterationsNumber] = useState(100);
-  const [learningRateIsDefault, setLearningRateIsDefault] = useState(true);
-  const [lrPoint, setLrPoint] = useState(0.8);
-  const [lrColor, setLrColor] = useState(0.01);
-  const [lrStroke, setLrStroke] = useState(0.1);
-  const [contourLoss, setContourLoss] = useState(100);
-  const [perceptionLoss, setPerceptionLoss] = useState(1);
-  const [ABMethod, setABMethod] = useState('method1');
-  const [ABCoef, setABCoef] = useState(1);
+  const [modelParams, setModelParams] = useState(default_params);
 
   return (
     <>
@@ -114,10 +150,16 @@ export default function MainVectorStyleTransfer() {
                     setAppError(false);
                     runVectorStyleTransfer(
                       contentSVG, style, styleMimeType,
-                      iterationsNumber, learningRateIsDefault,
-                      lrPoint, lrColor, lrStroke,
-                      contourLoss, perceptionLoss,
-                      ABMethod, ABCoef,
+                      modelParams,
+                      // iterationsNumber, learningRateIsDefault,
+                      // lrPoint, lrColor, lrStroke,
+                      // contourLoss, perceptionLoss,
+                      // styleLoss, contentLoss,
+                      // xingLoss,
+                      // optimizeOpacity,
+                      // initType,
+                      // maxStrokeWidth,
+                      // ABMethod, ABCoef,
                       (res_svg) => {
                         setResultImage(res_svg);
                         setAppRunning(false);
@@ -148,16 +190,7 @@ export default function MainVectorStyleTransfer() {
         </Grid>
       </Shape>
 
-      <InputParameters
-        iterationsNumber={iterationsNumber} setIterationsNumber={setIterationsNumber}
-        learningRateIsDefault={learningRateIsDefault} setLearningRateIsDefault={setLearningRateIsDefault}
-        lrPoint={lrPoint} setLrPoint={setLrPoint}
-        lrColor={lrColor} setLrColor={setLrColor}
-        lrStroke={lrStroke} setLrStroke={setLrStroke}
-        contourLoss={contourLoss} setContourLoss={setContourLoss}
-        perceptionLoss={perceptionLoss} setPerceptionLoss={setPerceptionLoss}
-        ABMethod={ABMethod} setABMethod={setABMethod}
-        ABCoef={ABCoef} setABCoef={setABCoef}/>
+      <InputParameters modelParams={modelParams} setModelParams={setModelParams}/>
     </>
   )
 }

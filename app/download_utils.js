@@ -1,5 +1,5 @@
-import config from './config.json';
-import {optimize_svg_pipeline} from "~/flatten_groups";
+import config from '~/config.json';
+import { optimize_svg_pipeline } from "~/flatten_groups";
 
 export function downloadBase64File(contentType, base64Data, fileName) {
   const link = document.createElement("a");
@@ -95,11 +95,9 @@ export function extractColors(image, n, callback, callback_err) {
 }
 
 export function runVectorStyleTransfer(content_img, style_img, styleMimeType,
-                                       iterationsNumber, learningRateIsDefault,
-                                       lrPoint, lrColor, lrStroke,
-                                       contourLoss, perceptionLoss,
-                                       ABMethod, ABCoef,
-                                       succCallback, errCallback, use_optimizing = false) {
+                                       modelParams,
+                                       succCallback, errCallback,
+                                       use_optimizing = false) {
   const formData = new FormData();
   if (use_optimizing) {
     formData.append("content_svg", optimize_svg_pipeline(content_img));
@@ -109,15 +107,26 @@ export function runVectorStyleTransfer(content_img, style_img, styleMimeType,
     formData.append("style", style_img);
   }
   formData.append("style_mime_type", styleMimeType);
-  formData.append("iter_num", iterationsNumber);
-  formData.append("is_lr_default", learningRateIsDefault);
-  formData.append("lr_point", lrPoint);
-  formData.append("lr_color", lrColor);
-  formData.append("lr_stroke_width", lrStroke);
-  formData.append("contour_loss_weight", contourLoss);
-  formData.append("perception_loss_weight", perceptionLoss);
-  formData.append("alpha_blending_method", ABMethod);
-  formData.append("alpha_blending_coef", ABCoef);
+  formData.append("iter_num", modelParams.iterationsNumber);
+  formData.append("is_lr_default", modelParams.learningRateIsDefault);
+  formData.append("lr_point", modelParams.lrPoint);
+  formData.append("lr_color", modelParams.lrColor);
+  formData.append("lr_stroke_width", modelParams.lrStroke);
+  formData.append("contour_loss_weight", modelParams.contourLoss);
+  formData.append("perception_loss_weight", modelParams.perceptionLoss);
+  formData.append("style_loss_weight", modelParams.styleLoss);
+  formData.append("content_loss_weight", modelParams.contentLoss);
+  formData.append("xing_loss_weight", modelParams.xingLoss);
+  formData.append("optimize_opacity", modelParams.optimizeOpacity);
+  formData.append("init_type", modelParams.initType);
+  formData.append("init_num_paths", modelParams[modelParams.initType].num_paths);
+  formData.append("init_min_num_segments", modelParams[modelParams.initType].min_num_segments);
+  formData.append("init_max_num_segments", modelParams[modelParams.initType].max_num_segments);
+  formData.append("init_radius", modelParams[modelParams.initType].radius);
+  formData.append("init_stroke_width", modelParams[modelParams.initType].stroke_width);
+  formData.append("max_stroke_width", modelParams.maxStrokeWidth);
+  formData.append("alpha_blending_method", modelParams.ABMethod);
+  formData.append("alpha_blending_coef", modelParams.ABCoef);
 
   $.ajax({
     url: `${config.vector_style_transfer_backend_host}/vector_style_transfer`,

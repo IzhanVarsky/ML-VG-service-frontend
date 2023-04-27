@@ -1,4 +1,9 @@
 {
   "covergan_backend_host": "http://109.188.135.85:9013",
-  "vector_style_transfer_backend_host": "http://109.188.135.85:9012"
+  "vector_style_transfer_backend_host": "http://109.188.135.85:9012",
+  "MainPage_href": "/",
+  "CoverGAN_href": "/covergan",
+  "SVGEditor_href": "/edit",
+  "VectorNST_href": "/vector_style_transfer",
+  "Mantine_href": "https://mantine.dev"
 }

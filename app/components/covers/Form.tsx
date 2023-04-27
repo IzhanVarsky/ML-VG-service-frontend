@@ -1,7 +1,7 @@
 import {
   Button,
   Container,
-  Grid,
+  Grid, Group,
   Loader,
   NativeSelect,
   NumberInput,
@@ -11,13 +11,13 @@ import {
   Text,
   TextInput,
 } from '@mantine/core';
-import Shape from './Shape';
+import Shape from '../Shape';
 import { useForm } from '@mantine/form';
 import { Dropzone } from '@mantine/dropzone';
 import { useOutletContext } from "@remix-run/react";
 import { useState } from 'react';
 import { FileMusic } from 'tabler-icons-react';
-import config from '../config.json';
+import config from '../../config.json';
 
 const emotions = [
   'ANGER',
@@ -182,24 +182,28 @@ export default function Form() {
             />
             <Radio.Group
               label="Generator type"
-              required
+              withAsterisk
               {...form.getInputProps('gen_type')}
               // spacing="xs"
               // size="md"
             >
-              <Radio value="1" label="Old"/>
-              <Radio value="2" label="New 1"/>
-              <Radio value="3" label="New 2"/>
-              <Radio value="4" label="New 3"/>
-              <Radio value="5" label="New 4"/>
+              <Group mt="xs">
+                <Radio value="1" label="Old"/>
+                <Radio value="2" label="New 1"/>
+                <Radio value="3" label="New 2"/>
+                <Radio value="4" label="New 3"/>
+                <Radio value="5" label="New 4"/>
+              </Group>
             </Radio.Group>
             <Radio.Group
               label="Captioner type"
               required
               {...form.getInputProps('use_captioner')}
             >
-              <Radio value="True" label="Old"/>
-              <Radio value="False" label="New"/>
+              <Group mt="xs">
+                <Radio value="True" label="Old"/>
+                <Radio value="False" label="New"/>
+              </Group>
             </Radio.Group>
             <NativeSelect
               label="Emotion"

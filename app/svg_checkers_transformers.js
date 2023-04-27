@@ -1,4 +1,4 @@
-import {getColors, prettifyXml} from "./utils";
+import { getColors, prettifyXml } from "./utils";
 
 export const updCoverNotPrettified = (state, svg) => {
   // For textarea only
@@ -12,7 +12,7 @@ export const updCoverNotPrettified = (state, svg) => {
       colors = state.colors;
     }
   }
-  return {svg, colors};
+  return { svg, colors };
 }
 
 export const getSVGAndColorsState = (svg, isColorFindingEnabled) => {
@@ -25,4 +25,4 @@ export const getSVGAndColorsState = (svg, isColorFindingEnabled) => {
   }
 }
 
-export const getStateWithNewSVGAndColors = (svg) => ({svg, colors: getColors(svg)})
+export const getStateWithNewSVGAndColors = (svg) => ({ svg, colors: getColors(svg) })
