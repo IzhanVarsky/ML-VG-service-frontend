@@ -10,20 +10,18 @@ jobs:
   get-current-tag:
     runs-on: ubuntu-latest
     steps:
-      - name: Set output
-        id: vars
-        run: echo "tag=${GITHUB_REF#refs/*/v}" >> $GITHUB_OUTPUT
-      - name: Check output
-        env:
-          RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
+      - name: Set tag name in env
+        run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+      - name: Test 1
+        run: |
+          echo "====================="
+          echo $RELEASE_VERSION
+          echo ${RELEASE_VERSION:1}
+          echo ${{ env.RELEASE_VERSION }}
+          echo "====================="
+      - name: Test 2
         run: |
           echo "====================="
           echo ${RELEASE_VERSION:1}
-          echo ${{ steps.vars.outputs.tag }}
-          echo "====================="
-      - name: Check output2
-        run: |
-          echo "====================="
-          echo ${RELEASE_VERSION:1}
-          echo ${{ steps.vars.outputs.tag }}
+          echo ${{ env.RELEASE_VERSION }}
           echo "====================="
