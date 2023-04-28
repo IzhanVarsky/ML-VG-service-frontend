@@ -19,5 +19,5 @@ jobs:
         run: |
           echo "====================="
           echo $RELEASE_VERSION
-          echo ${{ steps.vars.outputs.tag }}
+          echo ${{ steps.vars.outputs.tag[1:] }}
           echo "====================="
