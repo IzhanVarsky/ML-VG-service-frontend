@@ -1,12 +1,26 @@
 name: CI (build docker image)
 
 on:
+  push:
+    tags:
+      - 'v*.*.*'
   workflow_dispatch:
 
 jobs:
   docker:
     runs-on: ubuntu-latest
     steps:
+      -
+        name: Set tag name in env
+        run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+      - 
+        name: Check tag name
+        run: |
+          echo "====================="
+          echo $RELEASE_VERSION
+          echo ${RELEASE_VERSION:1}
+          echo ${{ env.RELEASE_VERSION }}
+          echo "====================="
       -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -24,4 +38,4 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           push: true
-          tags: izhanvarsky/covergan-frontend:latest
+          tags: izhanvarsky/covergan-frontend:${RELEASE_VERSION:1}
