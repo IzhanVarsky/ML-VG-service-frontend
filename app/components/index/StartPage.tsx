@@ -74,8 +74,12 @@ export default function StartPage() {
           This site implementation:
         </Text>
         <List size="lg" withPadding>
+          <List.Item style={{ paddingBottom: '1rem' }}>
+            Frontend repo <Anchor href="https://github.com/IzhanVarsky/ML-VG-service-frontend" target="_blank">on
+            GitHub</Anchor>
+          </List.Item>
           <List.Item>
-            Main repo <Anchor href="https://github.com/IzhanVarsky/CoverGAN_service" target="_blank">on
+            CoverGAN backend repo <Anchor href="https://github.com/IzhanVarsky/ML-VG-CoverGAN-service-backend" target="_blank">on
             GitHub</Anchor>
           </List.Item>
         </List>
