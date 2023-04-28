@@ -18,6 +18,11 @@ jobs:
           RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
         run: |
           echo "====================="
-          echo $RELEASE_VERSION
-          echo ${{ steps.vars.outputs.tag:1 }}
+          echo ${RELEASE_VERSION:1}
+          echo ${{ steps.vars.outputs.tag }}
+          echo "====================="
+      - name: Check output2
+        run: |
+          echo "====================="
+          echo ${RELEASE_VERSION:1}
           echo "====================="
