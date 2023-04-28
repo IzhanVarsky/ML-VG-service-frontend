@@ -5,9 +5,9 @@ on:
     tags:
       - 'v*.*.*'
   workflow_dispatch:
-    
+
 jobs:
-  test:
+  get-current-tag:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -20,3 +20,14 @@ jobs:
           echo "Nyash myash 2"
           echo ${{ env.RELEASE_VERSION }}
           echo "Nyash myash 3"
+  test-job:
+    needs: get-current-tag
+    runs-on: ubuntu-latest
+    steps:
+      - name: Test
+        run: |
+          echo "============="
+          echo $RELEASE_VERSION
+          echo "============="
+          echo ${{ env.RELEASE_VERSION }}
+          echo "============="
