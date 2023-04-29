@@ -1,8 +1,7 @@
-import { Anchor, Center, Divider, List, Text } from '@mantine/core';
+import { Anchor, Center, List, Text } from '@mantine/core';
 import Shape from '../Shape';
-import Update1Info from "~/components/index/Update1Info";
-import Update0Info from "~/components/index/Update0Info";
 import { CoverGANLink, SVGEditorLink, VectorNSTLink } from "~/components/Links";
+import Changelog from "~/components/index/Changelog";
 
 export default function StartPage() {
   return (
@@ -77,19 +76,17 @@ export default function StartPage() {
             GitHub</Anchor>
           </List.Item>
           <List.Item>
-            CoverGAN backend repo <Anchor href="https://github.com/IzhanVarsky/ML-VG-CoverGAN-service-backend" target="_blank">on
+            CoverGAN backend repo <Anchor href="https://github.com/IzhanVarsky/ML-VG-CoverGAN-service-backend"
+                                          target="_blank">on
             GitHub</Anchor>
           </List.Item>
         </List>
       </Shape>
+      <Changelog/>
       <Shape>
-        <Text size={'xl'} style={{ paddingBottom: '1rem' }} underline>Site changelog:</Text>
-        <Update1Info></Update1Info>
-        <Divider my="sm"/>
-        <Update0Info></Update0Info>
-      </Shape>
-      <Shape>
-        <Text size='md'>If you have any <Text weight={600} span>questions</Text> or <Text weight={600} span>suggestions</Text>, write me on <Anchor href="https://t.me/IzhanVarsky" target="_blank">Telegram</Anchor>.</Text>
+        <Text size='md'>If you have any <Text weight={600} span>questions</Text> or <Text weight={600}
+                                                                                          span>suggestions</Text>, write
+          me on <Anchor href="https://t.me/IzhanVarsky" target="_blank">Telegram</Anchor>.</Text>
       </Shape>
     </>
   )
