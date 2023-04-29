@@ -5,5 +5,6 @@
   "CoverGAN_href": "/covergan",
   "SVGEditor_href": "/edit",
   "VectorNST_href": "/vector_style_transfer",
-  "Mantine_href": "https://mantine.dev"
+  "Mantine_href": "https://mantine.dev",
+  "frontend_tag_version": "v1.0.1"
 }

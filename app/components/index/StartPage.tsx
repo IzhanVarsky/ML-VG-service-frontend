@@ -1,9 +1,7 @@
-import { Center, Text, List, Anchor, Divider } from '@mantine/core';
+import { Anchor, Center, Divider, List, Text } from '@mantine/core';
 import Shape from '../Shape';
-import { Link } from "@remix-run/react";
 import Update1Info from "~/components/index/Update1Info";
 import Update0Info from "~/components/index/Update0Info";
-import config from '~/config.json';
 import { CoverGANLink, SVGEditorLink, VectorNSTLink } from "~/components/Links";
 
 export default function StartPage() {
