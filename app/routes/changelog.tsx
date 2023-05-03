@@ -1,23 +1,23 @@
 import { AppShell } from '@mantine/core';
-import React from 'react';
 import Navigation from '~/components/Navigation';
-import Editor from '~/components/editor/Editor';
+import React from 'react';
 import AbstractPage from "~/AbstractPage";
 import { HeaderPageName } from "~/components/HeaderPageName";
+import Changelog from "~/components/changelog/Changelog";
 
-export default class Edit extends AbstractPage {
+export default class VectorWeaver extends AbstractPage {
   returnFunc() {
     return (
       <AppShell
         footer={<Navigation/>}
-        header={<HeaderPageName text='SVG Editor'/>}
+        header={<HeaderPageName text='Site Changelog'/>}
         styles={{
           main: {
             padding: 0,
           },
         }}
       >
-        <Editor/>
+        <Changelog/>
       </AppShell>
     );
   }

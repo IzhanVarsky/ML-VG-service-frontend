@@ -4,6 +4,7 @@ import Shape from '../Shape';
 import { downloadBase64File, downloadTextFile } from "app/download_utils";
 import SVG from '../SVG';
 import { useState } from "react";
+import { SVG_DATA_INPUT_KEY } from "~/components/editor/Editor";
 
 export default function Viewer() {
   const [selectedCover, setSelectedCover, covers, setCovers] = useOutletContext();
@@ -33,9 +34,13 @@ export default function Viewer() {
               <Button
                 onClick={() => downloadTextFile(cover.svg, "image.svg")}
               >Download</Button>
-              <Link to="/edit">
-                <Button>Edit</Button>
-              </Link>
+              <Button
+                onClick={() => {
+                  sessionStorage.setItem(SVG_DATA_INPUT_KEY, cover.svg);
+                  let tab = window.open("/edit", '_blank');
+                  tab.focus();
+                }}
+              >Edit</Button>
             </Grid>
           </Stack>
         </Tabs.Panel>

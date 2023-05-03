@@ -1,6 +1,6 @@
 import Shape from "~/components/Shape";
 import { Grid, Text } from "@mantine/core";
-import { CoverGANLink, MainPageLink, SVGEditorLink, VectorNSTLink } from "~/components/Links";
+import { CoverGANLink, MainPageLink, SVGEditorLink, VectorNSTLink, VectorWeaverLink } from "~/components/Links";
 import config from "~/config.json";
 
 export default function Navigation() {
@@ -8,7 +8,7 @@ export default function Navigation() {
     <>
       <Shape>
         <Grid align="center" columns={8}>
-          <Grid.Col span={4}>
+          <Grid.Col span={3}>
             <Text size="lg">ML Vector Tools (c) | {config.frontend_tag_version} | 2022 - 2023</Text>
           </Grid.Col>
           <Grid.Col span={1} style={{ textAlign: "center" }}>
@@ -19,6 +19,9 @@ export default function Navigation() {
           </Grid.Col>
           <Grid.Col span={1} style={{ textAlign: "center" }}>
             <Text><VectorNSTLink/></Text>
+          </Grid.Col>
+          <Grid.Col span={1} style={{ textAlign: "center" }}>
+            <Text><VectorWeaverLink/></Text>
           </Grid.Col>
           <Grid.Col span={1} style={{ textAlign: "center" }}>
             <Text><SVGEditorLink/></Text>

@@ -5,6 +5,7 @@ import { downloadTextFile, runVectorStyleTransfer } from "~/download_utils";
 import { Atom, Download } from "tabler-icons-react";
 import InputParameters from "~/components/vector_style_transfer/InputParameters";
 import BITMAPImageLoaderAndViewer from "~/components/vector_style_transfer/BITMAPImageLoaderAndViewer";
+import { HeaderPageName } from "~/components/HeaderPageName";
 
 let default_params = {
   iterationsNumber: 100,
@@ -67,12 +68,6 @@ export default function MainVectorStyleTransfer() {
 
   return (
     <>
-      <Text size='xl'
-            weight={800}
-            variant="gradient"
-            gradient={{ from: 'indigo', to: 'red', deg: 1 }}
-            style={{ marginLeft: '30px', fontFamily: 'Greycliff CF, sans-serif', userSelect: 'none' }}
-      >- - - Vector style transfer app - - -</Text>
       <Shape>
         <Grid justify='space-around' align="flex-start" columns={3}>
           <Grid.Col span={1}>

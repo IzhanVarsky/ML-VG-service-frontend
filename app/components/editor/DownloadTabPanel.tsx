@@ -1,4 +1,4 @@
-import { Button, Grid, NumberInput, Stack, } from '@mantine/core';
+import { Button, Grid, NumberInput, Stack, Center } from '@mantine/core';
 import { Braces, LayoutBoardSplit, Palette, } from 'tabler-icons-react';
 import { downloadPNGFromServer, downloadTextFile, getJSON } from "~/download_utils";
 import { svgWithSize } from '~/utils';
@@ -35,6 +35,8 @@ export default function DownloadTabPanel({
           required
         />
       </Grid>
+      {/*<Center>*/}
+      {/*  <Stack>*/}
       <Button
         leftIcon={<LayoutBoardSplit size={14}/>}
         onClick={() =>
@@ -56,6 +58,9 @@ export default function DownloadTabPanel({
       >
         Download JSON
       </Button>
+      {/*</Stack>*/}
+      {/*</Center>*/}
+
     </Stack>
   )
 }

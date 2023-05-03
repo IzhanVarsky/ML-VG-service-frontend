@@ -224,10 +224,7 @@ export default function Form() {
               label="Use color filters"
               {...form.getInputProps('use_filters')}
             />
-
-            {isLoading
-              ? <Container><Loader size='xl'/></Container>
-              : <Button type='submit' variant='gradient'>Generate</Button>}
+            <Button type='submit' variant='gradient' loading={isLoading}>Generate</Button>
           </Stack>
         </form>
       </Shape>

@@ -1,17 +1,18 @@
-import { AppShell, Stack } from '@mantine/core';
-import CoverGANLogo from '~/components/covers/CoverGANLogo';
+import { AppShell } from '@mantine/core';
 import Form from '~/components/covers/Form';
 import Navigation from '~/components/Navigation';
 import Covers from '~/components/covers/Covers';
 import React from 'react';
 import AbstractPage from "~/AbstractPage";
+import { HeaderPageName } from "~/components/HeaderPageName";
 
-export default class Index extends AbstractPage {
+export default class CoverGAN extends AbstractPage {
   returnFunc() {
     return (
       <AppShell
         footer={<Navigation/>}
-        navbar={<Stack><CoverGANLogo/><Form/></Stack>}
+        header={<HeaderPageName text='CoverGAN'/>}
+        navbar={<Form/>}
         styles={{
           main: {
             padding: 0,
