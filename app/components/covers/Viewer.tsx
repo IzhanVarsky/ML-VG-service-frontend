@@ -1,10 +1,10 @@
 import { Button, Container, Grid, Image, Stack, Tabs } from '@mantine/core';
-import { Link, useOutletContext } from '@remix-run/react';
+import { useOutletContext } from '@remix-run/react';
 import Shape from '../Shape';
 import { downloadBase64File, downloadTextFile } from "app/download_utils";
 import SVG from '../SVG';
 import { useState } from "react";
-import { SVG_DATA_INPUT_KEY } from "~/components/editor/Editor";
+import { addSVGToStorageAndOpenNewEditor } from "~/components/editor/Editor";
 
 export default function Viewer() {
   const [selectedCover, setSelectedCover, covers, setCovers] = useOutletContext();
@@ -31,16 +31,10 @@ export default function Viewer() {
           <Stack>
             <SVG svg={cover.svg} w={"50vh"} h={"50vh"}/>
             <Grid justify='space-around'>
-              <Button
-                onClick={() => downloadTextFile(cover.svg, "image.svg")}
-              >Download</Button>
-              <Button
-                onClick={() => {
-                  sessionStorage.setItem(SVG_DATA_INPUT_KEY, cover.svg);
-                  let tab = window.open("/edit", '_blank');
-                  tab.focus();
-                }}
-              >Edit</Button>
+              <Button onClick={() => downloadTextFile(cover.svg, "image.svg")}>
+                Download
+              </Button>
+              <Button onClick={() => addSVGToStorageAndOpenNewEditor(cover.svg)}>Edit</Button>
             </Grid>
           </Stack>
         </Tabs.Panel>

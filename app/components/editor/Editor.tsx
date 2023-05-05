@@ -1,4 +1,4 @@
-import { Grid, Text, } from '@mantine/core';
+import { Grid, } from '@mantine/core';
 import Shape from '~/components/Shape';
 import EditorTabs from '~/components/editor/EditorTabs';
 import { getColors } from '~/utils';
@@ -6,9 +6,14 @@ import useHistoryState from '~/HistoryState';
 import SVGViewer from "~/components/SVGViewer";
 import SVGViewerControlButtons from "~/components/editor/SVGViewerControlButtons";
 import { useState } from "react";
-import { HeaderPageName } from "~/components/HeaderPageName";
 
 export const SVG_DATA_INPUT_KEY = "SVG_KEY";
+
+export const addSVGToStorageAndOpenNewEditor = (svg: string) => {
+  sessionStorage.setItem(SVG_DATA_INPUT_KEY, svg);
+  let tab = window.open("/edit", '_blank');
+  tab?.focus();
+}
 
 export default function Editor() {
   let possibleInputSVG = sessionStorage.getItem(SVG_DATA_INPUT_KEY);

@@ -1,26 +1,18 @@
-import { AppShell } from '@mantine/core';
-import Form from '~/components/covers/Form';
-import Navigation from '~/components/Navigation';
-import Covers from '~/components/covers/Covers';
 import React from 'react';
 import AbstractPage from "~/AbstractPage";
-import { HeaderPageName } from "~/components/HeaderPageName";
+import ServiceShell from "~/components/ServiceShell";
+import config from '~/config.json';
+import Covers from "~/components/covers/Covers";
+import Form from "~/components/covers/Form";
 
 export default class CoverGAN extends AbstractPage {
   returnFunc() {
     return (
-      <AppShell
-        footer={<Navigation/>}
-        header={<HeaderPageName text='CoverGAN'/>}
-        navbar={<Form/>}
-        styles={{
-          main: {
-            padding: 0,
-          },
-        }}
-      >
-        <Covers/>
-      </AppShell>
+      <ServiceShell serviceName='CoverGAN'
+                    serviceHostname={config.covergan_backend_host}
+                    navBar={<Form/>}
+                    shellChild={<Covers/>}
+      />
     );
   }
 }

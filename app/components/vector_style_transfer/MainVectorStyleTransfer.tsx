@@ -5,7 +5,6 @@ import { downloadTextFile, runVectorStyleTransfer } from "~/download_utils";
 import { Atom, Download } from "tabler-icons-react";
 import InputParameters from "~/components/vector_style_transfer/InputParameters";
 import BITMAPImageLoaderAndViewer from "~/components/vector_style_transfer/BITMAPImageLoaderAndViewer";
-import { HeaderPageName } from "~/components/HeaderPageName";
 
 let default_params = {
   iterationsNumber: 100,

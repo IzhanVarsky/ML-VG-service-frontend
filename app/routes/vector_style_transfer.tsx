@@ -1,24 +1,16 @@
-import { AppShell } from '@mantine/core';
-import Navigation from '~/components/Navigation';
 import React from 'react';
 import AbstractPage from "~/AbstractPage";
 import MainVectorStyleTransfer from '~/components/vector_style_transfer/MainVectorStyleTransfer';
-import { HeaderPageName } from "~/components/HeaderPageName";
+import config from "~/config.json";
+import ServiceShell from "~/components/ServiceShell";
 
 export default class VectorStyleTransfer extends AbstractPage {
   returnFunc() {
     return (
-      <AppShell
-        footer={<Navigation/>}
-        header={<HeaderPageName text='Vector Style Transfer'/>}
-        styles={{
-          main: {
-            padding: 0,
-          },
-        }}
-      >
-        <MainVectorStyleTransfer/>
-      </AppShell>
+      <ServiceShell serviceName={'Vector Style Transfer'}
+                    serviceHostname={config.vector_style_transfer_backend_host}
+                    shellChild={<MainVectorStyleTransfer/>}
+      />
     );
   }
 }

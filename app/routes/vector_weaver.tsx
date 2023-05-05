@@ -1,24 +1,16 @@
-import { AppShell } from '@mantine/core';
-import Navigation from '~/components/Navigation';
 import React from 'react';
 import AbstractPage from "~/AbstractPage";
 import MainVectorWeaver from "~/components/vector_weaver/MainVectorWeaver";
-import { HeaderPageName } from "~/components/HeaderPageName";
+import config from "~/config.json";
+import ServiceShell from "~/components/ServiceShell";
 
 export default class VectorWeaver extends AbstractPage {
   returnFunc() {
     return (
-      <AppShell
-        footer={<Navigation/>}
-        header={<HeaderPageName text='Vector Weaver'/>}
-        styles={{
-          main: {
-            padding: 0,
-          },
-        }}
-      >
-        <MainVectorWeaver/>
-      </AppShell>
+      <ServiceShell serviceName={'Vector Weaver'}
+                    serviceHostname={config.vector_weaver_backend_host}
+                    shellChild={<MainVectorWeaver/>}
+      />
     );
   }
 }

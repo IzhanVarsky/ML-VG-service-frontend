@@ -16,7 +16,7 @@ export default class AbstractPage extends React.Component {
     return this.returnFunc();
   }
 
-  returnFunc() {
-    return null;
+  returnFunc(): JSX.Element {
+    return <></>;
   }
 }

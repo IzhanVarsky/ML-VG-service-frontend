@@ -1,1 +1,1 @@
-docker build -t covergan_front -f ./Dockerfile .
+docker build -t ml-vg-service-frontend -f ./Dockerfile .
