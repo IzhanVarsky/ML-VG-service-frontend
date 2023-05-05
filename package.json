@@ -4,7 +4,8 @@
   "scripts": {
     "build": "remix build",
     "dev": "set PORT=3000 && remix dev",
-    "start": "PORT=5001 remix-serve build"
+    "start": "PORT=5001 remix-serve build",
+    "start_no_port": "remix-serve build"
   },
   "dependencies": {
     "@codemirror/lang-xml": "^6.0.1",
