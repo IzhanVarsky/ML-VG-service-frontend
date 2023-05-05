@@ -1,7 +1,9 @@
-export function runHealthQuery(hostname, succ_callback, err_callback) {
+import config from "~/config.json";
+
+export function runHealthQuery(backendPath, succ_callback, err_callback) {
   $.ajax(
     {
-      url: `${hostname}/health`,
+      url: `${config.main_host}/${backendPath}/health`,
       type: "get",
       dataType: 'json',
       success: function (res) {

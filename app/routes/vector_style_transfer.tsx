@@ -8,7 +8,7 @@ export default class VectorStyleTransfer extends AbstractPage {
   returnFunc() {
     return (
       <ServiceShell serviceName={'Vector Style Transfer'}
-                    serviceHostname={config.vector_style_transfer_backend_host}
+                    backendPath={config.vector_style_transfer_backend_host}
                     shellChild={<MainVectorStyleTransfer/>}
       />
     );

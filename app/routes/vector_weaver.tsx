@@ -8,7 +8,7 @@ export default class VectorWeaver extends AbstractPage {
   returnFunc() {
     return (
       <ServiceShell serviceName={'Vector Weaver'}
-                    serviceHostname={config.vector_weaver_backend_host}
+                    backendPath={config.vector_weaver_backend_path}
                     shellChild={<MainVectorWeaver/>}
       />
     );

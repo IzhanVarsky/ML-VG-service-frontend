@@ -11,8 +11,7 @@ import { addSVGToStorageAndOpenNewEditor } from "~/components/editor/Editor"
 function runImageGeneration(numOfImages, succ_callback, err_callback) {
   console.log("numOfImages", numOfImages);
   $.ajax({
-    // url: 'http://localhost:9012/vector_weaver',
-    url: `${config.vector_weaver_backend_host}/vector_weaver`,
+    url: `${config.main_host}/${config.vector_weaver_backend_path}/vector_weaver`,
     type: 'post',
     data: JSON.stringify({ 'n_count': numOfImages }),
     contentType: 'application/json',

@@ -1,1 +1,0 @@
-docker run --restart=always -p 5001:5001 ml-vg-service-frontend:latest

@@ -6,12 +6,12 @@ import Navigation from "~/components/Navigation";
 import ServiceUnavailableInfo from "~/components/ServiceUnavailableInfo";
 
 export default function ServiceShell({
-                                       serviceHostname, serviceName,
+                                       backendPath, serviceName,
                                        shellChild, navBar = <></>
                                      }) {
   const [isServerAvailable, setIsServerAvailable] = useState(true);
   runHealthQuery(
-    serviceHostname,
+    backendPath,
     (msg) => {
       setIsServerAvailable(true);
     },

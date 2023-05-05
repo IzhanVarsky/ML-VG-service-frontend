@@ -9,7 +9,7 @@ export default class CoverGAN extends AbstractPage {
   returnFunc() {
     return (
       <ServiceShell serviceName='CoverGAN'
-                    serviceHostname={config.covergan_backend_host}
+                    backendPath={config.covergan_backend_host}
                     navBar={<Form/>}
                     shellChild={<Covers/>}
       />
