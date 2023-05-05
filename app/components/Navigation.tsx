@@ -1,7 +1,7 @@
 import Shape from "~/components/Shape";
 import { Grid, Text } from "@mantine/core";
 import { CoverGANLink, MainPageLink, SVGEditorLink, VectorNSTLink, VectorWeaverLink } from "~/components/Links";
-import config from "~/config.json";
+import { config } from "~/config.js";
 
 export default function Navigation() {
   return (

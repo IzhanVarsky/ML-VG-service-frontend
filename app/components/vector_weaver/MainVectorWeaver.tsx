@@ -3,7 +3,7 @@ import { Button, Center, Container, Group, Menu, NumberInput, Text } from "@mant
 import { Palette } from "tabler-icons-react";
 import { useState } from "react";
 import { IconMessageCircle, IconPhoto, IconSettings, } from '@tabler/icons-react';
-import config from "~/config.json";
+import { config } from "~/config.js";
 import { downloadPNGFromServer, downloadTextFile } from "~/download_utils";
 import { svgWithSize } from "~/utils";
 import { addSVGToStorageAndOpenNewEditor } from "~/components/editor/Editor"
@@ -11,7 +11,7 @@ import { addSVGToStorageAndOpenNewEditor } from "~/components/editor/Editor"
 function runImageGeneration(numOfImages, succ_callback, err_callback) {
   console.log("numOfImages", numOfImages);
   $.ajax({
-    url: `${config.main_host}/${config.vector_weaver_backend_path}/vector_weaver`,
+    url: `${config.vector_weaver_backend_path}/vector_weaver`,
     type: 'post',
     data: JSON.stringify({ 'n_count': numOfImages }),
     contentType: 'application/json',

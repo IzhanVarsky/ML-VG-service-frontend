@@ -17,7 +17,7 @@ import { Dropzone } from '@mantine/dropzone';
 import { useOutletContext } from "@remix-run/react";
 import { useState } from 'react';
 import { FileMusic } from 'tabler-icons-react';
-import config from '../../config.json';
+import { config } from '~/config.js';
 
 const emotions = [
   'ANGER',

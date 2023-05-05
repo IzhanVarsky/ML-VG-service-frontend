@@ -1,7 +1,7 @@
 import { List, Space, Text } from "@mantine/core";
 import { ChangelogLink, SVGEditorLink, VectorWeaverLink } from "~/components/Links";
 
-export default function Update2Info() {
+export default function Update3Info() {
   return (
     <>
       <Text size='md' style={{ paddingBottom: '1rem' }}>Update on <Text weight={600} span>03.05.2023:</Text></Text>

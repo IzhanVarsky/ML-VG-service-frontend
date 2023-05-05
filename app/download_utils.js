@@ -1,4 +1,4 @@
-import config from '~/config.json';
+import { config } from '~/config.js';
 import { optimize_svg_pipeline } from "~/flatten_groups";
 
 export function downloadBase64File(contentType, base64Data, fileName) {

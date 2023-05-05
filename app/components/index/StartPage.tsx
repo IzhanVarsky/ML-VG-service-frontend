@@ -2,7 +2,7 @@ import { Anchor, List, Text, Center, Container } from '@mantine/core';
 import Shape from '../Shape';
 import { CoverGANLink, SVGEditorLink, VectorNSTLink, VectorWeaverLink } from "~/components/Links";
 import { Link } from "@remix-run/react";
-import config from "~/config.json";
+import { config } from "~/config.js";
 
 export default function StartPage() {
   return (

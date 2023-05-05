@@ -1,4 +1,4 @@
-import config from "~/config.json";
+import { config } from "~/config.js";
 import { Link } from "@remix-run/react";
 import { Anchor } from "@mantine/core";
 

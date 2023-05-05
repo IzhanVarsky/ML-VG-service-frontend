@@ -1,9 +1,9 @@
-import config from "~/config.json";
-
 export function runHealthQuery(backendPath, succ_callback, err_callback) {
+  let sendingRequestTo = `${backendPath}/health`;
+  console.log("sendingRequestTo", sendingRequestTo);
   $.ajax(
     {
-      url: `${config.main_host}/${backendPath}/health`,
+      url: sendingRequestTo,
       type: "get",
       dataType: 'json',
       success: function (res) {
