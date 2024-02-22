@@ -1,6 +1,7 @@
 const getBackendPath = (serviceName) => `${main_host}/backend/${serviceName}`;
 
-const main_host = "http://109.188.135.85:5001";
+// const main_host = "http://109.188.135.85:5001";
+const main_host = "http://api.statanly.com:5001";
 
 export const covergan_backend_host = getBackendPath('covergan');
 export const vector_style_transfer_backend_host = getBackendPath('vector_style_transfer');
