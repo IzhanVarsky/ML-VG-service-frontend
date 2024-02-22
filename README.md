@@ -2,6 +2,20 @@
 
 - [Remix Docs](https://remix.run/docs)
 
+## Работа с тегами
+
+Перед пушем нужно в app/config.js прописать новое имя тега, чтобы оно отображалось на фронте.
+
+Вначале нужно запушить изменения (не забыть обновить changelog, если нужно) и затем можно создать тег, чтобы запустился
+CI/CD:
+
+`git tag -a v1.1.2 -m "release v1.1.2"`
+
+`git push origin --tags`
+
+Удалить тег:
+`git push --delete origin tagname`
+
 ## Development
 
 From your terminal:
@@ -39,7 +53,8 @@ Make sure to deploy the output of `remix build`
 
 ### Using a Template
 
-When you ran `npx create-remix@latest` there were a few choices for hosting. You can run that again to create a new project, then copy over your `app/` folder to the new project that's pre-configured for your target server.
+When you ran `npx create-remix@latest` there were a few choices for hosting. You can run that again to create a new
+project, then copy over your `app/` folder to the new project that's pre-configured for your target server.
 
 ```sh
 cd ..

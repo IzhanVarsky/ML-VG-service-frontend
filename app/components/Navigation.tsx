@@ -9,7 +9,7 @@ export default function Navigation() {
       <Shape>
         <Grid align="center" columns={8}>
           <Grid.Col span={3}>
-            <Text size="lg">ML Vector Tools (c) | {config.frontend_tag_version} | 2022 - 2023</Text>
+            <Text size="lg">ML Vector Tools (c) | {config.frontend_tag_version} | {config.startYear} - {config.endYear}</Text>
           </Grid.Col>
           <Grid.Col span={1} style={{ textAlign: "center" }}>
             <Text><MainPageLink/></Text>

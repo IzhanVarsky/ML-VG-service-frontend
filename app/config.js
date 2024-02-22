@@ -19,5 +19,7 @@ export const config = {
   "VectorWeaver_href": "/vector_weaver",
   "Changelog_href": "/changelog",
   "Mantine_href": "https://mantine.dev",
-  "frontend_tag_version": "v1.1.1"
+  "frontend_tag_version": "v1.1.2",
+  "startYear": "2022",
+  "endYear": "2024",
 }
