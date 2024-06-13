@@ -9,7 +9,7 @@ export default function Update5Info() {
           <Text>Frontend tag version: v1.1.2.</Text>
         </List.Item>
         <List.Item>
-          <Text>Backend Host moved to new IP: api.statanly.com.</Text>
+          <Text>Backend Host moved to new IP: api.statanly.com and CORS updated.</Text>
         </List.Item>
       </List>
     </>)
