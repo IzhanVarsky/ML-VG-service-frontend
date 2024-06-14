@@ -134,7 +134,7 @@ export function runVectorStyleTransfer(content_img, style_img, styleMimeType,
     data: formData,
     processData: false,
     contentType: false,
-    timeout: 200_000,
+    timeout: 500_000,
     cache: false,
     success: (response) => {
       console.log('SUCC', response);
