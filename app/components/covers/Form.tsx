@@ -16,8 +16,9 @@ import { useForm } from '@mantine/form';
 import { Dropzone } from '@mantine/dropzone';
 import { useOutletContext } from "@remix-run/react";
 import { useState } from 'react';
-import { FileMusic } from 'tabler-icons-react';
+import { FileMusic, PlayerRecord, Refresh } from 'tabler-icons-react';
 import { config } from '~/config.js';
+import AudioRecorder from "~/components/covers/AudioRecorder";
 
 const emotions = [
   'ANGER',
@@ -48,6 +49,8 @@ export default function Form() {
   const [artistName, setArtistName] = useState('');
   const [trackName, setTrackName] = useState('');
 
+  const [showAudio, setShowAudio] = useState(false);
+
   const splitByLast = (text: string, SEP: string = ".") => {
     const index = text.lastIndexOf(SEP);
     return index < 0 ? [text] : [text.slice(0, index), text.slice(index + SEP.length)];
@@ -63,6 +66,7 @@ export default function Form() {
   }
 
   const setArtistAndTrackNames = (audioFilename) => {
+    audioFilename = audioFilename.replace(/_/g, " ")
     const fname = splitByLast(audioFilename, ".");
     if (fname.length < 2) {
       updArtistName(audioFilename);
@@ -132,40 +136,53 @@ export default function Form() {
         })}>
           <Stack justify="space-around">
             <Text>Select music file</Text>
-            <Dropzone
-              multiple={false}
-              onDrop={(files) => {
-                form.setFieldValue('audio_file', files[0]);
-                setArtistAndTrackNames(files[0].name);
-                setShowError(false);
-              }}
-              onReject={(files) => console.log('rejected files', files)}
-              // maxSize={3 * 1024 ** 2}
-              accept={["audio/*"]}
-              style={{
-                borderColor: showError ? '#ffa3a3' : '',
-                backgroundColor: showError ? '#fff6f5' : '',
-                padding: '8px'
-              }}
-            >
-              <Grid align='center' columns={8}
-                    style={{ margin: 0 }}>
-                <Grid.Col span={1}>
-                  <FileMusic
-                    color={showError ? '#ff3b3b' : 'grey'}
-                    style={{ display: 'block', margin: 'auto' }}
-                    size={'30px'}/>
-                </Grid.Col>
-                <Grid.Col span={7}>
-                  {form.values['audio_file']
-                    ? <Text
-                      color='grey'
-                      style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}
-                    >{form.values['audio_file'].name}</Text>
-                    : <Text color={showError ? 'red' : 'grey'}>Drag or click</Text>}
-                </Grid.Col>
-              </Grid>
-            </Dropzone>
+            <Group justifyContent="space-between">
+              <Dropzone
+                multiple={false}
+                onDrop={(files) => {
+                  console.log(files[0]);
+                  form.setFieldValue('audio_file', files[0]);
+                  setArtistAndTrackNames(files[0].name);
+                  setShowError(false);
+                  setShowAudio(false);
+                }}
+                onReject={(files) => console.log('rejected files', files)}
+                // maxSize={3 * 1024 ** 2}
+                accept={["audio/*"]}
+                style={{
+                  borderColor: showError ? '#ffa3a3' : '',
+                  backgroundColor: showError ? '#fff6f5' : '',
+                  padding: '8px'
+                }}
+              >
+                <Grid align='center' columns={8}
+                      style={{ margin: 0 }}>
+                  <Grid.Col span={2}>
+                    <FileMusic
+                      color={showError ? '#ff3b3b' : 'grey'}
+                      style={{ display: 'block', margin: 'auto' }}
+                      size={'25px'}/>
+                  </Grid.Col>
+                  <Grid.Col span={6}>
+                    {form.values['audio_file']
+                      ? <Text
+                        color='grey'
+                        style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}
+                      >{form.values['audio_file'].name}</Text>
+                      : <Text color={showError ? 'red' : 'grey'}>Drag or click</Text>}
+                  </Grid.Col>
+                </Grid>
+              </Dropzone>
+              <Text>OR</Text>
+              <AudioRecorder
+                form={form}
+                updArtistName={updArtistName}
+                updTrackName={updTrackName}
+                showAudio={showAudio}
+                setShowAudio={setShowAudio}
+              ></AudioRecorder>
+            </Group>
+
             <TextInput
               placeholder={"Artist name"}
               label="Artist name"

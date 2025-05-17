@@ -6,6 +6,7 @@ import Update3Info from "~/components/changelog/Update3Info";
 import Update4Info from "~/components/changelog/Update4Info";
 import Update5Info from "~/components/changelog/Update5Info";
 import Update6Info from "~/components/changelog/Update6Info";
+import Update7Info from "~/components/changelog/Update7Info";
 import Shape from "~/components/Shape";
 
 export default function Changelog() {
@@ -13,6 +14,8 @@ export default function Changelog() {
     <>
       <Center>
         <Shape style={{ width: '60%' }}>
+          <Update7Info/>
+          <Divider my="sm"/>
           <Update6Info/>
           <Divider my="sm"/>
           <Update5Info/>

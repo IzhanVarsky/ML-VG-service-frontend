@@ -18,15 +18,16 @@
     "@remix-run/node": "^1.5.1",
     "@remix-run/react": "^1.5.1",
     "@remix-run/serve": "^1.5.1",
+    "@tabler/icons-react": "2.17.0",
     "@uiw/codemirror-theme-bbedit": "^4.15.1",
     "@uiw/react-codemirror": "^4.15.1",
     "jquery": "^3.6.0",
     "prettify-xml": "^1.2.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-microphone-recorder": "^1.0.0",
     "svgo": "^2.8.0",
-    "tabler-icons-react": "^1.48.1",
-    "@tabler/icons-react": "2.17.0"
+    "tabler-icons-react": "^1.48.1"
   },
   "devDependencies": {
     "@remix-run/dev": "^1.5.1",

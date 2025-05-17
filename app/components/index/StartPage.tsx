@@ -23,7 +23,8 @@ export default function StartPage() {
                     GitHub</Anchor>
                   </List.Item>
                   <List.Item>
-                    <Anchor href="https://arxiv.org/pdf/2205.07301v1.pdf" target="_blank">Link to the paper</Anchor>
+                    <Anchor href="https://www.scitepress.org/PublicationsDetail.aspx?ID=nExT/huV0TI=&t=1"
+                            target="_blank">Link to the paper</Anchor>
                   </List.Item>
                 </List>
               </List.Item>
@@ -38,7 +39,8 @@ export default function StartPage() {
                     GitHub</Anchor>
                   </List.Item>
                   <List.Item>
-                    <Anchor href="https://arxiv.org/pdf/2303.03405.pdf" target="_blank">Link to the paper</Anchor>
+                    <Anchor href="https://www.scitepress.org/PublicationsDetail.aspx?ID=MBw35KalSXo=&t=1"
+                            target="_blank">Link to the paper</Anchor>
                   </List.Item>
                 </List>
               </List.Item>
@@ -47,6 +49,17 @@ export default function StartPage() {
                   <VectorWeaverLink/> - service for unconditional vector image generating using pretrained transformer
                   model
                 </Text>
+                <List size="lg" withPadding>
+                  <List.Item>
+                    View implementation <Anchor href="https://github.com/CTLab-ITMO/VGLib/tree/main/VectorWeaver"
+                                                target="_blank">on
+                    GitHub</Anchor>
+                  </List.Item>
+                  <List.Item>
+                    <Anchor href="https://www.scitepress.org/PublicationsDetail.aspx?ID=Xy0kw/2ivPE=&t=1"
+                            target="_blank">Link to the paper</Anchor>
+                  </List.Item>
+                </List>
               </List.Item>
               <List.Item>
                 <Text>
@@ -58,11 +71,35 @@ export default function StartPage() {
           </Shape>
           <Shape>
             <Text size={'xl'} style={{ paddingBottom: '1rem' }} underline>Other vector graphics projects:</Text>
-            <List size="lg" withPadding>
+            <List size="lg" withPadding style={{width: "90%"}}>
+              <List.Item style={{ paddingBottom: '1rem', }}>
+                <Anchor href="https://arxiv.org/html/2503.04983" target="_blank">Leveraging Large Language Models For
+                  Scalable Vector Graphics Processing: A Review. </Anchor>
+                In this paper we examine how well
+                popular LLMs cope with SVG generation, editing and understanding tasks.
+              </List.Item>
               <List.Item style={{ paddingBottom: '1rem' }}>
-                DiffVG: <Anchor href="https://github.com/IzhanVarsky/diffvg2022" target="_blank">GitHub</Anchor>. We
-                fixed
-                come serious bugs and added useful functions.
+                <Anchor href="https://www.scitepress.org/PublicationsDetail.aspx?ID=i1mJHiH5vBY=&t=1" target="_blank">LIVBOC:
+                  Layerwise Image Vectorization via Bayesain-Optimized Contour. </Anchor>
+                In this paper we present our new vectorization algorithm. See implementation on <Anchor
+                href="https://github.com/CTLab-ITMO/LIVBOC"
+                target="_blank">GitHub</Anchor>.
+              </List.Item>
+              <List.Item style={{ paddingBottom: '1rem' }}>
+                <Anchor href="https://link.springer.com/chapter/10.1007/978-3-031-70085-9_24" target="_blank">EvoVec:
+                  Evolutionary Image
+                  Vectorization with Adaptive Curve Number and Color Gradients. </Anchor>
+                In this paper we present our new vectorization algorithm. See implementation on <Anchor
+                href="https://github.com/CTLab-ITMO/VGLib/blob/main/EvoVec-Evolutionary-Image-Vectorization"
+                target="_blank">GitHub</Anchor>.
+              </List.Item>
+              <List.Item style={{ paddingBottom: '1rem' }}>
+                <Anchor href="https://link.springer.com/article/10.1007/s10958-024-07422-4" target="_blank">Image Vectorization: a Review. </Anchor>
+                In this paper we examine the problems of image vectorization algorithms.
+              </List.Item>
+              <List.Item style={{ paddingBottom: '1rem' }}>
+                DiffVG: <Anchor href="https://github.com/IzhanVarsky/diffvg" target="_blank">GitHub</Anchor>. We
+                fixed some serious bugs and added useful functions.
               </List.Item>
               <List.Item>
                 Docker template for running models on GPU: <Anchor
