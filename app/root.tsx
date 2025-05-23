@@ -8,6 +8,26 @@ import {
   ScrollRestoration,
 } from "@remix-run/react";
 import { useState } from 'react';
+import i18n from "./i18n"; // уже есть импорт
+import { I18nextProvider } from "react-i18next";
+import { useEffect } from "react";
+import { useLocation } from "@remix-run/react";
+import i18n from "./i18n"; // твой экземпляр i18n
+
+function LanguageSync() {
+  const location = useLocation();
+
+  useEffect(() => {
+    // Парсим query-параметр lang
+    const params = new URLSearchParams(location.search);
+    const lang = params.get("lang") || params.get("lng");
+    if (lang && i18n.language !== lang) {
+      i18n.changeLanguage(lang);
+    }
+  }, [location]);
+
+  return null;
+}
 
 export const meta: MetaFunction = () => ({
   charset: "utf-8",
@@ -26,18 +46,22 @@ export default function App() {
   const [covers, setCovers] = useState([]);
 
   return (
-    <html lang="en">
-    <head>
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-      <Meta/>
-      <Links/>
-    </head>
-    <body>
-    <Outlet context={[selectedCover, setSelectedCover, covers, setCovers]}/>
-    <ScrollRestoration/>
-    <Scripts/>
-    <LiveReload/>
-    </body>
-    </html>
+    <I18nextProvider i18n={i18n}>
+
+      <html lang="en">
+      <head>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <Meta/>
+        <Links/>
+      </head>
+      <body>
+      <LanguageSync />
+      <Outlet context={[selectedCover, setSelectedCover, covers, setCovers]}/>
+      <ScrollRestoration/>
+      <Scripts/>
+      <LiveReload/>
+      </body>
+      </html>
+    </I18nextProvider>
   );
 }

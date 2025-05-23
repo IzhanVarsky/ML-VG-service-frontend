@@ -5,9 +5,11 @@ import { applyTransformsFromStr } from "~/flatten_transforms";
 import { optimize } from 'svgo';
 import { diffvg_optimize } from "~/download_utils";
 import { useState } from "react";
+import { useTranslation } from "react-i18next"; // добавил импорт
 
 export default function OptimizationsTabPanel({ stateSVG, setState, isColorFindingEnabled }) {
   const [diffvgRunning, setDiffvgRunning] = useState(false);
+  const { t } = useTranslation(); // добавил хук
 
   const getNewState = (svg) => getSVGAndColorsState(svg, isColorFindingEnabled)
 
@@ -34,7 +36,7 @@ export default function OptimizationsTabPanel({ stateSVG, setState, isColorFindi
 
   return (
     <Stack style={{
-      padding: '0 25%',
+      padding: '0 10%',
       justifyContent: 'flex-start', minHeight: '70vh'
     }}>
       <Button component="span" variant="outline"
@@ -45,7 +47,7 @@ export default function OptimizationsTabPanel({ stateSVG, setState, isColorFindi
           display: "flex",
           justifyContent: "center",
           alignItems: "center"
-        }}>Optimize (SVGO)</Center>
+        }}>{t("optimize-svgo")}</Center>
       </Button>
       <Button component="span" variant="outline"
               style={{ pointerEvents: 'all' }}
@@ -55,7 +57,7 @@ export default function OptimizationsTabPanel({ stateSVG, setState, isColorFindi
           display: "flex",
           justifyContent: "center",
           alignItems: "center"
-        }}>Flatten Transforms from groups + remove groups</Center>
+        }}>{t("flatten-groups")}</Center>
       </Button>
       <Button component="span" variant="outline"
               style={{ pointerEvents: 'all' }}
@@ -65,7 +67,7 @@ export default function OptimizationsTabPanel({ stateSVG, setState, isColorFindi
           display: "flex",
           justifyContent: "center",
           alignItems: "center"
-        }}>Apply Transformations</Center>
+        }}>{t("apply-transformations")}</Center>
       </Button>
       <Button component="span" variant="outline"
               style={{ pointerEvents: 'all' }}
@@ -75,7 +77,7 @@ export default function OptimizationsTabPanel({ stateSVG, setState, isColorFindi
           display: "flex",
           justifyContent: "center",
           alignItems: "center"
-        }}>Remove groups, apply transforms, optimize</Center>
+        }}>{t("remove-groups-pipeline")}</Center>
       </Button>
       <Button component="span" variant="outline"
               loading={diffvgRunning}
@@ -94,7 +96,7 @@ export default function OptimizationsTabPanel({ stateSVG, setState, isColorFindi
           display: "flex",
           justifyContent: "center",
           alignItems: "center"
-        }}>DiffVG Optimization</Center>
+        }}>{t("diffvg-optimization")}</Center>
       </Button>
     </Stack>
   )

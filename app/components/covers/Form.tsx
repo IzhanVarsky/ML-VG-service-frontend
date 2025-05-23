@@ -19,6 +19,7 @@ import { useState } from 'react';
 import { FileMusic, PlayerRecord, Refresh } from 'tabler-icons-react';
 import { config } from '~/config.js';
 import AudioRecorder from "~/components/covers/AudioRecorder";
+import { useTranslation } from "react-i18next"; // добавил импорт
 
 const emotions = [
   'ANGER',
@@ -50,6 +51,11 @@ export default function Form() {
   const [trackName, setTrackName] = useState('');
 
   const [showAudio, setShowAudio] = useState(false);
+  const { t } = useTranslation(); // добавил хук
+  const emotionOptions = emotions.map((key) => ({
+    value: key,
+    label: t(`emotion-${key}`)
+  }));
 
   const splitByLast = (text: string, SEP: string = ".") => {
     const index = text.lastIndexOf(SEP);
@@ -135,8 +141,8 @@ export default function Form() {
           }
         })}>
           <Stack justify="space-around">
-            <Text>Select music file</Text>
-            <Group justifyContent="space-between">
+            <Text>{t("select-music-file")}</Text>
+            <Group>
               <Dropzone
                 multiple={false}
                 onDrop={(files) => {
@@ -169,11 +175,11 @@ export default function Form() {
                         color='grey'
                         style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}
                       >{form.values['audio_file'].name}</Text>
-                      : <Text color={showError ? 'red' : 'grey'}>Drag or click</Text>}
+                      : <Text color={showError ? 'red' : 'grey'}>{t("drag-or-click")}</Text>}
                   </Grid.Col>
                 </Grid>
               </Dropzone>
-              <Text>OR</Text>
+              <Text>{t("or")}</Text>
               <AudioRecorder
                 form={form}
                 updArtistName={updArtistName}
@@ -184,53 +190,53 @@ export default function Form() {
             </Group>
 
             <TextInput
-              placeholder={"Artist name"}
-              label="Artist name"
+              placeholder={t("artist-name")}
+              label={t("artist-name")}
               required
               onChange={(event) => updArtistName(event.currentTarget.value)}
               value={artistName}
             />
             <TextInput
-              placeholder={"Track name"}
-              label="Track name"
+              placeholder={t("track-name")}
+              label={t("track-name")}
               required
               onChange={(event) => updTrackName(event.currentTarget.value)}
               value={trackName}
             />
             <Radio.Group
-              label="Generator type"
+              label={t("generator-type")}
               withAsterisk
               {...form.getInputProps('gen_type')}
               // spacing="xs"
               // size="md"
             >
               <Group mt="xs">
-                <Radio value="1" label="Old"/>
-                <Radio value="2" label="New 1"/>
-                <Radio value="3" label="New 2"/>
-                <Radio value="4" label="New 3"/>
-                <Radio value="5" label="New 4"/>
+                <Radio value="1" label={t("gen-old")}/>
+                <Radio value="2" label={t("gen-new-1")}/>
+                <Radio value="3" label={t("gen-new-2")}/>
+                <Radio value="4" label={t("gen-new-3")}/>
+                <Radio value="5" label={t("gen-new-4")}/>
               </Group>
             </Radio.Group>
             <Radio.Group
-              label="Captioner type"
+              label={t("captioner-type")}
               required
               {...form.getInputProps('use_captioner')}
             >
               <Group mt="xs">
-                <Radio value="True" label="Old"/>
-                <Radio value="False" label="New"/>
+                <Radio value="True" label={t("old")}/>
+                <Radio value="False" label={t("new")}/>
               </Group>
             </Radio.Group>
             <NativeSelect
-              label="Emotion"
-              data={emotions}
+              label={t("emotion")}
+              data={emotionOptions}
               required
               {...form.getInputProps('emotion')}
             />
             <NumberInput
-              placeholder="Number of covers"
-              label="Number of covers"
+              placeholder={t("num-covers")}
+              label={t("num-covers")}
               min={1}
               max={20}
               required
@@ -238,10 +244,20 @@ export default function Form() {
             />
             <Switch
               size="md"
-              label="Use color filters"
-              {...form.getInputProps('use_filters')}
+              checked={form.values.use_filters}
+              onChange={(event) =>
+                form.setFieldValue("use_filters", event.currentTarget.checked)
+              }
+              label={
+                <span>
+                  {t("use-filters")}
+                </span>
+              }
+              styles={{
+                body: { alignItems: 'center' },
+              }}
             />
-            <Button type='submit' variant='gradient' loading={isLoading}>Generate</Button>
+            <Button type='submit' variant='gradient' loading={isLoading}>{t("generate")}</Button>
           </Stack>
         </form>
       </Shape>

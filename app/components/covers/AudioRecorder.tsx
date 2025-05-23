@@ -3,11 +3,14 @@ import { useRecorder } from 'react-microphone-recorder';
 import { Button, Group } from "@mantine/core";
 import { Microphone, PlayerPlay, PlayerStop } from "tabler-icons-react";
 import type { FileWithPath } from "file-selector";
+import { useTranslation } from "react-i18next";
 
 // https://github.com/dinakar17/react-microphone-recorder?tab=readme-ov-file#installation
 // https://react-microphone-recorder.vercel.app/
 
 const AudioRecorder = ({ form, updArtistName, updTrackName, showAudio, setShowAudio }) => {
+  const { t } = useTranslation();
+
   const {
     startRecording,
     pauseRecording,
@@ -78,7 +81,7 @@ const AudioRecorder = ({ form, updArtistName, updTrackName, showAudio, setShowAu
             leftIcon={<PlayerPlay size={20} color="red"/>}
             variant="outline"
           >
-            Record
+            {t("record")}
           </Button>
           :
           <Button
@@ -87,7 +90,7 @@ const AudioRecorder = ({ form, updArtistName, updTrackName, showAudio, setShowAu
             leftIcon={<PlayerStop size={20} color="red"/>}
             variant="outline"
           >
-            Stop
+            {t("stop")}
           </Button>
       }
 

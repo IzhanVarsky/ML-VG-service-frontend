@@ -17,6 +17,7 @@ import { addRectBefore, addShadowFilter, changeAllColors, changeColorByIndex } f
 import { Dropzone } from '@mantine/dropzone';
 import { useState } from "react";
 import { getSVGAndColorsState } from "~/svg_checkers_transformers";
+import { useTranslation } from "react-i18next"; // добавил импорт
 
 const randomColor = () => {
   const rgba = [];
@@ -33,6 +34,7 @@ export default function EditOptionsTabPanel({
                                             }) {
   const [isDropZoneLoading, setIsDropZoneLoading] = useState(false);
   const [isColorsLoading, setIsColorsLoading] = useState(false);
+  const { t } = useTranslation(); // добавил хук
 
   const updWithNewColors = (newColors) => {
     const newSVG = changeAllColors(state.svg, newColors);
@@ -74,7 +76,7 @@ export default function EditOptionsTabPanel({
         <Loader size="md"/>
         :
         <Checkbox checked={isColorFindingEnabled}
-                  label="Find used colors"
+                  label={t("find-colors")}
                   size='md'
                   style={{
                     textAlign: 'right',
@@ -117,7 +119,7 @@ export default function EditOptionsTabPanel({
             <Grid>
               <Grid.Col>
                 <Button leftIcon={<Refresh size={20}/>} onClick={shuffleColors} style={{ width: '100%' }}>
-                  Shuffle All Colors
+                  {t("shuffle-all-colors")}
                 </Button>
               </Grid.Col>
             </Grid>
@@ -135,14 +137,14 @@ export default function EditOptionsTabPanel({
               }}>
               <Group style={{ pointerEvents: 'none' }}>
                 <Palette color='grey'/>
-                <Text color='grey'>Drop image to style transfer</Text>
+                <Text color='grey'>{t("drop-image-style-transfer")}</Text>
               </Group>
             </Dropzone>
           </>
           :
           <>
             <Center>
-              <Text>--- No colors found on the image ---</Text>
+              <Text>--- {t("no-colors-found")} ---</Text>
             </Center>
           </>
         :
@@ -154,7 +156,7 @@ export default function EditOptionsTabPanel({
             <Button
               leftIcon={<Shadow size={20}/>}
               onClick={() => updateSVGWithColors(addShadowFilter(state.svg))}>
-              Add Shadow Filter
+              {t("add-shadow-filter")}
             </Button>
           </Center>
         </Grid.Col>
@@ -163,7 +165,7 @@ export default function EditOptionsTabPanel({
             <Button
               leftIcon={<BarrierBlock size={20}/>}
               onClick={() => updateSVGWithColors(addRectBefore(state.svg))}>
-              Add Color Filter
+              {t("add-color-filter")}
             </Button>
           </Center>
         </Grid.Col>

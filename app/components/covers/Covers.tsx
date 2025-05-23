@@ -3,9 +3,11 @@ import Carousel from './Carousel';
 import Viewer from './Viewer';
 import { Center, Text } from '@mantine/core';
 import Shape from '../Shape';
+import { useTranslation } from "react-i18next"; // добавил импорт
 
 export default function Covers() {
   const [selectedCover, setSelectedCover, covers, setCovers] = useOutletContext();
+  const { t } = useTranslation(); // добавил хук
 
   return (
     <>
@@ -17,10 +19,14 @@ export default function Covers() {
         :
         <Shape>
           <Center>
-            <Text size={'xl'} weight={600} color='darkgray'>You haven't generated any covers yet.</Text>
+            <Text size={'xl'} weight={600} color='darkgray'>
+              {t("no-covers")}
+            </Text>
           </Center>
           <Center>
-            <Text size={'xl'} weight={600} color='darkgray'>Set input parameters on the left and run generation.</Text>
+            <Text size={'xl'} weight={600} color='darkgray'>
+              {t("set-params")}
+            </Text>
           </Center>
         </Shape>
       }

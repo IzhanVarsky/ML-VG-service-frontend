@@ -4,21 +4,24 @@ import React from 'react';
 import AbstractPage from "~/AbstractPage";
 import StartPage from "~/components/index/StartPage";
 import { HeaderPageName } from "~/components/HeaderPageName";
+import { withTranslation } from "react-i18next";
 
-export default class Index extends AbstractPage {
+class Index extends AbstractPage {
   returnFunc() {
     return (
       <AppShell
-        footer={<Navigation/>}
-        header={<HeaderPageName text='Welcome to ML Vector Graphics Lab'/>}
+        footer={<Navigation />}
+        header={<HeaderPageName text={this.props.t('welcome')} />}
         styles={{
           main: {
             padding: 0,
           },
         }}
       >
-        <StartPage/>
+        <StartPage />
       </AppShell>
     );
   }
 }
+
+export default withTranslation()(Index);  // ③

@@ -7,6 +7,7 @@ import EditOptionsTabPanel from "~/components/editor/EditOptionsTabPanel";
 import DownloadTabPanel from "~/components/editor/DownloadTabPanel";
 import OptimizationsTabPanel from "~/components/editor/OptimizationsTabPanel";
 import CodeMirrorEditorTabPanel from "~/components/editor/CodeMirrorEditorTabPanel";
+import { useTranslation } from "react-i18next"; // добавил импорт
 
 export default function EditorTabs({
                                      state, setState,
@@ -15,6 +16,7 @@ export default function EditorTabs({
   const [activeTab, setActiveTab] = useState(state.svg === "" ? "Edit Raw SVG" : "Edit Options");
   const [imageWidthToDownload, setImageWidthToDownload] = useState(getSVGSize(state.svg).w);
   const [imageHeightToDownload, setImageHeightToDownload] = useState(getSVGSize(state.svg).h);
+  const { t } = useTranslation(); // добавил хук
 
   return (
     <Tabs value={activeTab}
@@ -35,15 +37,15 @@ export default function EditorTabs({
                   icon={<AdjustmentsAlt size={14}/>}
                   style={{ color: activeTab == 'Edit Options' ? '#228be6' : '' }}
         >
-          Edit Options
+          {t("edit-options")}
         </Tabs.Tab>
         <Tabs.Tab value={"Edit Raw SVG"}
                   style={{ color: activeTab == 'Edit Raw SVG' ? '#228be6' : '' }}
-                  icon={<FileText size={14}/>}>Edit Raw SVG</Tabs.Tab>
+                  icon={<FileText size={14}/>}>{t("edit-raw-svg")}</Tabs.Tab>
         <Tabs.Tab value={"Download"}
                   disabled={state.svg === ""}
                   style={{ color: activeTab == 'Download' ? '#228be6' : '' }}
-                  icon={<Download size={14}/>}>Download</Tabs.Tab>
+                  icon={<Download size={14}/>}>{t("download")}</Tabs.Tab>
         <Tabs.Tab value={"Prettify SVG"}
                   disabled={state.svg === ""}
                   style={{ pointerEvents: 'none' }}
@@ -61,14 +63,14 @@ export default function EditorTabs({
                         display: "flex",
                         justifyContent: "center",
                         alignItems: "center"
-                      }}>Prettify SVG</Center>
+                      }}>{t("prettify-svg")}</Center>
                     </Button>
                   }
         />
         <Tabs.Tab value={"Optimizations"}
                   disabled={state.svg === ""}
                   style={{ color: activeTab == 'Optimizations' ? '#228be6' : '' }}
-                  icon={<Axe size={14}/>}>Optimizations</Tabs.Tab>
+                  icon={<Axe size={14}/>}>{t("optimizations")}</Tabs.Tab>
       </Tabs.List>
 
       <Tabs.Panel value="Edit Options">

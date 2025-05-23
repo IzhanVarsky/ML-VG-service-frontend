@@ -3,12 +3,15 @@ import { ArrowBackUp, ArrowForwardUp, LayoutBoardSplit, Trash, } from 'tabler-ic
 import { Dropzone } from '@mantine/dropzone';
 import { getSVGAndColorsState } from '~/svg_checkers_transformers';
 import { useState } from "react";
+import { useTranslation } from "react-i18next"; // добавил импорт
 
 export default function SVGViewerControlButtons({
                                                   svg, setState, pointer, undo, redo, history,
                                                   isColorFindingEnabled
                                                 }) {
   const [isLoading, setIsLoading] = useState(false);
+  const { t } = useTranslation(); // добавил хук
+
   return (
     <>
       <Center>
@@ -17,21 +20,21 @@ export default function SVGViewerControlButtons({
                 onClick={() => setState({ svg: '', colors: [] })}
                 leftIcon={<Trash/>}
         >
-          Delete
+          {t("delete")}
         </Button>
         <Button m='md'
                 color={pointer == 0 ? 'gray' : ''}
                 onClick={undo}
                 leftIcon={<ArrowBackUp/>}
         >
-          Undo
+          {t("undo")}
         </Button>
         <Button m='md'
                 color={pointer + 1 == history.length ? 'gray' : ''}
                 onClick={redo}
                 leftIcon={<ArrowForwardUp/>}
         >
-          Redo
+          {t("redo")}
         </Button>
       </Center>
       <Dropzone
@@ -49,10 +52,10 @@ export default function SVGViewerControlButtons({
           <LayoutBoardSplit color='grey' size={60}/>
           <div>
             <Text color='grey' size="xl" inline>
-              Drag SVG image here or click to select file
+              {t("drag-svg-here")}
             </Text>
             <Text color='dimmed' size="sm" inline mt={7}>
-              You can edit it after uploading!
+              {t("edit-after-upload")}
             </Text>
           </div>
         </Group>

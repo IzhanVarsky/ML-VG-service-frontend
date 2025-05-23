@@ -4,6 +4,7 @@ import CodeMirror from "@uiw/react-codemirror";
 import { EditorView } from "@codemirror/view";
 import { createTheme } from "@uiw/codemirror-themes";
 import { tags as t } from "@lezer/highlight";
+import { useTranslation } from "react-i18next"; // добавил импорт
 
 const styleTheme = EditorView.baseTheme({
   ".cm-content": {
@@ -49,11 +50,12 @@ const bbedit = createTheme({
 });
 
 export default function CodeMirrorEditorTabPanel({ state, setState, isColorFindingEnabled }) {
+  const { t } = useTranslation(); // добавил хук
   return (
     <>
       <CodeMirror
         autoFocus={true} // TODO: doesn't work
-        placeholder='Write SVG...'
+        placeholder={t('write-svg-placeholder')}
         height={'70vh'}
         width={'45vw'}
         extensions={[styleTheme, xml()]}

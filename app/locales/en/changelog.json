@@ -1,0 +1,88 @@
+[
+  {
+    "date": "Before 28.04.2023",
+    "details": [
+      "MantineAnchor framework version: 5.8.0.",
+      "CoverGANLink service implemented.",
+      "VectorNSTLink service implemented.",
+      "SVGEditorLink service implemented."
+    ]
+  },
+  {
+    "date": "Update on 28.04.2023",
+    "details": [
+      "Updated MantineAnchor framework version to 6.0.9.",
+      "Added more options for VectorNSTLink service.",
+      "This MainPageLink created."
+    ]
+  },
+  {
+    "date": "Update on 29.04.2023",
+    "details": [
+      "Frontend tag version: v1.0.2.",
+      "Fixed automatic word wrapping and removed code outline in the SVGEditorLink.",
+      "Added automatic build and push docker image to dockerhub using GitHub Actions.",
+      "Frontend tag versioning added."
+    ]
+  },
+  {
+    "date": "Update on 03.05.2023",
+    "details": [
+      "Frontend tag version: v1.1.0.",
+      "VectorWeaverLink frontend and backend services implemented.",
+      "CORS policy and json data forwarding configured.",
+      "Implemented a check for the availability of the backend server.",
+      "Site design unified.",
+      "ChangelogLink info moved to separate page.",
+      "Updated passing data to SVGEditorLink method. SessionStorage is now used instead of outletContext.",
+      "Added stub messages info about specifying input parameters before running services."
+    ]
+  },
+  {
+    "date": "Update on 05.05.2023",
+    "details": [
+      "Frontend tag version: v1.1.1.",
+      "New unpublished ports configured on all services.",
+      "Nginx reverse proxy configured.",
+      "CORS policy configured for all services.",
+      "Check for the availability of the backend add for all services."
+    ]
+  },
+  {
+    "date": "Update on 23.02.2024",
+    "details": [
+      "Frontend tag version: v1.1.2.",
+      "Backend Host moved to new IP: api.statanly.com and CORS updated."
+    ]
+  },
+  {
+    "date": "Update on 14.06.2024",
+    "details": [
+      "Frontend tag version: v1.1.3.",
+      "Timeout for VectorNST fixed."
+    ]
+  },
+  {
+    "date": "Update on 17.05.2025",
+    "details": [
+      "Frontend tag version: v1.1.4.",
+      "Added audio recording for CoverGAN.",
+      "New papers and projects info added."
+    ]
+  },
+  {
+    "date": "Update on 17.05.2025",
+    "details": [
+      "Frontend tag version: v1.1.5.",
+      "Moved to HTTPS instead of HTTP."
+    ]
+  },
+  {
+    "date": "Update on 24.05.2025",
+    "details": [
+      "Frontend tag version: v1.2.0.",
+      "Multilingual support has been added. The site is now Russified.",
+      "The code for creating Changelogs has been significantly simplified."
+    ]
+  }
+]

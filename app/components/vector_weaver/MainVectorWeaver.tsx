@@ -7,6 +7,7 @@ import { config } from "~/config.js";
 import { downloadPNGFromServer, downloadTextFile } from "~/download_utils";
 import { svgWithSize } from "~/utils";
 import { addSVGToStorageAndOpenNewEditor } from "~/components/editor/Editor"
+import { useTranslation } from "react-i18next"; // добавил импорт
 
 function runImageGeneration(numOfImages, succ_callback, err_callback) {
   console.log("numOfImages", numOfImages);
@@ -39,6 +40,7 @@ export default function MainVectorWeaver() {
     // ["1", "2", "3", "4", "5"]
     []
   );
+  const { t } = useTranslation(); // добавил хук
 
   return (
     <>
@@ -89,19 +91,19 @@ export default function MainVectorWeaver() {
                         downloadTextFile(d,
                           `vector_weather_${idx}.svg`)}
                     >
-                      Download SVG
+                      {t("download-svg")}
                     </Menu.Item>
                     <Menu.Item icon={<IconMessageCircle size={14}/>}
                                onClick={() =>
                                  downloadPNGFromServer(svgWithSize(d, 256, 256))}
                     >
-                      Download PNG
+                      {t("download-png")}
                     </Menu.Item>
                     <Menu.Item
                       icon={<IconPhoto size={14}/>}
                       onClick={() => addSVGToStorageAndOpenNewEditor(d)}
                     >
-                      Edit
+                      {t("edit")}
                     </Menu.Item>
                   </Menu.Dropdown>
                 </Menu>
@@ -115,12 +117,10 @@ export default function MainVectorWeaver() {
             :
             <>
               <Center>
-                <Text size={'xl'} weight={600} color='darkgray'>You haven't generated any images yet.</Text>
-                {/*<Text size={'xl'} weight={'bolder'}>Welcome! Generate some covers!</Text>*/}
+                <Text size={'xl'} weight={600} color='darkgray'>{t("no-images")}</Text>
               </Center>
               <Center>
-                <Text size={'xl'} weight={600} color='darkgray'>Specify number of images and run
-                  generation.</Text>
+                <Text size={'xl'} weight={600} color='darkgray'>{t("specify-number")}</Text>
               </Center>
             </>
         }
@@ -136,8 +136,8 @@ export default function MainVectorWeaver() {
             styles={{ input: { width: '9rem', } }}
             value={numOfImages}
             onChange={(val) => setNumOfImages(val)}
-            placeholder="Number of images"
-            label="Number of images"
+            placeholder={t("num-images")}
+            label={t("num-images")}
             min={1}
             max={20}
             withAsterisk
@@ -167,7 +167,7 @@ export default function MainVectorWeaver() {
             }}
             loading={isLoading}
           >
-            Generate images
+            {t("generate-images")}
           </Button>
         </Group>
       </Shape>

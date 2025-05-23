@@ -2,12 +2,15 @@ import { Button, Grid, NumberInput, Stack, Center } from '@mantine/core';
 import { Braces, LayoutBoardSplit, Palette, } from 'tabler-icons-react';
 import { downloadPNGFromServer, downloadTextFile, getJSON } from "~/download_utils";
 import { svgWithSize } from '~/utils';
+import { useTranslation } from "react-i18next"; // добавил импорт
 
 export default function DownloadTabPanel({
                                            svg,
                                            imageWidthToDownload, setImageWidthToDownload,
                                            imageHeightToDownload, setImageHeightToDownload
                                          }) {
+  const { t } = useTranslation(); // добавил хук
+
   return (
     <Stack style={{
       padding: '0 25%',
@@ -19,8 +22,8 @@ export default function DownloadTabPanel({
           onChange={(val) => setImageWidthToDownload(val)}
           min={0}
           max={10000}
-          placeholder="Image width"
-          label="Image width"
+          placeholder={t("image-width")}
+          label={t("image-width")}
           style={{ width: '40%' }}
           required
         />
@@ -29,38 +32,33 @@ export default function DownloadTabPanel({
           onChange={(val) => setImageHeightToDownload(val)}
           min={0}
           max={10000}
-          placeholder="Image height"
-          label="Image height"
+          placeholder={t("image-height")}
+          label={t("image-height")}
           style={{ width: '40%' }}
           required
         />
       </Grid>
-      {/*<Center>*/}
-      {/*  <Stack>*/}
       <Button
         leftIcon={<LayoutBoardSplit size={14}/>}
         onClick={() =>
           downloadTextFile(svgWithSize(svg, imageWidthToDownload, imageHeightToDownload),
             "edited.svg")}
       >
-        Download SVG
+        {t("download-svg")}
       </Button>
       <Button
         leftIcon={<Palette size={14}/>}
         onClick={() =>
           downloadPNGFromServer(svgWithSize(svg, imageWidthToDownload, imageHeightToDownload))}
       >
-        Download PNG
+        {t("download-png")}
       </Button>
       <Button
         leftIcon={<Braces size={14}/>}
         onClick={() => getJSON(svgWithSize(svg, imageWidthToDownload))}
       >
-        Download JSON
+        {t("download-json")}
       </Button>
-      {/*</Stack>*/}
-      {/*</Center>*/}
-
     </Stack>
   )
 }

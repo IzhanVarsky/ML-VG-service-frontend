@@ -5,6 +5,7 @@ import { downloadBase64File, downloadTextFile } from "app/download_utils";
 import SVG from '../SVG';
 import { useState } from "react";
 import { addSVGToStorageAndOpenNewEditor } from "~/components/editor/Editor";
+import { useTranslation } from "react-i18next"; // добавил импорт
 
 export default function Viewer() {
   const [selectedCover, setSelectedCover, covers, setCovers] = useOutletContext();
@@ -13,6 +14,7 @@ export default function Viewer() {
     ? cover.src
     : 'data:image/png;base64, ' + cover.base64;
   const [activeTab, setActiveTab] = useState("svg");
+  const { t } = useTranslation(); // добавил хук
 
   return (
     <Shape>
@@ -20,11 +22,11 @@ export default function Viewer() {
         <Tabs.List grow>
           <Tabs.Tab value="svg"
                     style={{ color: activeTab == 'svg' ? '#228be6' : '' }}>
-            SVG
+            {t("tab-svg")}
           </Tabs.Tab>
           <Tabs.Tab value="png"
                     style={{ color: activeTab == 'png' ? '#228be6' : '' }}>
-            PNG
+            {t("tab-png")}
           </Tabs.Tab>
         </Tabs.List>
         <Tabs.Panel value="svg" pt="xs">
@@ -32,9 +34,11 @@ export default function Viewer() {
             <SVG svg={cover.svg} w={"50vh"} h={"50vh"}/>
             <Grid justify='space-around'>
               <Button onClick={() => downloadTextFile(cover.svg, "image.svg")}>
-                Download
+                {t("download")}
               </Button>
-              <Button onClick={() => addSVGToStorageAndOpenNewEditor(cover.svg)}>Edit</Button>
+              <Button onClick={() => addSVGToStorageAndOpenNewEditor(cover.svg)}>
+                {t("edit")}
+              </Button>
             </Grid>
           </Stack>
         </Tabs.Panel>
@@ -50,7 +54,7 @@ export default function Viewer() {
               <Button
                 onClick={() => downloadBase64File("image/png", cover.base64, "image.png")}
               >
-                Download
+                {t("download")}
               </Button>
             </Grid>
           </Stack>
